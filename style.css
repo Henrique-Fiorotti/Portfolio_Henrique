@@ -1305,6 +1305,7 @@ main{
 }
 
 .hcg-desc{
+    height: 50px;
     display: flex;
     font-family: "Roboto Mono";
     font-size: 10pt;
@@ -1317,6 +1318,7 @@ main{
 }
 
 .test2{
+    height: 40px;
     display: flex;
     align-items: center;
 
