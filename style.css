@@ -1867,6 +1867,10 @@ main{
 }
 
 @media only screen and (max-width: 474px){
+    body{
+        padding: 10px;
+    }
+
     .projects{
         row-gap: 30px;
     }
@@ -1921,6 +1925,7 @@ main{
 
     main{
         height: auto;
+        width: 100%;
     }
     .section-2{
         width: 100%;
