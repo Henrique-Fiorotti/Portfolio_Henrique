@@ -1910,10 +1910,6 @@ main{
         display: none;
     }
 
-    .btn-1 p{
-        font-size: 3vw;
-    }
-
     .btn-2{
         width: 60%;
         height: 35%;
@@ -1921,10 +1917,6 @@ main{
 
     .btn-2 img{
         display: none;
-    }
-
-    .btn-2 p{
-        font-size: 3vw;
     }
 
     .link-1{
@@ -1993,5 +1985,23 @@ main{
 
     .hard-skills-s p{
         display: none;
+    }
+}
+
+@media only screen and (max-width: 307px){
+    .section-1-about p{
+        font-size: 11.5pt;
+    }
+
+    block-title p{
+        font-size: 11.5pt;
+    }
+
+    .main-footer-content a{
+        font-size: 11pt;
+    }
+
+    .main-footer-content img{
+        height: 60px;
     }
 }
