@@ -1,22 +1,29 @@
-# 📎 Planejamento
-O site vai ser feito com VsCode, os dados do curriculo vão ser guardados em .json e inseridos em um .php com HTML e CSS. Por último será feito uma página principal com card de portfólio e projetos realizados. Ápos isso o site vai ser deployado em Vercel.
+# Portfólio — Henrique Fiorotti
 
-🔗 Link Protótipo Canva: https://www.canva.com/design/DAGukm5qEtI/u1Zf0wzhwOahqPvxS0TWhg/edit?utm_content=DAGukm5qEtI&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton
+Portfólio pessoal responsivo desenvolvido com Next.js, React e TypeScript. O projeto preserva a identidade visual inspirada em janelas de desktop e organiza projetos, habilidades e currículo em componentes reutilizáveis.
 
-Nesse site de portfólio deve conter as seguintes seções:
-- Header window (estética)
-- Main
-- Curriculo (em PHP)
-- Footer
+## Executar localmente
 
-## 🤖 Linguagens utilizadas
-- HTML
-- CSS
-- JS
-- PHP
+É necessário ter Node.js 20.9 ou mais recente instalado.
 
-## 🧰 Ferramentas
-- VsCode
-- Canva
-- Git/Github
-- Vercel
+```bash
+npm install
+npm run dev
+```
+
+Acesse `http://localhost:3000`.
+
+## Comandos
+
+- `npm run dev`: inicia o ambiente de desenvolvimento.
+- `npm run build`: gera a versão de produção.
+- `npm start`: executa a versão de produção.
+
+## Estrutura
+
+- `app/`: páginas, layout e estilos globais.
+- `components/`: componentes reutilizáveis da interface.
+- `data/`: conteúdo dos projetos e do currículo.
+- `public/`: imagens e vídeos.
+
+O currículo está disponível em `/curriculo` e pode ser salvo como PDF usando a impressão do navegador.
