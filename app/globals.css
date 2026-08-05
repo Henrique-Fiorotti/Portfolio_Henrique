@@ -14,8 +14,9 @@ button { font:inherit; }
 .brand { font:700 27px 'Roboto Mono'; }.brand span,.eyebrow { color:var(--blue); }
 .siteHeader nav { display:flex; gap:30px; font:600 14px 'Roboto Mono'; }
 .siteHeader nav a:hover { color:var(--blue); }
-.window { overflow:hidden; border:2px solid var(--line); border-radius:10px; background:var(--panel); box-shadow:var(--shadow); }
-.windowBar { height:43px; padding:0 14px 0 18px; display:flex; align-items:center; justify-content:space-between; border-bottom:2px solid var(--line); background:#dad3f4; }
+.window { position:relative; overflow:hidden; border:2px solid var(--line); border-radius:10px; background:var(--panel); box-shadow:var(--shadow); will-change:transform; }
+.windowBar { height:43px; padding:0 14px 0 18px; display:flex; align-items:center; justify-content:space-between; border-bottom:2px solid var(--line); background:#dad3f4; cursor:grab; touch-action:none; user-select:none; }
+.windowBar:focus-visible { outline:3px solid var(--blue); outline-offset:-5px; }.window.isDragging { cursor:grabbing; }.window.isDragging .windowBar { cursor:grabbing; }
 .windowTitle { font:600 13px 'Roboto Mono'; }
 .windowControls { display:flex; gap:7px; }.windowControls i { width:12px; height:12px; border:1.5px solid var(--line); border-radius:50%; background:#ff6b6b; }.windowControls i:nth-child(2){background:#ffd166}.windowControls i:nth-child(3){background:#65d68b}
 .hero { min-height:620px; padding:clamp(36px,5vw,72px); display:grid; grid-template-columns:minmax(280px,.9fr) minmax(320px,1fr); align-items:center; justify-items:center; column-gap:clamp(32px,5vw,72px); }
