@@ -34,6 +34,11 @@ export default function Home() {
               <div className="heroActions">
                 <CasinoProjectButton />
                 <a className="button secondary" href={`mailto:${profile.email}`}>Entrar em contato</a>
+                <a className="button secondary resumeDownloadButton" href="/curriculo-henrique-fiorotti.pdf" download="curriculo-henrique-fiorotti.pdf" aria-label="Baixar currÃ­culo PDF" data-tooltip="Baixar currÃ­culo PDF">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 3v12m0 0 4-4m-4 4-4-4M5 19h14" />
+                  </svg>
+                </a>
               </div>
               <div className="socialLinks">
                 <a href={profile.github} target="_blank" rel="noreferrer">GitHub ↗</a>

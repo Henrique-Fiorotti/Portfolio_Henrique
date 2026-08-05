@@ -255,6 +255,11 @@ export function Window({
     animationStartRect.current = windowRef.current?.getBoundingClientRect() ?? null;
     setIsMaximized(maximized => !maximized);
   };
+  const windowControlIcon = isMaximized ? <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M5 9h4V5M3 3l6 6M19 9h-4V5m6-2-6 6M5 15h4v4m-6 2 6-6M19 15h-4v4m6 2-6-6" />
+    </svg> : <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M16 4h4v4m-6 2 6-6M8 20H4v-4m6-2-6 6M4 8V4h4m2 6L4 4m16 12v4h-4m-2-6 6 6" />
+    </svg>;
   return <section ref={windowRef} className={`window ${className} ${interactive ? "" : "isStatic"} ${isDragging ? "isDragging" : ""} ${isMaximized ? "isMaximized" : ""}`} style={{
     "--window-x": `${position.x}px`,
     "--window-y": `${position.y}px`,
@@ -265,7 +270,9 @@ export function Window({
         
         <span className="windowTitle">{title}</span>
         <span className="windowControls">
-          <button type="button" className="windowControl maximize" aria-label={isMaximized ? "Restaurar janela" : "Maximizar janela"} data-tooltip={isMaximized ? "Restaurar janela" : "Maximizar janela"} aria-pressed={isMaximized} disabled={!interactive} onClick={toggleMaximize} onPointerDown={stopWindowDrag} />
+          <button type="button" className={`windowControl maximize ${interactive ? "hasIcon" : ""}`} aria-label={isMaximized ? "Restaurar janela" : "Maximizar janela"} data-tooltip={isMaximized ? "Restaurar janela" : "Maximizar janela"} aria-pressed={isMaximized} disabled={!interactive} onClick={toggleMaximize} onPointerDown={stopWindowDrag}>
+            {interactive && windowControlIcon}
+          </button>
         </span>
       </div>
       <div className="windowBody">{children}</div>
