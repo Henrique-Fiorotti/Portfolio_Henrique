@@ -22,8 +22,6 @@ type WindowProps = {
 
 const DEFAULT_POSITION = { x: 0, y: 0 };
 const MIN_VISIBLE_TITLEBAR = 72;
-const SNAP_DISTANCE = 24;
-const SNAP_GRID_SIZE = 24;
 const TOUCH_HOLD_DELAY = 280;
 const TOUCH_MOVE_TOLERANCE = 12;
 
@@ -35,7 +33,7 @@ const clamp = (value: number, min: number, max: number) => {
 };
 
 export function Window({ title, children, className = "" }: WindowProps) {
-  const { registerWindow, snapEnabled } = useWindowLayout();
+  const { registerWindow } = useWindowLayout();
   const [position, setPosition] = useState<Position>(DEFAULT_POSITION);
   const [isDragging, setIsDragging] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
@@ -84,26 +82,6 @@ export function Window({ title, children, className = "" }: WindowProps) {
       origin.y + window.innerHeight - MIN_VISIBLE_TITLEBAR - windowRect.top,
     ),
   });
-
-  const snapPosition = (nextPosition: Position, start: DragState) => {
-    let snappedPosition = {
-      x: Math.round(nextPosition.x / SNAP_GRID_SIZE) * SNAP_GRID_SIZE,
-      y: Math.round(nextPosition.y / SNAP_GRID_SIZE) * SNAP_GRID_SIZE,
-    };
-    const left = start.windowRect.left + snappedPosition.x - start.origin.x;
-    const top = start.windowRect.top + snappedPosition.y - start.origin.y;
-
-    if (Math.abs(left) <= SNAP_DISTANCE) snappedPosition.x -= left;
-    if (Math.abs(window.innerWidth - (left + start.windowRect.width)) <= SNAP_DISTANCE) {
-      snappedPosition.x += window.innerWidth - (left + start.windowRect.width);
-    }
-    if (Math.abs(top) <= SNAP_DISTANCE) snappedPosition.y -= top;
-    if (Math.abs(window.innerHeight - (top + start.titleBarHeight)) <= SNAP_DISTANCE) {
-      snappedPosition.y += window.innerHeight - (top + start.titleBarHeight);
-    }
-
-    return constrainPosition(snappedPosition, start.origin, start.windowRect, start.titleBarHeight);
-  };
 
   const clearTouchTimer = () => {
     if (touchTimer.current !== null) {
@@ -222,9 +200,12 @@ export function Window({ title, children, className = "" }: WindowProps) {
     if (event.currentTarget.hasPointerCapture(event.pointerId)) {
       event.currentTarget.releasePointerCapture(event.pointerId);
     }
-    const finalPosition = snapEnabled
-      ? snapPosition(positionRef.current, start)
-      : constrainPosition(positionRef.current, start.origin, start.windowRect, start.titleBarHeight);
+    const finalPosition = constrainPosition(
+      positionRef.current,
+      start.origin,
+      start.windowRect,
+      start.titleBarHeight,
+    );
 
     commitPosition(finalPosition);
     dragStart.current = null;
@@ -299,9 +280,11 @@ export function Window({ title, children, className = "" }: WindowProps) {
         className="windowBar"
         aria-label={`Mover janela ${title}. Use as setas para mover e Home para restaurar a posicao.`}
         role="group"
+        onFocus={bringToFront}
         onKeyDown={handleKeyDown}
         onPointerCancel={finishDragging}
         onPointerDown={handlePointerDown}
+        onPointerEnter={bringToFront}
         onPointerMove={handlePointerMove}
         onPointerUp={finishDragging}
         tabIndex={0}

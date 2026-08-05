@@ -1,20 +1,17 @@
 "use client";
 
-import { createContext, useCallback, useContext, useRef, useState, type ReactNode } from "react";
-import { Grid3X3, RotateCcw } from "lucide-react";
+import { createContext, useCallback, useContext, useRef, type ReactNode } from "react";
+import { RotateCcw } from "lucide-react";
 
 type WindowLayoutContextValue = {
   registerWindow: (reset: () => void) => () => void;
   resetLayout: () => void;
-  snapEnabled: boolean;
-  toggleSnap: () => void;
 };
 
 const WindowLayoutContext = createContext<WindowLayoutContextValue | null>(null);
 
 export function WindowLayoutProvider({ children }: { children: ReactNode }) {
   const resetters = useRef(new Set<() => void>());
-  const [snapEnabled, setSnapEnabled] = useState(true);
 
   const registerWindow = useCallback((reset: () => void) => {
     resetters.current.add(reset);
@@ -25,12 +22,8 @@ export function WindowLayoutProvider({ children }: { children: ReactNode }) {
     resetters.current.forEach((reset) => reset());
   }, []);
 
-  const toggleSnap = useCallback(() => {
-    setSnapEnabled((enabled) => !enabled);
-  }, []);
-
   return (
-    <WindowLayoutContext.Provider value={{ registerWindow, resetLayout, snapEnabled, toggleSnap }}>
+    <WindowLayoutContext.Provider value={{ registerWindow, resetLayout }}>
       {children}
     </WindowLayoutContext.Provider>
   );
@@ -47,20 +40,10 @@ export function useWindowLayout() {
 }
 
 export function WindowLayoutControls() {
-  const { resetLayout, snapEnabled, toggleSnap } = useWindowLayout();
+  const { resetLayout } = useWindowLayout();
 
   return (
     <div className="windowLayoutControls" aria-label="Controles de layout das janelas">
-      <button
-        type="button"
-        className="windowLayoutControl"
-        aria-label={snapEnabled ? "Desativar encaixe das janelas" : "Ativar encaixe das janelas"}
-        aria-pressed={snapEnabled}
-        data-tooltip={snapEnabled ? "Encaixe ativado" : "Encaixe desativado"}
-        onClick={toggleSnap}
-      >
-        <Grid3X3 aria-hidden="true" />
-      </button>
       <button
         type="button"
         className="windowLayoutControl"
