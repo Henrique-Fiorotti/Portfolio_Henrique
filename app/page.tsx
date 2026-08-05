@@ -23,7 +23,7 @@ export default function Home() {
       </header>
 
       <div id="top" className="container">
-        <Window title="Portfolio.exe" className="heroWindow">
+        <Window title="Portfolio.exe" className="heroWindow" interactive={false}>
           <section className="hero">
             <div className="portrait" aria-hidden="true">
               <img className="mb-20" src="/images/user.svg" alt="Henrique Fiorotti" />
@@ -47,7 +47,7 @@ export default function Home() {
       </div>
 
       <section id="sobre" className="container aboutSection">
-        <Window title="Sobre-mim.txt">
+        <Window title="Sobre-mim.txt" interactive={false}>
           <div className="aboutGrid">
             <div>
               <p className="eyebrow">Perfil</p>

@@ -296,10 +296,22 @@ button {
   cursor: pointer;
 }
 
-.windowControl:hover,
-.windowControl:focus-visible {
+.windowControl:not(:disabled):hover,
+.windowControl:not(:disabled):focus-visible {
   transform: scale(1.18);
   outline: none
+}
+
+.windowControl:disabled {
+  cursor: default
+}
+
+.windowControl:disabled::after {
+  display: none
+}
+
+.window.isStatic .windowBar {
+  cursor: default
 }
 
 .windowControl.reset {

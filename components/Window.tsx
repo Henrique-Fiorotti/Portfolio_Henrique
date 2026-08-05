@@ -18,6 +18,7 @@ type WindowProps = {
   title: string;
   children: ReactNode;
   className?: string;
+  interactive?: boolean;
 };
 
 const DEFAULT_POSITION = { x: 0, y: 0 };
@@ -32,7 +33,7 @@ const clamp = (value: number, min: number, max: number) => {
   return Math.min(Math.max(value, min), max);
 };
 
-export function Window({ title, children, className = "" }: WindowProps) {
+export function Window({ title, children, className = "", interactive = true }: WindowProps) {
   const { registerWindow } = useWindowLayout();
   const [position, setPosition] = useState<Position>(DEFAULT_POSITION);
   const [isDragging, setIsDragging] = useState(false);
@@ -91,6 +92,8 @@ export function Window({ title, children, className = "" }: WindowProps) {
   };
 
   const startDragging = (pointerId: number, clientX: number, clientY: number) => {
+    if (!interactive) return;
+
     const windowElement = windowRef.current;
     const titleBar = titleBarRef.current;
     if (!windowElement || !titleBar || isMaximized) return;
@@ -230,6 +233,7 @@ export function Window({ title, children, className = "" }: WindowProps) {
   };
 
   const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (!interactive) return;
     if (event.target !== event.currentTarget) return;
 
     const step = event.shiftKey ? 64 : 16;
@@ -272,28 +276,28 @@ export function Window({ title, children, className = "" }: WindowProps) {
   return (
     <section
       ref={windowRef}
-      className={`window ${className} ${isDragging ? "isDragging" : ""} ${isMinimized ? "isMinimized" : ""} ${isMaximized ? "isMaximized" : ""}`}
+      className={`window ${className} ${interactive ? "" : "isStatic"} ${isDragging ? "isDragging" : ""} ${isMinimized ? "isMinimized" : ""} ${isMaximized ? "isMaximized" : ""}`}
       style={{ transform: `translate(${position.x}px, ${position.y}px)`, zIndex: layer }}
     >
       <div
         ref={titleBarRef}
         className="windowBar"
-        aria-label={`Mover janela ${title}. Use as setas para mover e Home para restaurar a posicao.`}
+        aria-label={interactive ? `Mover janela ${title}. Use as setas para mover e Home para restaurar a posicao.` : title}
         role="group"
-        onFocus={bringToFront}
+        onFocus={interactive ? bringToFront : undefined}
         onKeyDown={handleKeyDown}
         onPointerCancel={finishDragging}
         onPointerDown={handlePointerDown}
-        onPointerEnter={bringToFront}
+        onPointerEnter={interactive ? bringToFront : undefined}
         onPointerMove={handlePointerMove}
         onPointerUp={finishDragging}
-        tabIndex={0}
+        tabIndex={interactive ? 0 : -1}
       >
         <span className="windowTitle">{title}</span>
         <span className="windowControls">
-          <button type="button" className="windowControl reset" aria-label="Restaurar janela" data-tooltip="Restaurar janela" onClick={resetWindow} onPointerDown={stopWindowDrag} />
-          <button type="button" className="windowControl minimize" aria-label={isMinimized ? "Expandir janela" : "Minimizar janela"} data-tooltip={isMinimized ? "Expandir janela" : "Minimizar janela"} onClick={toggleMinimize} onPointerDown={stopWindowDrag} />
-          <button type="button" className="windowControl maximize" aria-label={isMaximized ? "Restaurar tamanho" : "Maximizar janela"} data-tooltip={isMaximized ? "Restaurar tamanho" : "Maximizar janela"} onClick={toggleMaximize} onPointerDown={stopWindowDrag} />
+          <button type="button" className="windowControl reset" aria-label="Restaurar janela" data-tooltip="Restaurar janela" disabled={!interactive} onClick={resetWindow} onPointerDown={stopWindowDrag} />
+          <button type="button" className="windowControl minimize" aria-label={isMinimized ? "Expandir janela" : "Minimizar janela"} data-tooltip={isMinimized ? "Expandir janela" : "Minimizar janela"} disabled={!interactive} onClick={toggleMinimize} onPointerDown={stopWindowDrag} />
+          <button type="button" className="windowControl maximize" aria-label={isMaximized ? "Restaurar tamanho" : "Maximizar janela"} data-tooltip={isMaximized ? "Restaurar tamanho" : "Maximizar janela"} disabled={!interactive} onClick={toggleMaximize} onPointerDown={stopWindowDrag} />
         </span>
       </div>
       <div className="windowBody">{children}</div>
