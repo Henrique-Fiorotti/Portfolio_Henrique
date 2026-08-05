@@ -1,4 +1,5 @@
 import { Footer } from "@/components/Footer";
+import { CasinoProjectButton } from "@/components/CasinoProjectButton";
 import { ProjectCard } from "@/components/ProjectCard";
 import { SkillPill } from "@/components/SkillPill";
 import { WindowLayoutControls, WindowLayoutProvider } from "@/components/WindowLayout";
@@ -28,12 +29,12 @@ export default function Home() {
               <img className="mb-20" src="/images/user.svg" alt="Henrique Fiorotti" />
             </div>
             <div className="heroContent">
-              <p className="eyebrow">Olá, eu sou</p>
+              <p className="eyebrow">Opa, eu sou</p>
               <h1>Henrique<br /><span>Fiorotti</span></h1>
               <p className="role">Desenvolvedor de sistemas & criador de experiências digitais</p>
               <p className="heroText">Transformo ideias em interfaces responsivas, automações e aplicações web funcionais.</p>
               <div className="heroActions">
-                <a className="button primary" href="#projetos">Conhecer projetos</a>
+                <CasinoProjectButton />
                 <a className="button secondary" href={`mailto:${profile.email}`}>Entrar em contato</a>
               </div>
               <div className="socialLinks">
