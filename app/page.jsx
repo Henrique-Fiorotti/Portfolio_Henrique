@@ -5,10 +5,8 @@ import { SkillPill } from "@/components/SkillPill";
 import { WindowLayoutControls, WindowLayoutProvider } from "@/components/WindowLayout";
 import { Window } from "@/components/Window";
 import { profile, projects, skills, tools } from "@/data/portfolio";
-
 export default function Home() {
-  return (
-    <WindowLayoutProvider>
+  return <WindowLayoutProvider>
     <main>
       <header className="siteHeader container">
         <a className="brand" href="#top">HF<span>.</span></a>
@@ -56,8 +54,8 @@ export default function Home() {
             <p>{profile.about}</p>
           </div>
           <div className="skillColumns">
-            <div><h3>Hard skills</h3><div className="pillList">{skills.map((skill) => <SkillPill key={skill} name={skill} />)}</div></div>
-            <div><h3>Ferramentas</h3><div className="pillList">{tools.map((tool) => <SkillPill key={tool} name={tool} />)}</div></div>
+            <div><h3>Hard skills</h3><div className="pillList">{skills.map(skill => <SkillPill key={skill} name={skill} />)}</div></div>
+            <div><h3>Ferramentas</h3><div className="pillList">{tools.map(tool => <SkillPill key={tool} name={tool} />)}</div></div>
           </div>
         </Window>
       </section>
@@ -67,11 +65,10 @@ export default function Home() {
           <div><p className="eyebrow">Trabalhos selecionados</p><h2>Projetos</h2></div>
           <p>Uma seleção de aplicações, experiências visuais e estudos de desenvolvimento.</p>
         </div>
-        <div className="projectsGrid">{projects.map((project) => <ProjectCard key={project.slug} project={project} />)}</div>
+        <div className="projectsGrid">{projects.map(project => <ProjectCard key={project.slug} project={project} />)}</div>
       </section>
 
       <Footer />
     </main>
-    </WindowLayoutProvider>
-  );
+    </WindowLayoutProvider>;
 }

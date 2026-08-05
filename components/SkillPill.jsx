@@ -1,4 +1,4 @@
-const iconMap: Record<string, string> = {
+const iconMap = {
   HTML: "html-5-svgrepo-com.svg",
   CSS: "css-3-svgrepo-com.svg",
   JavaScript: "js-svgrepo-com.svg",
@@ -11,15 +11,14 @@ const iconMap: Record<string, string> = {
   Word: "word-svgrepo-com.svg",
   Canva: "canva-svgrepo-com.svg",
   Illustrator: "adobe-illustrator-svgrepo-com.svg",
-  Photoshop: "adobe-photoshop-svgrepo-com.svg",
+  Photoshop: "adobe-photoshop-svgrepo-com.svg"
 };
-
-export function SkillPill({ name }: { name: string }) {
+export function SkillPill({
+  name
+}) {
   const icon = iconMap[name];
-  return (
-    <span className="skillPill">
+  return <span className="skillPill">
       {icon && <img src={`/images/${icon}`} alt="" width="18" height="18" />}
       {name}
-    </span>
-  );
+    </span>;
 }
