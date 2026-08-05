@@ -1,19 +1,24 @@
 import { Footer } from "@/components/Footer";
 import { ProjectCard } from "@/components/ProjectCard";
 import { SkillPill } from "@/components/SkillPill";
+import { WindowLayoutControls, WindowLayoutProvider } from "@/components/WindowLayout";
 import { Window } from "@/components/Window";
 import { profile, projects, skills, tools } from "@/data/portfolio";
 
 export default function Home() {
   return (
+    <WindowLayoutProvider>
     <main>
       <header className="siteHeader container">
         <a className="brand" href="#top">HF<span>.</span></a>
+        <div className="siteHeaderActions">
         <nav aria-label="Navegação principal">
           <a href="#sobre">Sobre</a>
           <a href="#projetos">Projetos</a>
           <a href="/curriculo">Currículo</a>
         </nav>
+        <WindowLayoutControls />
+        </div>
       </header>
 
       <div id="top" className="container">
@@ -66,5 +71,6 @@ export default function Home() {
 
       <Footer />
     </main>
+    </WindowLayoutProvider>
   );
 }
