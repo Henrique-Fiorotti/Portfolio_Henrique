@@ -217,10 +217,14 @@ button {
   border-radius: 10px;
   background: var(--panel);
   box-shadow: var(--shadow);
+  transform: translate(var(--window-x, 0), var(--window-y, 0)) translate(var(--window-animation-x, 0), var(--window-animation-y, 0)) scale(var(--window-animation-scale-x, 1), var(--window-animation-scale-y, 1));
+  transform-origin: top left;
   will-change: transform;
 }
 
 .windowBar {
+  position: relative;
+  z-index: 10;
   height: 43px;
   padding: 0 14px 0 18px;
   display: flex;
@@ -252,22 +256,13 @@ button {
   cursor: grabbing;
 }
 
-.window.isMinimized .windowBody {
-  display: none
-}
-
-.window.isMinimized .windowBar {
-  border-radius: 8px;
-  border-bottom: 0
-}
-
 .window.isMaximized {
   position: fixed;
-  inset: 16px;
+  inset: clamp(40px, 5vw, 80px);
   width: auto !important;
   height: auto;
   margin: 0;
-  transform: none !important;
+  transform: translate(var(--window-animation-x, 0), var(--window-animation-y, 0)) scale(var(--window-animation-scale-x, 1), var(--window-animation-scale-y, 1)) !important;
   box-shadow: 12px 12px 0 var(--line)
 }
 
@@ -313,21 +308,17 @@ button {
   cursor: default
 }
 
-.windowControl.reset {
-  background: #ff6b6b
-}
-
-.windowControl.minimize {
-  background: #ffd166
-}
-
 .windowControl.maximize {
-  background: #65d68b
+  background: var(--blue)
 }
 
 .windowControl::after {
   top: calc(100% + 11px);
   right: -3px
+}
+
+.window:has(.windowControl:hover, .windowControl:focus-visible) {
+  z-index: 2147483645 !important
 }
 
 .hero {
@@ -932,7 +923,7 @@ button {
   }
 
   .window.isMaximized {
-    inset: 8px;
+    inset: 16px;
     box-shadow: 5px 5px 0 var(--line)
   }
 

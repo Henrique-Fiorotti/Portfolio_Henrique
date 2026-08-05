@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState, type KeyboardEvent, type PointerEvent, type ReactNode } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type KeyboardEvent, type PointerEvent, type ReactNode } from "react";
+import { gsap } from "gsap";
 import { useWindowLayout } from "./WindowLayout";
 
 type Position = { x: number; y: number };
@@ -27,6 +28,9 @@ const TOUCH_HOLD_DELAY = 280;
 const TOUCH_MOVE_TOLERANCE = 12;
 
 let nextWindowLayer = 1;
+let scrollLockCount = 0;
+let previousBodyOverflow = "";
+let previousHtmlOverflow = "";
 
 const clamp = (value: number, min: number, max: number) => {
   if (min > max) return (min + max) / 2;
@@ -37,7 +41,6 @@ export function Window({ title, children, className = "", interactive = true }: 
   const { registerWindow } = useWindowLayout();
   const [position, setPosition] = useState<Position>(DEFAULT_POSITION);
   const [isDragging, setIsDragging] = useState(false);
-  const [isMinimized, setIsMinimized] = useState(false);
   const [isMaximized, setIsMaximized] = useState(false);
   const [layer, setLayer] = useState(0);
   const windowRef = useRef<HTMLElement>(null);
@@ -47,6 +50,8 @@ export function Window({ title, children, className = "", interactive = true }: 
   const pendingTouch = useRef<{ pointerId: number; clientX: number; clientY: number } | null>(null);
   const frame = useRef<number | null>(null);
   const touchTimer = useRef<number | null>(null);
+  const animationStartRect = useRef<DOMRect | null>(null);
+  const resizeTween = useRef<gsap.core.Tween | null>(null);
 
   const bringToFront = () => {
     setLayer(nextWindowLayer++);
@@ -114,12 +119,71 @@ export function Window({ title, children, className = "", interactive = true }: 
   const resetWindow = () => {
     commitPosition(DEFAULT_POSITION);
     setIsDragging(false);
-    setIsMinimized(false);
     setIsMaximized(false);
     setLayer(0);
   };
 
   useEffect(() => registerWindow(resetWindow), [registerWindow]);
+
+  useLayoutEffect(() => {
+    const windowElement = windowRef.current;
+    const startRect = animationStartRect.current;
+    animationStartRect.current = null;
+    if (!windowElement || !startRect) return;
+
+    resizeTween.current?.kill();
+    const endRect = windowElement.getBoundingClientRect();
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (reducedMotion) {
+      gsap.set(windowElement, {
+        "--window-animation-x": "0px",
+        "--window-animation-y": "0px",
+        "--window-animation-scale-x": 1,
+        "--window-animation-scale-y": 1,
+      });
+      return;
+    }
+
+    resizeTween.current = gsap.fromTo(windowElement, {
+      "--window-animation-x": `${startRect.left - endRect.left}px`,
+      "--window-animation-y": `${startRect.top - endRect.top}px`,
+      "--window-animation-scale-x": startRect.width / endRect.width,
+      "--window-animation-scale-y": startRect.height / endRect.height,
+    }, {
+      "--window-animation-x": "0px",
+      "--window-animation-y": "0px",
+      "--window-animation-scale-x": 1,
+      "--window-animation-scale-y": 1,
+      duration: 0.58,
+      ease: "power3.inOut",
+      overwrite: true,
+    });
+
+    return () => {
+      resizeTween.current?.kill();
+    };
+  }, [isMaximized]);
+
+  useEffect(() => {
+    if (!isMaximized) return;
+
+    if (scrollLockCount === 0) {
+      previousBodyOverflow = document.body.style.overflow;
+      previousHtmlOverflow = document.documentElement.style.overflow;
+      document.body.style.overflow = "hidden";
+      document.documentElement.style.overflow = "hidden";
+    }
+    scrollLockCount += 1;
+
+    return () => {
+      scrollLockCount = Math.max(0, scrollLockCount - 1);
+      if (scrollLockCount === 0) {
+        document.body.style.overflow = previousBodyOverflow;
+        document.documentElement.style.overflow = previousHtmlOverflow;
+      }
+    };
+  }, [isMaximized]);
 
   useEffect(() => {
     const keepTitleBarVisible = () => {
@@ -261,23 +325,21 @@ export function Window({ title, children, className = "", interactive = true }: 
     event.stopPropagation();
   };
 
-  const toggleMinimize = () => {
-    bringToFront();
-    setIsMaximized(false);
-    setIsMinimized((minimized) => !minimized);
-  };
-
   const toggleMaximize = () => {
     bringToFront();
-    setIsMinimized(false);
+    animationStartRect.current = windowRef.current?.getBoundingClientRect() ?? null;
     setIsMaximized((maximized) => !maximized);
   };
 
   return (
     <section
       ref={windowRef}
-      className={`window ${className} ${interactive ? "" : "isStatic"} ${isDragging ? "isDragging" : ""} ${isMinimized ? "isMinimized" : ""} ${isMaximized ? "isMaximized" : ""}`}
-      style={{ transform: `translate(${position.x}px, ${position.y}px)`, zIndex: layer }}
+      className={`window ${className} ${interactive ? "" : "isStatic"} ${isDragging ? "isDragging" : ""} ${isMaximized ? "isMaximized" : ""}`}
+      style={{
+        "--window-x": `${position.x}px`,
+        "--window-y": `${position.y}px`,
+        zIndex: layer,
+      } as CSSProperties}
     >
       <div
         ref={titleBarRef}
@@ -295,9 +357,7 @@ export function Window({ title, children, className = "", interactive = true }: 
       >
         <span className="windowTitle">{title}</span>
         <span className="windowControls">
-          <button type="button" className="windowControl reset" aria-label="Restaurar janela" data-tooltip="Restaurar janela" disabled={!interactive} onClick={resetWindow} onPointerDown={stopWindowDrag} />
-          <button type="button" className="windowControl minimize" aria-label={isMinimized ? "Expandir janela" : "Minimizar janela"} data-tooltip={isMinimized ? "Expandir janela" : "Minimizar janela"} disabled={!interactive} onClick={toggleMinimize} onPointerDown={stopWindowDrag} />
-          <button type="button" className="windowControl maximize" aria-label={isMaximized ? "Restaurar tamanho" : "Maximizar janela"} data-tooltip={isMaximized ? "Restaurar tamanho" : "Maximizar janela"} disabled={!interactive} onClick={toggleMaximize} onPointerDown={stopWindowDrag} />
+          <button type="button" className="windowControl maximize" aria-label={isMaximized ? "Restaurar janela" : "Maximizar janela"} data-tooltip={isMaximized ? "Restaurar janela" : "Maximizar janela"} aria-pressed={isMaximized} disabled={!interactive} onClick={toggleMaximize} onPointerDown={stopWindowDrag} />
         </span>
       </div>
       <div className="windowBody">{children}</div>
