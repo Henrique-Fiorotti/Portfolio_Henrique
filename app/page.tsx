@@ -20,9 +20,7 @@ export default function Home() {
         <Window title="Portfolio.exe" className="heroWindow">
           <section className="hero">
             <div className="portrait" aria-hidden="true">
-              <span className="portraitSquare one" />
-              <span className="portraitSquare two" />
-              <img src="/images/IMG_0012-removebg-preview.png" alt="Henrique Fiorotti" />
+              <img className="mb-20" src="/images/user.svg" alt="Henrique Fiorotti" />
             </div>
             <div className="heroContent">
               <p className="eyebrow">Olá, eu sou</p>

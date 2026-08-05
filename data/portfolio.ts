@@ -32,7 +32,7 @@ export const projects: Project[] = [
     subtitle: "Manutenção preditiva industrial, web, mobile e IoT",
     description:
       "Plataforma para monitoramento de máquinas e sensores, gestão de alertas e equipes, relatórios e assistência operacional por IA, com atualizações em tempo real.",
-    image: "https://raw.githubusercontent.com/Henrique-Fiorotti/orbis/main/public/orbis_dashboard_hero.svg",
+    image: "/images/orbis.svg",
     technologies: ["Next.js", "React", "TypeScript", "Tailwind", "Socket.IO", "IA"],
     site: "https://orbis-3td.com.br",
     repository: "https://github.com/Henrique-Fiorotti/orbis",
