@@ -7,7 +7,6 @@ const DEFAULT_POSITION = {
   x: 0,
   y: 0
 };
-const MIN_VISIBLE_TITLEBAR = 72;
 const TOUCH_HOLD_DELAY = 280;
 const TOUCH_MOVE_TOLERANCE = 12;
 let nextWindowLayer = 1;
@@ -59,10 +58,16 @@ export function Window({
     }
     setPosition(nextPosition);
   };
-  const constrainPosition = (nextPosition, origin, windowRect, titleBarHeight) => ({
-    x: clamp(nextPosition.x, origin.x + MIN_VISIBLE_TITLEBAR - windowRect.right, origin.x + window.innerWidth - MIN_VISIBLE_TITLEBAR - windowRect.left),
-    y: clamp(nextPosition.y, origin.y + MIN_VISIBLE_TITLEBAR - (windowRect.top + titleBarHeight), origin.y + window.innerHeight - MIN_VISIBLE_TITLEBAR - windowRect.top)
-  });
+  const constrainPosition = (nextPosition, origin, windowRect) => {
+    const viewportWidth = document.documentElement.clientWidth;
+    const viewportHeight = document.documentElement.clientHeight;
+    const horizontalBounds = [origin.x - windowRect.left, origin.x + viewportWidth - windowRect.right];
+    const verticalBounds = [origin.y - windowRect.top, origin.y + viewportHeight - windowRect.bottom];
+    return {
+      x: clamp(nextPosition.x, Math.min(...horizontalBounds), Math.max(...horizontalBounds)),
+      y: clamp(nextPosition.y, Math.min(...verticalBounds), Math.max(...verticalBounds))
+    };
+  };
   const clearTouchTimer = () => {
     if (touchTimer.current !== null) {
       window.clearTimeout(touchTimer.current);
@@ -80,8 +85,7 @@ export function Window({
       clientX,
       clientY,
       origin: positionRef.current,
-      windowRect: windowElement.getBoundingClientRect(),
-      titleBarHeight: titleBar.getBoundingClientRect().height
+      windowRect: windowElement.getBoundingClientRect()
     };
     bringToFront();
     setIsDragging(true);
@@ -152,7 +156,7 @@ export function Window({
       const titleBar = titleBarRef.current;
       if (!windowElement || !titleBar) return;
       const currentPosition = positionRef.current;
-      const constrained = constrainPosition(currentPosition, currentPosition, windowElement.getBoundingClientRect(), titleBar.getBoundingClientRect().height);
+      const constrained = constrainPosition(currentPosition, currentPosition, windowElement.getBoundingClientRect());
       if (constrained.x !== currentPosition.x || constrained.y !== currentPosition.y) {
         commitPosition(constrained);
       }
@@ -198,7 +202,7 @@ export function Window({
     const nextPosition = constrainPosition({
       x: start.origin.x + event.clientX - start.clientX,
       y: start.origin.y + event.clientY - start.clientY
-    }, start.origin, start.windowRect, start.titleBarHeight);
+    }, start.origin, start.windowRect);
     queuePosition(nextPosition);
   };
   const finishDragging = event => {
@@ -209,7 +213,7 @@ export function Window({
     if (event.currentTarget.hasPointerCapture(event.pointerId)) {
       event.currentTarget.releasePointerCapture(event.pointerId);
     }
-    const finalPosition = constrainPosition(positionRef.current, start.origin, start.windowRect, start.titleBarHeight);
+    const finalPosition = constrainPosition(positionRef.current, start.origin, start.windowRect);
     commitPosition(finalPosition);
     dragStart.current = null;
     setIsDragging(false);
@@ -224,7 +228,7 @@ export function Window({
     commitPosition(constrainPosition({
       x: currentPosition.x + x,
       y: currentPosition.y + y
-    }, currentPosition, windowElement.getBoundingClientRect(), titleBar.getBoundingClientRect().height));
+    }, currentPosition, windowElement.getBoundingClientRect()));
   };
   const handleKeyDown = event => {
     if (!interactive) return;

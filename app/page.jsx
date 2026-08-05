@@ -11,10 +11,10 @@ export default function Home() {
       <header className="siteHeader container">
         <a className="brand" href="#top">HF<span>.</span></a>
         <div className="siteHeaderActions">
-        <nav aria-label="Navegação principal">
-          <a href="#sobre">Sobre</a>
-          <a href="#projetos">Projetos</a>
-          <a href="/curriculo">Currículo</a>
+        <nav className="siteHeaderNav" aria-label="Navegação principal">
+          <a className="navLink" href="#sobre">Sobre</a>
+          <a className="navLink" href="#projetos">Projetos</a>
+          <a className="navLink" href="/curriculo">Currículo</a>
         </nav>
         <WindowLayoutControls />
         </div>
