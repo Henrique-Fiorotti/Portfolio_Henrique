@@ -1,3 +1,8 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import { gsap } from "gsap";
+import { TextPlugin } from "gsap/TextPlugin";
 import { Footer } from "@/components/Footer";
 import { CasinoProjectButton } from "@/components/CasinoProjectButton";
 import { ProjectCard } from "@/components/ProjectCard";
@@ -5,9 +10,86 @@ import { SkillPill } from "@/components/SkillPill";
 import { WindowLayoutControls, WindowLayoutProvider } from "@/components/WindowLayout";
 import { Window } from "@/components/Window";
 import { profile, projects, skills, tools } from "@/data/portfolio";
+
 export default function Home() {
+  const [isLoading, setIsLoading] = useState(true);
+  const loaderRef = useRef(null);
+  const loaderBrandRef = useRef(null);
+  const loaderNameRef = useRef(null);
+
+  useEffect(() => {
+    gsap.registerPlugin(TextPlugin);
+
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({
+        defaults: { ease: "power3.inOut" },
+        onComplete: () => setIsLoading(false)
+      });
+
+      tl.set(loaderBrandRef.current, {
+        left: "max(20px, calc((100vw - 1180px) / 2))",
+        top: "25px",
+        xPercent: 0,
+        yPercent: 0,
+        opacity: 0,
+        scale: 0.8
+      });
+
+      tl.set(loaderNameRef.current, {
+        left: "50%",
+        top: "50%",
+        xPercent: -50,
+        yPercent: -50,
+        opacity: 1,
+        scale: 1,
+        text: "Henrique <span class='loaderAccent'>Fiorotti</span>"
+      });
+
+      tl.to(loaderNameRef.current, {
+        duration: 1.25,
+        scale: 1,
+        opacity: 0.96,
+        filter: "blur(0.1px)"
+      });
+
+      tl.to(loaderNameRef.current, {
+        duration: 0.9,
+        text: "<span class='loaderAccent'>H</span>F.",
+        ease: "power3.out",
+        onComplete: () => {
+          gsap.to(loaderBrandRef.current, {
+            duration: 0.7,
+            opacity: 1,
+            scale: 1,
+            ease: "power2.out"
+          });
+        }
+      }, "+=0.1");
+
+      tl.to(loaderNameRef.current, {
+        duration: 0.7,
+        opacity: 0,
+        scale: 0.2,
+        ease: "power2.inOut"
+      }, "+=0.3");
+
+      tl.to(loaderRef.current, {
+        duration: 0.7,
+        autoAlpha: 0,
+        ease: "power2.inOut",
+        pointerEvents: "none"
+      }, "+=0.2");
+    });
+
+    return () => ctx.revert();
+  }, []);
+
   return <WindowLayoutProvider>
-    <main>
+    <div ref={loaderRef} className={`loaderOverlay ${isLoading ? "isVisible" : "isHidden"}`} aria-live="polite" aria-label="Carregando portfólio">
+      <span ref={loaderBrandRef} className="loaderBrand">HF<span>.</span></span>
+      <span ref={loaderNameRef} className="loaderName">Henrique Fiorotti</span>
+    </div>
+    <main className={isLoading ? "siteContent isLoading" : "siteContent"}>
       <header className="siteHeader container">
         <a className="brand" href="#top">HF<span>.</span></a>
         <div className="siteHeaderActions">
@@ -34,7 +116,7 @@ export default function Home() {
               <div className="heroActions">
                 <CasinoProjectButton />
                 <a className="button secondary" href={`mailto:${profile.email}`}>Entrar em contato</a>
-                <a className="button secondary resumeDownloadButton" href="/curriculo-henrique-fiorotti.pdf" download="curriculo-henrique-fiorotti.pdf" aria-label="Baixar currÃ­culo PDF" data-tooltip="Baixar currÃ­culo PDF">
+                <a className="button secondary resumeDownloadButton" href="/curriculo-henrique-fiorotti.pdf" download="curriculo-henrique-fiorotti.pdf" aria-label="Baixar currículo PDF" data-tooltip="Baixar currí­culo PDF">
                   <svg viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M12 3v12m0 0 4-4m-4 4-4-4M5 19h14" />
                   </svg>

@@ -60,12 +60,10 @@ export function Window({
   };
   const constrainPosition = (nextPosition, origin, windowRect) => {
     const viewportWidth = document.documentElement.clientWidth;
-    const viewportHeight = document.documentElement.clientHeight;
     const horizontalBounds = [origin.x - windowRect.left, origin.x + viewportWidth - windowRect.right];
-    const verticalBounds = [origin.y - windowRect.top, origin.y + viewportHeight - windowRect.bottom];
     return {
       x: clamp(nextPosition.x, Math.min(...horizontalBounds), Math.max(...horizontalBounds)),
-      y: clamp(nextPosition.y, Math.min(...verticalBounds), Math.max(...verticalBounds))
+      y: nextPosition.y
     };
   };
   const clearTouchTimer = () => {
@@ -157,7 +155,7 @@ export function Window({
       if (!windowElement || !titleBar) return;
       const currentPosition = positionRef.current;
       const constrained = constrainPosition(currentPosition, currentPosition, windowElement.getBoundingClientRect());
-      if (constrained.x !== currentPosition.x || constrained.y !== currentPosition.y) {
+      if (constrained.x !== currentPosition.x) {
         commitPosition(constrained);
       }
     };
