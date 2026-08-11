@@ -913,6 +913,17 @@ button {
   letter-spacing: -.04em
 }
 
+.animatedAboutWord {
+  display: inline-block;
+  margin-right: .24em;
+  transform-origin: center bottom;
+  will-change: transform, opacity, filter, color;
+}
+
+.animatedAboutWord:last-child {
+  margin-right: 0;
+}
+
 .aboutGrid>p {
   margin: 0;
   color: var(--portfolio-muted);

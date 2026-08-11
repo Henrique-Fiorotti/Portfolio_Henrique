@@ -112,7 +112,6 @@ export function ContactModal() {
             </button>
           </header>
           <div className="contactModalBody">
-            <p>Escolha o canal que for melhor para você.</p>
             <div className="contactJson" aria-label="Opções de contato em formato JSON">
               <div className="contactJsonBrace">&#123;</div>
               {contacts.map(({ key, value, href, external }, index) => <div className="contactJsonLine" key={key}>

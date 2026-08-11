@@ -5,6 +5,7 @@ import { gsap } from "gsap";
 import { Footer } from "@/components/Footer";
 import { CasinoProjectButton } from "@/components/CasinoProjectButton";
 import { ContactModal } from "@/components/ContactModal";
+import { AnimatedAboutTitle } from "@/components/AnimatedAboutTitle";
 import { ProjectCard } from "@/components/ProjectCard";
 import { SkillPill } from "@/components/SkillPill";
 import { WindowLayoutControls, WindowLayoutProvider } from "@/components/WindowLayout";
@@ -176,7 +177,7 @@ export default function Home() {
           <div className="aboutGrid">
             <div>
               <p className="eyebrow">Perfil</p>
-              <h2>Curiosidade, código e atenção aos detalhes.</h2>
+              <AnimatedAboutTitle />
             </div>
             <p>{profile.about}</p>
           </div>
