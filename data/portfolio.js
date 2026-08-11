@@ -1,6 +1,8 @@
 export const profile = {
   name: "Henrique Fiorotti",
   email: "hberdoldifiorotti@gmail.com",
+  phone: "(11) 91001-5575",
+  phoneHref: "tel:+5511910015575",
   github: "https://github.com/Henrique-Fiorotti",
   linkedin: "https://www.linkedin.com/in/henrique-berdoldi-fiorotti-4594bb291/",
   about: "Sou estudante de Técnico em Desenvolvimento de Sistemas pelo SENAI e atuo na automação de rotinas com Python e JavaScript. Desenvolvo soluções front-end e back-end, sempre buscando unir uma boa experiência visual a código organizado."

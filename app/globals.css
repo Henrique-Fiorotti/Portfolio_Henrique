@@ -9,10 +9,32 @@
   --ink: #17151d;
   --portfolio-muted: #696570;
   --blue: #004aad;
+  --action-blue: #004aad;
   --lavender: #eeeaff;
   --panel: #fff;
   --line: #24212b;
   --shadow: 8px 8px 0 #24212b;
+  --loader-background: rgba(238, 234, 255, .96);
+  --nav-link-background: rgba(255, 255, 255, .62);
+  --glass-background: rgba(238, 234, 255, .82);
+  --glass-border: rgba(36, 33, 43, .14);
+  --glass-shadow: 0 5px 18px rgba(36, 33, 43, .08);
+  --window-bar: #dad3f4;
+  --button-surface: #fff;
+  --divider: #dad7df;
+  --pill-border: #cbc6d3;
+  --pill-background: #faf9fc;
+  --media-background: #ece8f1;
+  --footer-background: #17151d;
+  --footer-foreground: #fff;
+  --footer-accent: #9ec7ff;
+  --footer-link: #bcd6ff;
+  --resume-page-background: #e9e7ed;
+  --resume-background: #fff;
+  --resume-text: #4e4b54;
+  --resume-shadow: 0 12px 45px #24212b25;
+  --tooltip-background: #17151d;
+  --tooltip-foreground: #fff;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
@@ -47,6 +69,43 @@
   --sidebar-ring: oklch(0.708 0 0);
 }
 
+:root[data-theme="dark"] {
+  --ink: #f4f1fb;
+  --portfolio-muted: #b4adbf;
+  --blue: #73aaff;
+  --action-blue: #2f72c6;
+  --lavender: #0f0e16;
+  --panel: #1a1823;
+  --line: #8d869b;
+  --shadow: 8px 8px 0 #050409;
+  --loader-background: rgba(15, 14, 22, .97);
+  --nav-link-background: rgba(36, 32, 48, .78);
+  --glass-background: rgba(26, 24, 35, .84);
+  --glass-border: rgba(222, 216, 235, .2);
+  --glass-shadow: 0 7px 24px rgba(0, 0, 0, .3);
+  --window-bar: #2b2738;
+  --button-surface: #24212f;
+  --divider: #3d3849;
+  --pill-border: #554f61;
+  --pill-background: #24212e;
+  --media-background: #24212e;
+  --footer-background: #09080e;
+  --footer-foreground: #f7f4ff;
+  --footer-accent: #91bdff;
+  --footer-link: #b9d3ff;
+  --resume-page-background: #100f17;
+  --resume-background: #1a1823;
+  --resume-text: #c6bfce;
+  --resume-shadow: 0 14px 50px rgba(0, 0, 0, .42);
+  --tooltip-background: #f4f1fb;
+  --tooltip-foreground: #17151d;
+  --background: oklch(0.145 0.015 285);
+  --foreground: oklch(0.96 0.01 285);
+  --card: oklch(0.2 0.015 285);
+  --card-foreground: oklch(0.96 0.01 285);
+  --border: oklch(0.7 0.02 285 / 35%);
+}
+
 * {
   box-sizing: border-box;
 }
@@ -60,6 +119,7 @@ body {
   color: var(--ink);
   background: var(--lavender);
   font-family: 'DM Sans', sans-serif;
+  transition: color .3s ease, background-color .3s ease;
 }
 
 .siteContent {
@@ -78,17 +138,17 @@ body {
   z-index: 2147483647;
   display: grid;
   place-items: center;
-  background: rgba(238, 234, 255, 0.96);
+  background: var(--loader-background);
   backdrop-filter: blur(10px);
   overflow: hidden;
-  pointer-events: none;
+  pointer-events: auto;
+  transition: background-color .3s ease;
 }
 
 .loaderOverlay.isHidden {
   display: none;
 }
 
-.loaderBrand,
 .loaderName {
   position: absolute;
   left: 50%;
@@ -99,23 +159,34 @@ body {
   white-space: nowrap;
 }
 
-.loaderBrand {
-  font-size: clamp(5rem, 13vw, 10rem);
-  font-weight: 700;
+.loaderName {
+  font-size: clamp(1.8rem, 5vw, 4rem);
+  font-weight: 600;
   color: var(--ink);
-  z-index: 2;
+  opacity: 0;
+  text-align: center;
 }
 
-.loaderBrand span {
+.loaderLetter {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  white-space: pre;
+  will-change: width, transform, opacity, filter;
+}
+
+.loaderAccent,
+.loaderDot {
   color: var(--blue);
 }
 
-.loaderName {
-  font-size: clamp(2.1rem, 4vw, 4rem);
-  font-weight: 600;
-  color: var(--ink);
-  opacity: 1;
-  text-align: center;
+.loaderDot {
+  display: inline-block;
+  width: 0;
+  overflow: hidden;
+  opacity: 0;
+  transform: scale(0);
+  transform-origin: left bottom;
 }
 
 .animatedCodeBackground {
@@ -136,7 +207,7 @@ body {
 
   justify-content: center;
 
-  background-color: #ffffff9d;
+  background-color: var(--nav-link-background);
   border-radius: 30px;
   padding: 10px;
   opacity: 60%;
@@ -204,10 +275,10 @@ button {
   display: flex;
   gap: 30px;
   padding: 12px 18px;
-  border: 1px solid rgba(36, 33, 43, .14);
+  border: 1px solid var(--glass-border);
   border-radius: 999px;
-  background: rgba(231, 231, 231, 0.301);
-  box-shadow: 0 5px 18px rgba(36, 33, 43, .08);
+  background: var(--glass-background);
+  box-shadow: var(--glass-shadow);
   backdrop-filter: blur(12px);
   transform: translateX(-50%);
   font: 600 14px 'Roboto Mono';
@@ -229,14 +300,16 @@ button {
   z-index: 2147483647;
   top: 20px;
   right: max(20px, calc((100vw - 1180px)/2));
-  width: 44px;
+  width: auto;
   height: 44px;
-  display: grid;
-  place-items: center;
-  border: 1px solid rgba(36, 33, 43, .14);
-  border-radius: 50%;
-  background: rgba(238, 234, 255, .82);
-  box-shadow: 0 5px 18px rgba(36, 33, 43, .08);
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 5px;
+  border: 1px solid var(--glass-border);
+  border-radius: 999px;
+  background: var(--glass-background);
+  box-shadow: var(--glass-shadow);
   backdrop-filter: blur(12px)
 }
 
@@ -281,8 +354,8 @@ button {
   padding: 7px 9px;
   border: 1px solid var(--line);
   border-radius: 4px;
-  background: var(--ink);
-  color: #fff;
+  background: var(--tooltip-background);
+  color: var(--tooltip-foreground);
   font: 600 11px 'Roboto Mono';
   opacity: 0;
   pointer-events: none;
@@ -308,6 +381,7 @@ button {
   transform: translate(var(--window-x, 0), var(--window-y, 0)) translate(var(--window-animation-x, 0), var(--window-animation-y, 0)) scale(var(--window-animation-scale-x, 1), var(--window-animation-scale-y, 1));
   transform-origin: top left;
   will-change: transform;
+  transition: background-color .3s ease, border-color .3s ease, box-shadow .3s ease;
 }
 
 .windowBar {
@@ -320,10 +394,11 @@ button {
   justify-content: space-between;
   border-radius: 8px 8px 0 0;
   border-bottom: 2px solid var(--line);
-  background: #dad3f4;
+  background: var(--window-bar);
   cursor: grab;
   touch-action: pan-y;
   user-select: none;
+  transition: background-color .3s ease, border-color .3s ease;
 }
 
 .windowBody {
@@ -471,7 +546,7 @@ button {
   height: 190px;
   border: 2px solid var(--line);
   transform: rotate(12deg);
-  background: #e6e0ff;
+  background: var(--window-bar);
 }
 
 .portraitSquare.one {
@@ -553,11 +628,11 @@ button {
 
 .button.primary {
   color: white;
-  background: var(--blue);
+  background: var(--action-blue);
 }
 
 .button.secondary {
-  background: white
+  background: var(--button-surface)
 }
 
 .resumeDownloadButton {
@@ -587,8 +662,8 @@ button {
   padding: 7px 9px;
   border: 1px solid var(--line);
   border-radius: 4px;
-  background: var(--ink);
-  color: #fff;
+  background: var(--tooltip-background);
+  color: var(--tooltip-foreground);
   font: 600 11px 'Roboto Mono';
   opacity: 0;
   pointer-events: none;
@@ -600,6 +675,165 @@ button {
 .resumeDownloadButton:focus-visible::after {
   opacity: 1;
   transform: translate(-50%, 0)
+}
+
+.contactDialog {
+  position: fixed;
+  inset: 0;
+  width: min(680px, calc(100% - 28px));
+  max-width: none;
+  max-height: calc(100dvh - 28px);
+  margin: auto;
+  padding: 0;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--ink);
+  font-family: inherit;
+  overflow: visible;
+}
+
+.contactDialog::backdrop {
+  background: rgba(8, 7, 12, .65);
+  backdrop-filter: blur(7px);
+}
+
+.contactModal {
+  overflow: hidden;
+  border: 2px solid var(--line);
+  border-radius: 11px;
+  background: var(--panel);
+  box-shadow: 10px 10px 0 color-mix(in srgb, var(--line) 80%, transparent);
+}
+
+.contactModalHeader {
+  min-height: 92px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 18px 22px;
+  border-bottom: 2px solid var(--line);
+  background: var(--window-bar);
+}
+
+.contactModalEyebrow {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--blue);
+  font: 700 11px 'Roboto Mono';
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.contactModalHeader h2 {
+  margin: 0;
+  font-size: clamp(25px, 4vw, 34px);
+  line-height: 1;
+  letter-spacing: -.035em;
+}
+
+.contactModalClose {
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1.5px solid var(--line);
+  border-radius: 50%;
+  background: var(--button-surface);
+  color: var(--ink);
+  cursor: pointer;
+  transition: color .18s ease, background-color .18s ease, transform .18s ease;
+}
+
+.contactModalClose svg {
+  width: 18px;
+  height: 18px;
+}
+
+.contactModalClose:hover,
+.contactModalClose:focus-visible {
+  color: var(--blue);
+  outline: none;
+  transform: rotate(8deg) scale(1.06);
+}
+
+.contactModalBody {
+  padding: clamp(22px, 5vw, 38px);
+}
+
+.contactModalBody > p {
+  margin: 0 0 22px;
+  color: var(--portfolio-muted);
+  font-size: 16px;
+}
+
+.contactJson {
+  overflow-x: auto;
+  padding: 22px 24px;
+  border: 1.5px solid #373344;
+  border-radius: 8px;
+  background: #111019;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .05);
+  color: #d8d3e2;
+  font: 600 clamp(12px, 2vw, 15px)/1.9 'Roboto Mono';
+  scrollbar-color: #504a60 transparent;
+}
+
+.contactJsonBrace {
+  color: #d8d3e2;
+}
+
+.contactJsonLine {
+  min-width: max-content;
+  padding-left: 24px;
+  border-radius: 4px;
+  transition: background-color .16s ease;
+}
+
+.contactJsonLine:hover {
+  background: rgba(255, 255, 255, .045);
+}
+
+.contactJsonKey {
+  color: #86b7ff;
+}
+
+.contactJsonPunctuation {
+  color: #aaa3b8;
+}
+
+.contactJsonValue {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: #a8dc8c;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 4px;
+  transition: color .16s ease, text-decoration-color .16s ease;
+}
+
+.contactJsonValue svg {
+  width: 14px;
+  height: 14px;
+  opacity: .55;
+  transition: opacity .16s ease, transform .16s ease;
+}
+
+.contactJsonValue:hover,
+.contactJsonValue:focus-visible {
+  color: #c3f3a9;
+  text-decoration-color: currentColor;
+  outline: none;
+}
+
+.contactJsonValue:hover svg,
+.contactJsonValue:focus-visible svg {
+  opacity: 1;
+  transform: translate(2px, -2px);
 }
 
 .casinoButton {
@@ -667,7 +901,7 @@ button {
   display: grid;
   grid-template-columns: .9fr 1.1fr;
   gap: 60px;
-  border-bottom: 1px solid #dad7df;
+  border-bottom: 1px solid var(--divider);
 }
 
 .aboutGrid h2,
@@ -711,10 +945,15 @@ button {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  border: 1.5px solid #cbc6d3;
+  border: 1.5px solid var(--pill-border);
   border-radius: 4px;
-  background: #faf9fc;
+  background: var(--pill-background);
   font: 600 12px 'Roboto Mono';
+  transition: color .3s ease, background-color .3s ease, border-color .3s ease;
+}
+
+:root[data-theme="dark"] .skillPill img[src*="github-icon"] {
+  filter: invert(1);
 }
 
 .skillPill img {
@@ -762,7 +1001,7 @@ button {
   overflow: hidden;
   aspect-ratio: 16/10;
   border-bottom: 2px solid var(--line);
-  background: #ece8f1;
+  background: var(--media-background);
 }
 
 .projectMedia img,
@@ -891,18 +1130,19 @@ button {
   display: grid;
   grid-template-columns: 2fr 1fr;
   gap: 70px;
-  background: #17151d;
-  color: white;
+  background: var(--footer-background);
+  color: var(--footer-foreground);
+  transition: color .3s ease, background-color .3s ease;
 }
 
 .footerContent .eyebrow {
-  color: #9ec7ff
+  color: var(--footer-accent)
 }
 
 .footerEmail {
   display: inline-block;
   margin-top: 25px;
-  color: #bcd6ff;
+  color: var(--footer-link);
   font: 500 clamp(14px, 2vw, 20px) 'Roboto Mono';
   word-break: break-all
 }
@@ -916,7 +1156,7 @@ button {
 }
 
 .footerLinks a:hover {
-  color: #9ec7ff
+  color: var(--footer-accent)
 }
 
 .copyright {
@@ -929,7 +1169,8 @@ button {
 .resumePage {
   min-height: 100vh;
   padding: 45px 20px;
-  background: #e9e7ed
+  background: var(--resume-page-background);
+  transition: color .3s ease, background-color .3s ease;
 }
 
 .resumeToolbar,
@@ -953,8 +1194,9 @@ button {
 
 .resume {
   padding: clamp(30px, 7vw, 75px);
-  background: white;
-  box-shadow: 0 12px 45px #24212b25
+  background: var(--resume-background);
+  box-shadow: var(--resume-shadow);
+  transition: color .3s ease, background-color .3s ease, box-shadow .3s ease;
 }
 
 .resumeHeader {
@@ -1006,7 +1248,7 @@ button {
 .resumeSection p,
 .resumeSection li {
   line-height: 1.65;
-  color: #4e4b54
+  color: var(--resume-text)
 }
 
 .resumeSection ul {
@@ -1109,7 +1351,7 @@ button {
   .windowLayoutControls {
     top: 14px;
     right: 12px;
-    width: 40px;
+    width: auto;
     height: 40px
   }
 
@@ -1160,6 +1402,24 @@ button {
 
   .heroActions .button {
     width: 100%
+  }
+
+  .contactDialog {
+    width: calc(100% - 24px);
+  }
+
+  .contactModalHeader {
+    min-height: 78px;
+    padding: 15px 17px;
+  }
+
+  .contactJson {
+    padding: 17px 15px;
+    font-size: 11px;
+  }
+
+  .contactJsonLine {
+    padding-left: 14px;
   }
 
   .aboutSection,
@@ -1241,6 +1501,23 @@ button {
 }
 
 @media print {
+  :root {
+    --ink: #17151d;
+    --blue: #004aad;
+    --resume-background: #fff;
+    --resume-text: #4e4b54;
+  }
+
+  body {
+    color: #17151d;
+    background: #fff;
+  }
+
+  .themeToggle,
+  .animatedCodeBackground {
+    display: none;
+  }
+
   .resumePage {
     padding: 0;
     background: white

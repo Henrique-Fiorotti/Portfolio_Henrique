@@ -1,5 +1,18 @@
 import { AnimatedCodeBackground } from "@/components/AnimatedCodeBackground";
 import "./globals.css";
+
+const themeScript = `
+  (function () {
+    try {
+      var savedTheme = localStorage.getItem("portfolio-theme");
+      var theme = savedTheme || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      document.documentElement.classList.toggle("dark", theme === "dark");
+      document.documentElement.dataset.theme = theme;
+      document.documentElement.style.colorScheme = theme;
+    } catch (error) {}
+  })();
+`;
+
 export const metadata = {
   title: "Henrique Fiorotti | Desenvolvedor",
   description: "Portfólio de Henrique Fiorotti, desenvolvedor de sistemas com projetos em front-end, back-end e automação.",
@@ -15,7 +28,8 @@ export const viewport = {
 export default function RootLayout({
   children
 }) {
-  return <html lang="pt-BR">
+  return <html lang="pt-BR" suppressHydrationWarning>
+      <head><script dangerouslySetInnerHTML={{ __html: themeScript }} /></head>
       <body>
         <AnimatedCodeBackground />
         {children}

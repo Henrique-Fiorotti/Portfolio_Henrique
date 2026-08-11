@@ -2,6 +2,7 @@
 
 import { createContext, useCallback, useContext, useRef } from "react";
 import { RotateCcw } from "lucide-react";
+import { ThemeToggle } from "./ThemeToggle";
 const WindowLayoutContext = createContext(null);
 export function WindowLayoutProvider({
   children
@@ -32,7 +33,8 @@ export function WindowLayoutControls() {
   const {
     resetLayout
   } = useWindowLayout();
-  return <div className="windowLayoutControls" aria-label="Controles de layout das janelas">
+  return <div className="windowLayoutControls" aria-label="Controles do site">
+      <ThemeToggle />
       <button type="button" className="windowLayoutControl" aria-label="Restaurar layout das janelas" data-tooltip="Restaurar layout" onClick={resetLayout}>
         
         <RotateCcw aria-hidden="true" />

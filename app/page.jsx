@@ -2,96 +2,136 @@
 
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
-import { TextPlugin } from "gsap/TextPlugin";
 import { Footer } from "@/components/Footer";
 import { CasinoProjectButton } from "@/components/CasinoProjectButton";
+import { ContactModal } from "@/components/ContactModal";
 import { ProjectCard } from "@/components/ProjectCard";
 import { SkillPill } from "@/components/SkillPill";
 import { WindowLayoutControls, WindowLayoutProvider } from "@/components/WindowLayout";
 import { Window } from "@/components/Window";
 import { profile, projects, skills, tools } from "@/data/portfolio";
 
+const LOADER_NAME = "Henrique Fiorotti";
+const LOADER_INITIALS = new Set([0, LOADER_NAME.indexOf("F")]);
+
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const loaderRef = useRef(null);
-  const loaderBrandRef = useRef(null);
   const loaderNameRef = useRef(null);
+  const loaderLettersRef = useRef([]);
+  const loaderDotRef = useRef(null);
+  const contentRef = useRef(null);
+  const siteBrandRef = useRef(null);
 
   useEffect(() => {
-    gsap.registerPlugin(TextPlugin);
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const finishLoading = () => {
+      document.body.style.overflow = previousOverflow;
+      setIsLoading(false);
+    };
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      finishLoading();
+      return () => {
+        document.body.style.overflow = previousOverflow;
+      };
+    }
 
     const ctx = gsap.context(() => {
+      const letters = loaderLettersRef.current.filter(Boolean);
+      const removableLetters = letters
+        .filter((_, index) => !LOADER_INITIALS.has(index))
+        .reverse();
+      const logoRect = siteBrandRef.current.getBoundingClientRect();
+      const logoStyle = window.getComputedStyle(siteBrandRef.current);
       const tl = gsap.timeline({
         defaults: { ease: "power3.inOut" },
-        onComplete: () => setIsLoading(false)
+        onComplete: finishLoading
       });
 
-      tl.set(loaderBrandRef.current, {
-        left: "max(20px, calc((100vw - 1180px) / 2))",
-        top: "25px",
+      tl.set(loaderNameRef.current, { autoAlpha: 1 });
+      tl.fromTo(letters,
+        { autoAlpha: 0, y: 14, filter: "blur(5px)" },
+        {
+          duration: 0.24,
+          autoAlpha: 1,
+          y: 0,
+          filter: "blur(0px)",
+          stagger: 0.045,
+          ease: "power2.out"
+        }
+      );
+
+      tl.to(removableLetters, {
+        duration: 0.13,
+        autoAlpha: 0,
+        y: -8,
+        width: 0,
+        scaleX: 0,
+        stagger: 0.045,
+        ease: "power2.in"
+      }, "+=0.5");
+
+      tl.to(letters[LOADER_NAME.indexOf("F")], {
+        duration: 0.2,
+        color: "var(--ink)"
+      }, "<");
+
+      tl.to(loaderDotRef.current, {
+        duration: 0.28,
+        autoAlpha: 1,
+        width: "auto",
+        scale: 1,
+        ease: "back.out(2)"
+      });
+
+      tl.to(loaderNameRef.current, {
+        duration: 0.75,
+        left: logoRect.left,
+        top: logoRect.top,
         xPercent: 0,
         yPercent: 0,
-        opacity: 0,
-        scale: 0.8
-      });
-
-      tl.set(loaderNameRef.current, {
-        left: "50%",
-        top: "50%",
-        xPercent: -50,
-        yPercent: -50,
-        opacity: 1,
-        scale: 1,
-        text: "Henrique <span class='loaderAccent'>Fiorotti</span>"
-      });
-
-      tl.to(loaderNameRef.current, {
-        duration: 1.25,
-        scale: 1,
-        opacity: 0.96,
-        filter: "blur(0.1px)"
-      });
-
-      tl.to(loaderNameRef.current, {
-        duration: 0.9,
-        text: "<span class='loaderAccent'>H</span>F.",
-        ease: "power3.out",
-        onComplete: () => {
-          gsap.to(loaderBrandRef.current, {
-            duration: 0.7,
-            opacity: 1,
-            scale: 1,
-            ease: "power2.out"
-          });
-        }
-      }, "+=0.1");
-
-      tl.to(loaderNameRef.current, {
-        duration: 0.7,
-        opacity: 0,
-        scale: 0.2,
-        ease: "power2.inOut"
-      }, "+=0.3");
+        fontSize: logoStyle.fontSize,
+        fontWeight: logoStyle.fontWeight,
+        letterSpacing: logoStyle.letterSpacing,
+        ease: "power3.inOut"
+      }, "+=0.25");
 
       tl.to(loaderRef.current, {
-        duration: 0.7,
+        duration: 0.5,
         autoAlpha: 0,
-        ease: "power2.inOut",
-        pointerEvents: "none"
-      }, "+=0.2");
+        ease: "power2.inOut"
+      }, "+=0.4");
+
+      tl.to(contentRef.current, {
+        duration: 0.5,
+        opacity: 1,
+        ease: "power2.out"
+      }, "<");
     });
 
-    return () => ctx.revert();
+    return () => {
+      ctx.revert();
+      document.body.style.overflow = previousOverflow;
+    };
   }, []);
 
   return <WindowLayoutProvider>
-    <div ref={loaderRef} className={`loaderOverlay ${isLoading ? "isVisible" : "isHidden"}`} aria-live="polite" aria-label="Carregando portfólio">
-      <span ref={loaderBrandRef} className="loaderBrand">HF<span>.</span></span>
-      <span ref={loaderNameRef} className="loaderName">Henrique Fiorotti</span>
+    <div ref={loaderRef} className={`loaderOverlay ${isLoading ? "isVisible" : "isHidden"}`} role="status" aria-live="polite" aria-label="Carregando portfólio" aria-hidden={!isLoading}>
+      <span ref={loaderNameRef} className="loaderName" aria-hidden="true">
+        {LOADER_NAME.split("").map((letter, index) => <span
+          ref={node => { loaderLettersRef.current[index] = node; }}
+          className={`loaderLetter ${index >= LOADER_NAME.indexOf("F") ? "loaderAccent" : ""}`}
+          key={`${letter}-${index}`}
+        >{letter}</span>)}
+        <span ref={loaderDotRef} className="loaderDot">.</span>
+      </span>
     </div>
-    <main className={isLoading ? "siteContent isLoading" : "siteContent"}>
+    <main ref={contentRef} className={isLoading ? "siteContent isLoading" : "siteContent"} aria-busy={isLoading}>
       <header className="siteHeader container">
-        <a className="brand" href="#top">HF<span>.</span></a>
+        <a ref={siteBrandRef} className="brand" href="#top">HF<span>.</span></a>
         <div className="siteHeaderActions">
         <nav className="siteHeaderNav" aria-label="Navegação principal">
           <a className="navLink" href="#sobre">Sobre</a>
@@ -115,7 +155,7 @@ export default function Home() {
               <p className="heroText">Transformo ideias em interfaces responsivas, automações e aplicações web funcionais.</p>
               <div className="heroActions">
                 <CasinoProjectButton />
-                <a className="button secondary" href={`mailto:${profile.email}`}>Entrar em contato</a>
+                <ContactModal />
                 <a className="button secondary resumeDownloadButton" href="/curriculo-henrique-fiorotti.pdf" download="curriculo-henrique-fiorotti.pdf" aria-label="Baixar currículo PDF" data-tooltip="Baixar currí­culo PDF">
                   <svg viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M12 3v12m0 0 4-4m-4 4-4-4M5 19h14" />
