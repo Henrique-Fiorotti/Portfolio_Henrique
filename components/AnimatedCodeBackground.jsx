@@ -34,6 +34,7 @@ export function AnimatedCodeBackground() {
       return Math.exp(-(normalizedX * normalizedX + normalizedY * normalizedY) * 1.8);
     };
     const draw = time => {
+      const isDark = document.documentElement.classList.contains("dark");
       const seconds = time / 1000;
       const cellWidth = width < 640 ? 15 : 18;
       const cellHeight = width < 640 ? 17 : 20;
@@ -76,12 +77,16 @@ export function AnimatedCodeBackground() {
           if (influence > .13) {
             const symbol = influence > .68 ? "#" : influence > .43 ? seed > .48 ? "#" : "%" : seed > .55 ? "%" : "*";
             const alpha = .16 + influence * .47;
-            context.fillStyle = `rgba(0, 74, 173, ${alpha})`;
+            context.fillStyle = isDark
+              ? `rgba(115, 170, 255, ${alpha * .72})`
+              : `rgba(0, 74, 173, ${alpha})`;
             context.fillText(symbol, x, y);
           } else {
             const symbolIndex = Math.floor(seed * 3);
             const alpha = .1 + seed * .07;
-            context.fillStyle = `rgba(36, 33, 43, ${alpha})`;
+            context.fillStyle = isDark
+              ? `rgba(220, 214, 235, ${alpha * .62})`
+              : `rgba(36, 33, 43, ${alpha})`;
             context.fillText(SYMBOLS[symbolIndex], x, y);
           }
         }
@@ -105,13 +110,18 @@ export function AnimatedCodeBackground() {
       resize();
       if (motionPreference.matches) draw(0);
     };
+    const handleThemeChange = () => {
+      if (motionPreference.matches) draw(0);
+    };
     resize();
     start();
     window.addEventListener("resize", handleResize);
+    window.addEventListener("portfolio-theme-change", handleThemeChange);
     motionPreference.addEventListener("change", start);
     return () => {
       window.cancelAnimationFrame(animationFrame);
       window.removeEventListener("resize", handleResize);
+      window.removeEventListener("portfolio-theme-change", handleThemeChange);
       motionPreference.removeEventListener("change", start);
     };
   }, []);
