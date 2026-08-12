@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 const SYMBOLS = ["0", "1", "=", "*", "%", "#"];
-const FRAME_INTERVAL = 1000 / 30;
+const FRAME_INTERVAL = 1000 / 20;
 const hash = (column, row) => {
   const value = Math.sin(column * 12.9898 + row * 78.233) * 43758.5453;
   return value - Math.floor(value);
@@ -18,8 +18,10 @@ export function AnimatedCodeBackground() {
     let height = 0;
     let animationFrame = 0;
     let lastFrame = 0;
+    let scrollResumeTimer = 0;
+    let isScrolling = false;
     const resize = () => {
-      const pixelRatio = Math.min(window.devicePixelRatio || 1, 1.5);
+      const pixelRatio = 1;
       width = window.innerWidth;
       height = window.innerHeight;
       canvas.width = Math.round(width * pixelRatio);
@@ -94,6 +96,7 @@ export function AnimatedCodeBackground() {
     };
     const animate = time => {
       animationFrame = window.requestAnimationFrame(animate);
+      if (isScrolling || document.hidden) return;
       if (time - lastFrame < FRAME_INTERVAL) return;
       lastFrame = time;
       draw(time);
@@ -113,14 +116,25 @@ export function AnimatedCodeBackground() {
     const handleThemeChange = () => {
       if (motionPreference.matches) draw(0);
     };
+    const handleScroll = () => {
+      isScrolling = true;
+      window.clearTimeout(scrollResumeTimer);
+      scrollResumeTimer = window.setTimeout(() => {
+        isScrolling = false;
+        lastFrame = 0;
+      }, 140);
+    };
     resize();
     start();
     window.addEventListener("resize", handleResize);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     window.addEventListener("portfolio-theme-change", handleThemeChange);
     motionPreference.addEventListener("change", start);
     return () => {
       window.cancelAnimationFrame(animationFrame);
+      window.clearTimeout(scrollResumeTimer);
       window.removeEventListener("resize", handleResize);
+      window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("portfolio-theme-change", handleThemeChange);
       motionPreference.removeEventListener("change", start);
     };

@@ -1,4 +1,6 @@
 import { AnimatedCodeBackground } from "@/components/AnimatedCodeBackground";
+import { SmoothScroll } from "@/components/SmoothScroll";
+import "lenis/dist/lenis.css";
 import "./globals.css";
 
 const themeScript = `
@@ -31,6 +33,7 @@ export default function RootLayout({
   return <html lang="pt-BR" suppressHydrationWarning>
       <head><script dangerouslySetInnerHTML={{ __html: themeScript }} /></head>
       <body>
+        <SmoothScroll />
         <AnimatedCodeBackground />
         {children}
       </body>

@@ -38,7 +38,7 @@ export function ProjectsCarousel({ projects }) {
             end: () => `+=${getDistance()}`,
             pin: sticky,
             pinSpacing: true,
-            scrub: 1.35,
+            scrub: 0.5,
             anticipatePin: 1,
             invalidateOnRefresh: true,
             onUpdate: self => gsap.set(progress, { scaleX: self.progress })

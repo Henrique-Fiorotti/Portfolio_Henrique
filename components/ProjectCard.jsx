@@ -1,15 +1,26 @@
+"use client";
+
+import { useRef } from "react";
 import { SkillPill } from "./SkillPill";
 import { Window } from "./Window";
 export function ProjectCard({
   project
 }) {
+  const videoRef = useRef(null);
+  const playPreview = () => videoRef.current?.play().catch(() => {});
+  const pausePreview = () => {
+    if (!videoRef.current) return;
+    videoRef.current.pause();
+    videoRef.current.currentTime = 0;
+  };
+
   return <Window title={project.windowTitle} className="projectWindow" interactive={false}>
       <article className="projectCard" style={{
       "--accent": project.accent
     }}>
-        <a className="projectMedia" href={project.site ?? project.repository} target="_blank" rel="noreferrer" aria-label={`Abrir ${project.title}`}>
+        <a className="projectMedia" href={project.site ?? project.repository} target="_blank" rel="noreferrer" aria-label={`Abrir ${project.title}`} onPointerEnter={playPreview} onPointerLeave={pausePreview} onFocus={playPreview} onBlur={pausePreview}>
           <img src={project.image} alt={`Prévia do projeto ${project.title}`} />
-          {project.video && <video src={project.video} muted loop autoPlay playsInline aria-hidden="true" />}
+          {project.video && <video ref={videoRef} src={project.video} muted loop playsInline preload="metadata" aria-hidden="true" />}
         </a>
         <div className="projectContent">
           <div>
