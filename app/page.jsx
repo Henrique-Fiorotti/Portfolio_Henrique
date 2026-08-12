@@ -17,6 +17,7 @@ const LOADER_INITIALS = new Set([0, LOADER_NAME.indexOf("F")]);
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
+  const [isHeaderHidden, setIsHeaderHidden] = useState(false);
   const loaderRef = useRef(null);
   const loaderNameRef = useRef(null);
   const loaderLettersRef = useRef([]);
@@ -119,6 +120,35 @@ export default function Home() {
     };
   }, []);
 
+  useEffect(() => {
+    let previousScrollY = window.scrollY;
+    let frame = null;
+
+    const updateHeader = () => {
+      const currentScrollY = Math.max(0, window.scrollY);
+      const difference = currentScrollY - previousScrollY;
+
+      if (currentScrollY <= 24) {
+        setIsHeaderHidden(false);
+      } else if (Math.abs(difference) >= 6) {
+        setIsHeaderHidden(difference > 0);
+      }
+
+      previousScrollY = currentScrollY;
+      frame = null;
+    };
+
+    const handleScroll = () => {
+      if (frame === null) frame = window.requestAnimationFrame(updateHeader);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      if (frame !== null) window.cancelAnimationFrame(frame);
+    };
+  }, []);
+
   return <WindowLayoutProvider>
     <div ref={loaderRef} className={`loaderOverlay ${isLoading ? "isVisible" : "isHidden"}`} role="status" aria-live="polite" aria-label="Carregando portfólio" aria-hidden={!isLoading}>
       <span ref={loaderNameRef} className="loaderName" aria-hidden="true">
@@ -131,8 +161,14 @@ export default function Home() {
       </span>
     </div>
     <main ref={contentRef} className={isLoading ? "siteContent isLoading" : "siteContent"} aria-busy={isLoading}>
-      <header className="siteHeader container">
-        <a ref={siteBrandRef} className="brand" href="#top">HF<span>.</span></a>
+      <header className={`siteHeader container ${isHeaderHidden ? "isHidden" : ""}`} aria-hidden={isHeaderHidden}>
+        <a ref={siteBrandRef} className="brand" href="#top" aria-label="Henrique Fiorotti — voltar ao início">
+          <span className="brandInitial" aria-hidden="true">H</span>
+          <span className="brandExpansion brandExpansionFirst" aria-hidden="true">enrique&nbsp;</span>
+          <span className="brandInitial" aria-hidden="true">F</span>
+          <span className="brandExpansion brandExpansionLast" aria-hidden="true">iorotti</span>
+          <span className="brandDot" aria-hidden="true">.</span>
+        </a>
         <div className="siteHeaderActions">
         <nav className="siteHeaderNav" aria-label="Navegação principal">
           <a className="navLink" href="#sobre">Sobre</a>
@@ -143,7 +179,7 @@ export default function Home() {
         </div>
       </header>
 
-      <div id="top" className="container">
+      <div id="top" className="container mt-12">
         <Window title="Portfolio.exe" className="heroWindow" interactive={false}>
           <section className="hero">
             <div className="portrait" aria-hidden="true">

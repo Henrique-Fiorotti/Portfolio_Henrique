@@ -242,6 +242,7 @@ button {
 
 .siteHeader {
   --header-content-width: 1580px;
+  --header-control-center: 50px;
   width: min(var(--header-content-width), calc(100% - 32px));
   min-height: 93px;
   display: flex;
@@ -252,14 +253,53 @@ button {
 .brand {
   position: fixed;
   z-index: 2147483647;
-  top: 25px;
+  top: var(--header-control-center);
   left: max(16px, calc((100vw - var(--header-content-width))/2));
-  font: 700 27px 'Roboto Mono';
+  display: inline-flex;
+  align-items: baseline;
+  white-space: nowrap;
+  font: 700 24px 'Roboto Mono';
+  transform: translateY(-50%);
+  transition: opacity .28s ease, transform .38s cubic-bezier(.22, 1, .36, 1);
 }
 
-.brand span,
+.brandDot,
 .eyebrow {
   color: var(--blue);
+}
+
+.brandExpansion {
+  display: inline-block;
+  max-width: 0;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateX(-.18em);
+  transition: max-width 1s cubic-bezier(.22, 1, .36, 1), opacity .38s ease, transform .82s cubic-bezier(.22, 1, .36, 1);
+}
+
+.brand:hover .brandExpansion,
+.brand:focus-visible .brandExpansion {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.brand:hover .brandExpansionFirst,
+.brand:focus-visible .brandExpansionFirst {
+  max-width: 5em;
+}
+
+.brand:hover .brandExpansionLast,
+.brand:focus-visible .brandExpansionLast {
+  max-width: 4.5em;
+}
+
+.brandExpansionLast {
+  transition-delay: .06s, .08s, .06s;
+}
+
+.brand:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 5px;
 }
 
 .siteHeaderActions {
@@ -283,6 +323,7 @@ button {
   box-shadow: var(--glass-shadow);
   backdrop-filter: blur(12px);
   transform: translateX(-50%);
+  transition: opacity .28s ease, transform .38s cubic-bezier(.22, 1, .36, 1);
   font: 600 14px 'Roboto Mono';
 }
 
@@ -300,7 +341,7 @@ button {
 .windowLayoutControls {
   position: fixed;
   z-index: 2147483647;
-  top: 20px;
+  top: var(--header-control-center);
   right: max(16px, calc((100vw - var(--header-content-width))/2));
   width: auto;
   height: 44px;
@@ -312,7 +353,22 @@ button {
   border-radius: 999px;
   background: var(--glass-background);
   box-shadow: var(--glass-shadow);
-  backdrop-filter: blur(12px)
+  backdrop-filter: blur(12px);
+  transform: translateY(-50%);
+  transition: opacity .28s ease, transform .38s cubic-bezier(.22, 1, .36, 1)
+}
+
+.siteHeader.isHidden .brand,
+.siteHeader.isHidden .windowLayoutControls {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(calc(-50% - 72px));
+}
+
+.siteHeader.isHidden nav {
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -72px);
 }
 
 .windowLayoutControl {
@@ -1407,6 +1463,7 @@ button {
   }
 
   .siteHeader {
+    --header-control-center: 42px;
     min-height: 70px
   }
 
@@ -1423,13 +1480,13 @@ button {
   }
 
   .brand {
-    top: 21px;
+    top: var(--header-control-center);
     left: 12px;
-    font-size: 23px
+    font-size: 21px
   }
 
   .windowLayoutControls {
-    top: 14px;
+    top: var(--header-control-center);
     right: 12px;
     width: auto;
     height: 40px
