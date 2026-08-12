@@ -3,7 +3,7 @@ import { Window } from "./Window";
 export function ProjectCard({
   project
 }) {
-  return <Window title={project.windowTitle} className="projectWindow">
+  return <Window title={project.windowTitle} className="projectWindow" interactive={false}>
       <article className="projectCard" style={{
       "--accent": project.accent
     }}>

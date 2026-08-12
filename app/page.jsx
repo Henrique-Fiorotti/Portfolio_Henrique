@@ -6,7 +6,7 @@ import { Footer } from "@/components/Footer";
 import { CasinoProjectButton } from "@/components/CasinoProjectButton";
 import { ContactModal } from "@/components/ContactModal";
 import { AnimatedAboutTitle } from "@/components/AnimatedAboutTitle";
-import { ProjectCard } from "@/components/ProjectCard";
+import { ProjectsCarousel } from "@/components/ProjectsCarousel";
 import { SkillPill } from "@/components/SkillPill";
 import { WindowLayoutControls, WindowLayoutProvider } from "@/components/WindowLayout";
 import { Window } from "@/components/Window";
@@ -188,13 +188,7 @@ export default function Home() {
         </Window>
       </section>
 
-      <section id="projetos" className="container projectsSection">
-        <div className="sectionHeading">
-          <div><p className="eyebrow">Trabalhos selecionados</p><h2>Projetos</h2></div>
-          <p>Uma seleção de aplicações, experiências visuais e estudos de desenvolvimento.</p>
-        </div>
-        <div className="projectsGrid">{projects.map(project => <ProjectCard key={project.slug} project={project} />)}</div>
-      </section>
+      <ProjectsCarousel projects={projects} />
 
       <Footer />
     </main>
