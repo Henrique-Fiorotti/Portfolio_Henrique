@@ -321,7 +321,8 @@ button {
   border-radius: 999px;
   background: var(--glass-background);
   box-shadow: var(--glass-shadow);
-  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(28px) saturate(125%);
+  backdrop-filter: blur(28px) saturate(125%);
   transform: translateX(-50%);
   transition: opacity .28s ease, transform .38s cubic-bezier(.22, 1, .36, 1);
   font: 600 14px 'Roboto Mono';
@@ -353,7 +354,8 @@ button {
   border-radius: 999px;
   background: var(--glass-background);
   box-shadow: var(--glass-shadow);
-  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(28px) saturate(125%);
+  backdrop-filter: blur(28px) saturate(125%);
   transform: translateY(-50%);
   transition: opacity .28s ease, transform .38s cubic-bezier(.22, 1, .36, 1)
 }
