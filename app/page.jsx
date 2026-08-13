@@ -11,9 +11,11 @@ import { SkillPill } from "@/components/SkillPill";
 import { WindowLayoutControls, WindowLayoutProvider } from "@/components/WindowLayout";
 import { Window } from "@/components/Window";
 import { profile, projects, skills, tools } from "@/data/portfolio";
+import { resume } from "@/data/resume";
 
 const LOADER_NAME = "Henrique Fiorotti";
 const LOADER_INITIALS = new Set([0, LOADER_NAME.indexOf("F")]);
+const FEATURED_EXPERIENCE = resume.professionalExperience[0];
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
@@ -188,8 +190,8 @@ export default function Home() {
             <div className="heroContent">
               <p className="eyebrow">Opa, eu sou</p>
               <h1>Henrique<br /><span>Fiorotti</span></h1>
-              <p className="role">Desenvolvedor de sistemas & criador de experiências digitais</p>
-              <p className="heroText">Transformo ideias em interfaces responsivas, automações e aplicações web funcionais.</p>
+              <p className="role">Desenvolvedor de sistemas & profissional de suporte de TI</p>
+              <p className="heroText">Uno desenvolvimento web, suporte técnico e infraestrutura para criar soluções funcionais e resolver problemas reais.</p>
               <div className="heroActions">
                 <CasinoProjectButton />
                 <ContactModal />
@@ -218,8 +220,32 @@ export default function Home() {
             <p>{profile.about}</p>
           </div>
           <div className="skillColumns">
-            <div><h3>Hard skills</h3><div className="pillList">{skills.map(skill => <SkillPill key={skill} name={skill} />)}</div></div>
-            <div><h3>Ferramentas</h3><div className="pillList">{tools.map(tool => <SkillPill key={tool} name={tool} />)}</div></div>
+            <div><h3>Tecnologias</h3><div className="pillList">{skills.map(skill => <SkillPill key={skill} name={skill} />)}</div></div>
+            <div><h3>Ferramentas & TI corporativo</h3><div className="pillList">{tools.map(tool => <SkillPill key={tool} name={tool} />)}</div></div>
+          </div>
+        </Window>
+      </section>
+
+      <section className="container experienceSection" aria-labelledby="experience-title">
+        <Window title="experiencia.log" interactive={false}>
+          <div className="experienceContent">
+            <div className="experienceHeading">
+              <p className="eyebrow">Experiência profissional</p>
+              <h2 id="experience-title">Suporte que resolve.<br /><span>Desenvolvimento que evolui.</span></h2>
+            </div>
+            <article className="experienceRole">
+              <div className="experienceRoleMeta">
+                <span>{FEATURED_EXPERIENCE.period}</span>
+                <span>{FEATURED_EXPERIENCE.location}</span>
+              </div>
+              <h3>{FEATURED_EXPERIENCE.role}</h3>
+              <p className="experienceCompany">{FEATURED_EXPERIENCE.company}</p>
+              <p>{FEATURED_EXPERIENCE.summary}</p>
+              <ul>
+                {FEATURED_EXPERIENCE.details.slice(0, 3).map(detail => <li key={detail}>{detail}</li>)}
+              </ul>
+              <a className="experienceResumeLink" href="/curriculo">Ver currículo completo <span aria-hidden="true">→</span></a>
+            </article>
           </div>
         </Window>
       </section>

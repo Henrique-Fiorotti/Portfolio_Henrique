@@ -24,7 +24,6 @@ export function ProjectCard({
         </a>
         <div className="projectContent">
           <div>
-            <p className="eyebrow">Projeto em destaque</p>
             <h3>{project.title}</h3>
             <p className="projectSubtitle">{project.subtitle}</p>
             <p>{project.description}</p>

@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
@@ -950,6 +949,7 @@ button {
 }
 
 .aboutSection,
+.experienceSection,
 .footer {
   padding-top: 110px;
   scroll-margin-top: 30px;
@@ -1036,6 +1036,85 @@ button {
   object-fit: contain
 }
 
+.experienceContent {
+  padding: clamp(28px, 5vw, 60px);
+  display: grid;
+  grid-template-columns: .9fr 1.1fr;
+  gap: clamp(42px, 7vw, 86px);
+}
+
+.experienceHeading h2 {
+  margin: 0;
+  font-size: clamp(32px, 4vw, 52px);
+  line-height: 1.05;
+  letter-spacing: -.04em;
+}
+
+.experienceHeading h2 span {
+  color: var(--blue);
+}
+
+.experienceRole {
+  padding-left: clamp(22px, 3vw, 34px);
+  border-left: 3px solid var(--blue);
+}
+
+.experienceRoleMeta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px 20px;
+  color: var(--portfolio-muted);
+  font: 600 11px 'Roboto Mono';
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+
+.experienceRole h3 {
+  margin: 22px 0 5px;
+  font-size: clamp(26px, 3vw, 38px);
+  line-height: 1;
+}
+
+.experienceCompany {
+  margin: 0 0 20px;
+  color: var(--blue);
+  font: 600 14px 'Roboto Mono';
+}
+
+.experienceRole>p:not(.experienceCompany),
+.experienceRole li {
+  color: var(--portfolio-muted);
+  line-height: 1.65;
+}
+
+.experienceRole ul {
+  margin: 18px 0 0;
+  padding-left: 19px;
+}
+
+.experienceRole li+li {
+  margin-top: 8px;
+}
+
+.experienceResumeLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 24px;
+  color: var(--blue);
+  font: 700 13px 'Roboto Mono';
+}
+
+.experienceResumeLink span {
+  transition: transform .18s ease;
+}
+
+.experienceResumeLink:hover span,
+.experienceResumeLink:focus-visible span {
+  transform: translateX(4px);
+}
+
 .sectionHeading {
   margin-bottom: 36px;
   display: flex;
@@ -1057,6 +1136,10 @@ button {
 .projectWindow {
   height: 100%;
   box-shadow: 6px 6px 0 var(--line)
+}
+
+.projectWindow .windowBody {
+  height: calc(100% - 43px)
 }
 
 .projectsSection {
@@ -1132,6 +1215,7 @@ button {
 
 .projectCard {
   height: 100%;
+  min-height: 500px;
   display: grid;
   grid-template-columns: 1.12fr .88fr;
 }
@@ -1139,7 +1223,7 @@ button {
 .projectMedia {
   position: relative;
   overflow: hidden;
-  min-height: 500px;
+  height: 100%;
   border-right: 2px solid var(--line);
   background: var(--media-background);
 }
@@ -1147,6 +1231,8 @@ button {
 .projectMedia img,
 .projectMedia video {
   position: absolute;
+  inset: 0;
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -1384,10 +1470,62 @@ button {
   margin: 0 0 8px
 }
 
+.resumeItemHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.resumeItemHeader p {
+  margin: 0;
+  font: 600 12px 'Roboto Mono';
+}
+
+.resumeItemHeader>span {
+  flex: 0 0 auto;
+  color: var(--blue);
+  font: 600 11px 'Roboto Mono';
+  white-space: nowrap;
+}
+
+.resumeItem .resumeItemSummary {
+  margin: 13px 0;
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.resumeSkillGroups {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.resumeSkillGroup {
+  padding: 16px;
+  border: 1px solid var(--divider);
+  border-radius: 5px;
+  background: var(--resume-page-background);
+}
+
+.resumeSkillGroup h3 {
+  margin: 0 0 7px;
+  font: 700 12px 'Roboto Mono';
+}
+
+.resumeSkillGroup p {
+  margin: 0;
+  font-size: 13px;
+}
+
 .resumeColumns {
   display: grid;
   grid-template-columns: 1.4fr 1fr 1fr;
   gap: 30px
+}
+
+.resumeColumnsCompact {
+  grid-template-columns: 1.5fr .8fr;
 }
 
 @media (max-width:850px) {
@@ -1438,12 +1576,19 @@ button {
     scroll-snap-align: center;
   }
 
+  .projectWindow,
+  .projectWindow .windowBody {
+    height: auto;
+  }
+
   .projectCard {
+    min-height: 0;
     display: flex;
     flex-direction: column;
   }
 
   .projectMedia {
+    height: auto;
     min-height: 0;
     aspect-ratio: 16/10;
     border-right: 0;
@@ -1562,8 +1707,13 @@ button {
   }
 
   .aboutSection,
+  .experienceSection,
   .footer {
     padding-top: 75px
+  }
+
+  .experienceContent {
+    grid-template-columns: 1fr;
   }
 
   .skillColumns {
@@ -1618,6 +1768,19 @@ button {
 
   .resumeColumns {
     grid-template-columns: 1fr
+  }
+
+  .resumeItemHeader {
+    display: block;
+  }
+
+  .resumeItemHeader>span {
+    display: inline-block;
+    margin-top: 8px;
+  }
+
+  .resumeSkillGroups {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -1697,6 +1860,11 @@ button {
 
   .resumeSection {
     margin-top: 20px
+  }
+
+  .resumeItem,
+  .resumeSkillGroup {
+    break-inside: avoid;
   }
 }
 

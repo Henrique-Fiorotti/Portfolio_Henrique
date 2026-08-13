@@ -5,10 +5,10 @@ export const profile = {
   phoneHref: "tel:+5511910015575",
   github: "https://github.com/Henrique-Fiorotti",
   linkedin: "https://www.linkedin.com/in/henrique-berdoldi-fiorotti-4594bb291/",
-  about: "Sou estudante de Técnico em Desenvolvimento de Sistemas pelo SENAI e atuo na automação de rotinas com Python e JavaScript. Desenvolvo soluções front-end e back-end, sempre buscando unir uma boa experiência visual a código organizado."
+  about: "Sou Técnico em Desenvolvimento de Sistemas pelo SENAI, com experiência profissional em suporte a usuários, infraestrutura e sistemas corporativos. Também desenvolvo aplicações front-end e back-end, unindo resolução de problemas, boa experiência visual e código organizado."
 };
-export const skills = ["HTML", "CSS", "JavaScript", "Python", "PHP", "React", "Tailwind"];
-export const tools = ["GitHub", "VS Code", "MySQL", "Excel", "Canva", "Illustrator", "Photoshop"];
+export const skills = ["Next.js", "React", "JavaScript", "Node.js", "Python", "FastAPI", "APIs REST", "Tailwind", "SQL", "PostgreSQL"];
+export const tools = ["Git", "GitHub", "VS Code", "Swagger", "Prisma ORM", "TOTVS Protheus", "Pulsus", "UniFi"];
 export const projects = [{
   slug: "orbis",
   windowTitle: "Orbis.exe",
@@ -20,6 +20,28 @@ export const projects = [{
   site: "https://orbis-3td.com.br",
   repository: "https://github.com/Henrique-Fiorotti/orbis",
   accent: "#5e17eb"
+}, {
+  slug: "producplus",
+  windowTitle: "ProducPlus.exe",
+  title: "PRODUCPLUS",
+  subtitle: "Compra e gerenciamento de materiais industriais",
+  description: "Sistema colaborativo desenvolvido no SENAI para organizar a compra e o gerenciamento de materiais usados em linhas de produção, com arquitetura MVC, autenticação JWT e upload de imagens.",
+  image: "https://opengraph.githubassets.com/portfolio/EnzoPenido/ProducPlus",
+  technologies: ["HTML", "CSS", "JavaScript", "MVC", "JWT"],
+  site: "https://produc-plus.vercel.app",
+  repository: "https://github.com/EnzoPenido/ProducPlus",
+  accent: "#f28c28"
+}, {
+  slug: "hubit",
+  windowTitle: "HubIT.exe",
+  title: "HUBIT",
+  subtitle: "Empregos e portfólios para profissionais de TI",
+  description: "Plataforma colaborativa do SENAI que aproxima candidatos e empresas de tecnologia por meio de vagas, currículos e um feed de portfólios voltado à área de TI.",
+  image: "https://opengraph.githubassets.com/portfolio/gpc186/HubIT",
+  technologies: ["JavaScript", "HTML", "CSS", "Figma"],
+  site: "https://hub-it-one.vercel.app",
+  repository: "https://github.com/gpc186/HubIT",
+  accent: "#2f6d88"
 }, {
   slug: "identidade-cultura",
   windowTitle: "Cultura.exe",
