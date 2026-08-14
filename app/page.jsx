@@ -64,7 +64,8 @@ export default function Home() {
           y: 0,
           filter: "blur(0px)",
           stagger: 0.045,
-          ease: "power2.out"
+          ease: "power2.out",
+          force3D: true
         }
       );
 
@@ -75,7 +76,9 @@ export default function Home() {
         width: 0,
         scaleX: 0,
         stagger: 0.045,
-        ease: "power2.in"
+        ease: "power2.in",
+        force3D: true,
+        autoRound: false
       }, "+=0.5");
 
       tl.to(letters[LOADER_NAME.indexOf("F")], {
@@ -88,7 +91,8 @@ export default function Home() {
         autoAlpha: 1,
         width: "auto",
         scale: 1,
-        ease: "back.out(2)"
+        ease: "back.out(2)",
+        force3D: true
       });
 
       tl.to(loaderNameRef.current, {
@@ -100,13 +104,16 @@ export default function Home() {
         fontSize: logoStyle.fontSize,
         fontWeight: logoStyle.fontWeight,
         letterSpacing: logoStyle.letterSpacing,
-        ease: "power3.inOut"
+        ease: "power3.inOut",
+        force3D: true,
+        autoRound: false
       }, "+=0.25");
 
       tl.to(loaderRef.current, {
         duration: 0.5,
         autoAlpha: 0,
-        ease: "power2.inOut"
+        ease: "power2.inOut",
+        force3D: true
       }, "+=0.4");
 
       tl.to(contentRef.current, {

@@ -142,6 +142,10 @@ body {
   overflow: hidden;
   pointer-events: auto;
   transition: background-color .3s ease;
+  isolation: isolate;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  will-change: opacity;
 }
 
 .loaderOverlay.isHidden {
@@ -152,10 +156,12 @@ body {
   position: absolute;
   left: 50%;
   top: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate3d(-50%, -50%, 0);
   font-family: 'Roboto Mono', monospace;
   letter-spacing: -.05em;
   white-space: nowrap;
+  backface-visibility: hidden;
+  will-change: transform, left, top, font-size;
 }
 
 .loaderName {
@@ -171,6 +177,7 @@ body {
   overflow: hidden;
   vertical-align: bottom;
   white-space: pre;
+  backface-visibility: hidden;
   will-change: width, transform, opacity, filter;
 }
 
@@ -186,6 +193,7 @@ body {
   opacity: 0;
   transform: scale(0);
   transform-origin: left bottom;
+  will-change: transform, opacity;
 }
 
 .animatedCodeBackground {
