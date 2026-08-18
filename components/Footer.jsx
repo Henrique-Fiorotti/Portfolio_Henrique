@@ -2,7 +2,7 @@ import { profile, projects } from "@/data/portfolio";
 import { Window } from "./Window";
 export function Footer() {
   return <footer className="container footer">
-      <Window title="Contato.exe">
+      <Window title="Contato.exe" interactive={false} showMaximize={false}>
         <div className="footerContent">
           <div>
             <p className="eyebrow">Vamos conversar?</p>
