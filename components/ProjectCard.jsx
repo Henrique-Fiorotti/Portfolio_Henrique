@@ -14,7 +14,7 @@ export function ProjectCard({
     videoRef.current.currentTime = 0;
   };
 
-  return <Window title={project.windowTitle} className="projectWindow" interactive={false}>
+  return <Window title={project.windowTitle} className="projectWindow" interactive={false} showMaximize={false}>
       <article className="projectCard" style={{
       "--accent": project.accent
     }}>
