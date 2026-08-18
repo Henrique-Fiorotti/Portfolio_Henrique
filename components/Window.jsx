@@ -21,7 +21,8 @@ export function Window({
   title,
   children,
   className = "",
-  interactive = true
+  interactive = true,
+  showMaximize = true
 }) {
   const {
     registerWindow
@@ -271,11 +272,11 @@ export function Window({
       <div ref={titleBarRef} className="windowBar" aria-label={interactive ? `Mover janela ${title}. Use as setas para mover e Home para restaurar a posicao.` : title} role="group" onFocus={interactive ? bringToFront : undefined} onKeyDown={handleKeyDown} onPointerCancel={finishDragging} onPointerDown={handlePointerDown} onPointerEnter={interactive ? bringToFront : undefined} onPointerMove={handlePointerMove} onPointerUp={finishDragging} tabIndex={interactive ? 0 : -1}>
         
         <span className="windowTitle">{title}</span>
-        <span className="windowControls">
+        {showMaximize && <span className="windowControls">
           <button type="button" className={`windowControl maximize ${interactive ? "hasIcon" : ""}`} aria-label={isMaximized ? "Restaurar janela" : "Maximizar janela"} data-tooltip={isMaximized ? "Restaurar janela" : "Maximizar janela"} aria-pressed={isMaximized} disabled={!interactive} onClick={toggleMaximize} onPointerDown={stopWindowDrag}>
             {interactive && windowControlIcon}
           </button>
-        </span>
+        </span>}
       </div>
       <div className="windowBody">{children}</div>
     </section>;
