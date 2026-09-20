@@ -20,6 +20,12 @@ export function AnimatedCodeBackground() {
     let lastFrame = 0;
     let scrollResumeTimer = 0;
     let isScrolling = false;
+    let columns = 0;
+    let rows = 0;
+    let cellWidth = 0;
+    let cellHeight = 0;
+    let seeds = [];
+    let phases = [];
     const resize = () => {
       const pixelRatio = 1;
       width = window.innerWidth;
@@ -29,19 +35,27 @@ export function AnimatedCodeBackground() {
       canvas.style.width = `${width}px`;
       canvas.style.height = `${height}px`;
       context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
-    };
-    const fieldStrength = (x, y, centerX, centerY, radiusX, radiusY) => {
-      const normalizedX = (x - centerX) / radiusX;
-      const normalizedY = (y - centerY) / radiusY;
-      return Math.exp(-(normalizedX * normalizedX + normalizedY * normalizedY) * 1.8);
+      cellWidth = width < 640 ? 15 : 18;
+      cellHeight = width < 640 ? 17 : 20;
+      columns = Math.ceil(width / cellWidth) + 1;
+      rows = Math.ceil(height / cellHeight) + 1;
+      seeds = new Float64Array(columns * rows);
+      phases = new Float64Array(columns * rows);
+      for (let row = 0; row < rows; row++) {
+        for (let column = 0; column < columns; column++) {
+          const index = row * columns + column;
+          seeds[index] = hash(column, row);
+          phases[index] = column * .16 + row * .11 + seeds[index] * 5;
+        }
+      }
+      const fontFamily = getComputedStyle(document.documentElement).getPropertyValue("--font-roboto-mono").trim() || '"Roboto Mono"';
+      context.font = `600 ${width < 640 ? 9 : 10}px ${fontFamily}, monospace`;
+      context.textAlign = "center";
+      context.textBaseline = "middle";
     };
     const draw = time => {
       const isDark = document.documentElement.classList.contains("dark");
       const seconds = time / 1000;
-      const cellWidth = width < 640 ? 15 : 18;
-      const cellHeight = width < 640 ? 17 : 20;
-      const columns = Math.ceil(width / cellWidth) + 1;
-      const rows = Math.ceil(height / cellHeight) + 1;
       const fields = [{
         x: width * (.12 + .35 * (Math.sin(seconds * .21) + 1) / 2),
         y: height * (.18 + .52 * (Math.cos(seconds * .16) + 1) / 2),
@@ -61,20 +75,25 @@ export function AnimatedCodeBackground() {
         ry: Math.max(180, height * .28),
         power: .72
       }];
+      // The Gaussian separates into horizontal and vertical factors. Calculate
+      // these per row/column, preserving the field instead of thousands of exp()
+      // calls per frame. Cell seeds/phases are cached until the viewport changes.
+      const influences = fields.map(field => ({
+        x: Array.from({ length: columns }, (_, column) => Math.exp(-Math.pow((column * cellWidth - field.x) / field.rx, 2) * 1.8)),
+        y: Array.from({ length: rows }, (_, row) => Math.exp(-Math.pow((row * cellHeight - field.y) / field.ry, 2) * 1.8) * field.power),
+      }));
       context.clearRect(0, 0, width, height);
-      context.font = `600 ${width < 640 ? 9 : 10}px "Roboto Mono", monospace`;
-      context.textAlign = "center";
-      context.textBaseline = "middle";
       for (let row = 0; row < rows; row += 1) {
         const y = row * cellHeight;
         for (let column = 0; column < columns; column += 1) {
           const x = column * cellWidth;
-          const seed = hash(column, row);
+          const index = row * columns + column;
+          const seed = seeds[index];
           let influence = 0;
-          for (const field of fields) {
-            influence += fieldStrength(x, y, field.x, field.y, field.rx, field.ry) * field.power;
+          for (const field of influences) {
+            influence += field.x[column] * field.y[row];
           }
-          const ripple = .88 + .12 * Math.sin(seconds * 1.7 + column * .16 + row * .11 + seed * 5);
+          const ripple = .88 + .12 * Math.sin(seconds * 1.7 + phases[index]);
           influence = Math.min(1, influence * ripple);
           if (influence > .13) {
             const symbol = influence > .68 ? "#" : influence > .43 ? seed > .48 ? "#" : "%" : seed > .55 ? "%" : "*";
@@ -103,6 +122,7 @@ export function AnimatedCodeBackground() {
     };
     const start = () => {
       window.cancelAnimationFrame(animationFrame);
+      if (document.hidden) return;
       if (motionPreference.matches) {
         draw(0);
       } else {
@@ -130,6 +150,7 @@ export function AnimatedCodeBackground() {
     window.addEventListener("scroll", handleScroll, { passive: true });
     window.addEventListener("portfolio-theme-change", handleThemeChange);
     motionPreference.addEventListener("change", start);
+    document.addEventListener("visibilitychange", start);
     return () => {
       window.cancelAnimationFrame(animationFrame);
       window.clearTimeout(scrollResumeTimer);
@@ -137,6 +158,7 @@ export function AnimatedCodeBackground() {
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("portfolio-theme-change", handleThemeChange);
       motionPreference.removeEventListener("change", start);
+      document.removeEventListener("visibilitychange", start);
     };
   }, []);
   return <canvas ref={canvasRef} className="animatedCodeBackground" aria-hidden="true" />;

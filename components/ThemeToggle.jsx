@@ -1,9 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useSyncExternalStore } from "react";
 import { Moon, Sun } from "lucide-react";
 
 const STORAGE_KEY = "portfolio-theme";
+const getTheme = () => document.documentElement.dataset.theme || "light";
+const getServerTheme = () => null;
+const subscribeTheme = callback => {
+  window.addEventListener("portfolio-theme-change", callback);
+  return () => window.removeEventListener("portfolio-theme-change", callback);
+};
 
 const applyTheme = theme => {
   const root = document.documentElement;
@@ -19,7 +25,7 @@ const applyTheme = theme => {
 };
 
 export function ThemeToggle() {
-  const [theme, setTheme] = useState(null);
+  const theme = useSyncExternalStore(subscribeTheme, getTheme, getServerTheme);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -27,14 +33,14 @@ export function ThemeToggle() {
     const initialTheme = root.dataset.theme ?? (colorScheme.matches ? "dark" : "light");
 
     const followSystemTheme = event => {
-      if (localStorage.getItem(STORAGE_KEY)) return;
+      try {
+        if (localStorage.getItem(STORAGE_KEY)) return;
+      } catch { /* Theme changes still work when storage is unavailable. */ }
       const systemTheme = event.matches ? "dark" : "light";
       applyTheme(systemTheme);
-      setTheme(systemTheme);
     };
 
     applyTheme(initialTheme);
-    setTheme(initialTheme);
     colorScheme.addEventListener("change", followSystemTheme);
 
     return () => colorScheme.removeEventListener("change", followSystemTheme);
@@ -42,9 +48,10 @@ export function ThemeToggle() {
 
   const toggleTheme = () => {
     const nextTheme = theme === "dark" ? "light" : "dark";
-    localStorage.setItem(STORAGE_KEY, nextTheme);
+    try {
+      localStorage.setItem(STORAGE_KEY, nextTheme);
+    } catch { /* Persistence is optional. */ }
     applyTheme(nextTheme);
-    setTheme(nextTheme);
   };
 
   const isDark = theme === "dark";

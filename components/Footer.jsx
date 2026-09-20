@@ -1,8 +1,9 @@
 import { profile, projects } from "@/data/portfolio";
-import { Window } from "./Window";
+import Link from "next/link";
+import { StaticWindow as Window } from "./StaticWindow";
 export function Footer() {
   return <footer className="container footer">
-      <Window title="Contato.exe" interactive={false} showMaximize={false}>
+      <Window title="Contato.exe" showMaximize={false}>
         <div className="footerContent">
           <div>
             <p className="eyebrow">Vamos conversar?</p>
@@ -10,7 +11,7 @@ export function Footer() {
             <a className="footerEmail" href={`mailto:${profile.email}`}>{profile.email}</a>
           </div>
           <nav className="footerLinks" aria-label="Links do rodapé">
-            <a href="/curriculo">Currículo</a>
+            <Link href="/curriculo">Currículo</Link>
             <a href={profile.github} target="_blank" rel="noreferrer">GitHub</a>
             <a href={profile.linkedin} target="_blank" rel="noreferrer">LinkedIn</a>
             {projects.slice(0, 2).map(project => <a key={project.slug} href={project.repository} target="_blank" rel="noreferrer">{project.title}</a>)}

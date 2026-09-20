@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
+@import "./styles/loader.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -117,83 +118,8 @@ body {
   margin: 0;
   color: var(--ink);
   background: var(--lavender);
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-dm-sans), sans-serif;
   transition: color .3s ease, background-color .3s ease;
-}
-
-.siteContent {
-  opacity: 1;
-  transition: opacity .5s ease;
-}
-
-.siteContent.isLoading {
-  opacity: 0;
-  pointer-events: none;
-}
-
-.loaderOverlay {
-  position: fixed;
-  inset: 0;
-  z-index: 2147483647;
-  display: grid;
-  place-items: center;
-  background: var(--loader-background);
-  backdrop-filter: blur(10px);
-  overflow: hidden;
-  pointer-events: auto;
-  transition: background-color .3s ease;
-  isolation: isolate;
-  transform: translateZ(0);
-  backface-visibility: hidden;
-  will-change: opacity;
-}
-
-.loaderOverlay.isHidden {
-  display: none;
-}
-
-.loaderName {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate3d(-50%, -50%, 0);
-  font-family: 'Roboto Mono', monospace;
-  letter-spacing: -.05em;
-  white-space: nowrap;
-  backface-visibility: hidden;
-  will-change: transform, left, top, font-size;
-}
-
-.loaderName {
-  font-size: clamp(1.8rem, 5vw, 4rem);
-  font-weight: 600;
-  color: var(--ink);
-  opacity: 0;
-  text-align: center;
-}
-
-.loaderLetter {
-  display: inline-block;
-  overflow: hidden;
-  vertical-align: bottom;
-  white-space: pre;
-  backface-visibility: hidden;
-  will-change: width, transform, opacity, filter;
-}
-
-.loaderAccent,
-.loaderDot {
-  color: var(--blue);
-}
-
-.loaderDot {
-  display: inline-block;
-  width: 0;
-  overflow: hidden;
-  opacity: 0;
-  transform: scale(0);
-  transform-origin: left bottom;
-  will-change: transform, opacity;
 }
 
 .animatedCodeBackground {
@@ -265,7 +191,7 @@ button {
   display: inline-flex;
   align-items: baseline;
   white-space: nowrap;
-  font: 700 24px 'Roboto Mono';
+  font: 700 24px var(--font-roboto-mono);
   transform: translateY(-50%);
   transition: opacity .28s ease, transform .38s cubic-bezier(.22, 1, .36, 1);
 }
@@ -332,7 +258,7 @@ button {
   backdrop-filter: blur(28px) saturate(125%);
   transform: translateX(-50%);
   transition: opacity .28s ease, transform .38s cubic-bezier(.22, 1, .36, 1);
-  font: 600 14px 'Roboto Mono';
+  font: 600 14px var(--font-roboto-mono);
 }
 
 .siteHeader nav a {
@@ -423,7 +349,7 @@ button {
   border-radius: 4px;
   background: var(--tooltip-background);
   color: var(--tooltip-foreground);
-  font: 600 11px 'Roboto Mono';
+  font: 600 11px var(--font-roboto-mono);
   opacity: 0;
   pointer-events: none;
   transform: translateY(-4px);
@@ -502,7 +428,7 @@ button {
 }
 
 .windowTitle {
-  font: 600 13px 'Roboto Mono';
+  font: 600 13px var(--font-roboto-mono);
 }
 
 .windowControls {
@@ -538,6 +464,15 @@ button {
 
 .window.isStatic .windowBar {
   cursor: default
+}
+
+.window.isStatic {
+  will-change: auto;
+}
+
+.window.isStatic .windowControl {
+  cursor: default;
+  pointer-events: none;
 }
 
 .windowControl.maximize {
@@ -601,6 +536,7 @@ button {
   position: relative;
   z-index: 2;
   width: min(100%, 480px);
+  height: auto;
   max-height: 460px;
   object-fit: contain;
   object-position: center;
@@ -639,14 +575,14 @@ button {
 
 .eyebrow {
   margin: 0 0 14px;
-  font: 700 12px 'Roboto Mono';
+  font: 700 12px var(--font-roboto-mono);
   letter-spacing: .14em;
   text-transform: uppercase;
 }
 
 .hero h1 {
   margin: 0;
-  font: 700 clamp(48px, 7vw, 92px)/.9 'DM Sans';
+  font: 700 clamp(48px, 7vw, 92px)/.9 var(--font-dm-sans);
   letter-spacing: -.065em;
 }
 
@@ -657,7 +593,7 @@ button {
 .role {
   max-width: 600px;
   margin: 26px 0 12px;
-  font: 600 clamp(18px, 2vw, 25px)/1.3 'Roboto Mono';
+  font: 600 clamp(18px, 2vw, 25px)/1.3 var(--font-roboto-mono);
 }
 
 .heroText {
@@ -684,7 +620,7 @@ button {
   padding: 0 19px;
   border: 2px solid var(--line);
   border-radius: 5px;
-  font: 700 13px 'Roboto Mono';
+  font: 700 13px var(--font-roboto-mono);
   transition: .18s;
 }
 
@@ -731,7 +667,7 @@ button {
   border-radius: 4px;
   background: var(--tooltip-background);
   color: var(--tooltip-foreground);
-  font: 600 11px 'Roboto Mono';
+  font: 600 11px var(--font-roboto-mono);
   opacity: 0;
   pointer-events: none;
   transform: translate(-50%, 5px);
@@ -788,7 +724,7 @@ button {
   display: block;
   margin-bottom: 4px;
   color: var(--blue);
-  font: 700 11px 'Roboto Mono';
+  font: 700 11px var(--font-roboto-mono);
   letter-spacing: .1em;
   text-transform: uppercase;
 }
@@ -845,7 +781,7 @@ button {
   background: #111019;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, .05);
   color: #d8d3e2;
-  font: 600 clamp(12px, 2vw, 15px)/1.9 'Roboto Mono';
+  font: 600 clamp(12px, 2vw, 15px)/1.9 var(--font-roboto-mono);
   scrollbar-color: #504a60 transparent;
 }
 
@@ -949,7 +885,7 @@ button {
   gap: 22px;
   margin-top: 27px;
   color: var(--portfolio-muted);
-  font: 600 15px 'Roboto Mono';
+  font: 600 15px var(--font-roboto-mono);
 }
 
 .socialLinks a:hover {
@@ -1010,7 +946,7 @@ button {
 }
 
 .skillColumns h3 {
-  font: 600 14px 'Roboto Mono';
+  font: 600 14px var(--font-roboto-mono);
   margin: 0 0 18px
 }
 
@@ -1030,7 +966,7 @@ button {
   border: 1.5px solid var(--pill-border);
   border-radius: 4px;
   background: var(--pill-background);
-  font: 600 12px 'Roboto Mono';
+  font: 600 12px var(--font-roboto-mono);
   transition: color .3s ease, background-color .3s ease, border-color .3s ease;
 }
 
@@ -1073,7 +1009,7 @@ button {
   justify-content: space-between;
   gap: 8px 20px;
   color: var(--portfolio-muted);
-  font: 600 11px 'Roboto Mono';
+  font: 600 11px var(--font-roboto-mono);
   text-transform: uppercase;
   letter-spacing: .08em;
 }
@@ -1087,7 +1023,7 @@ button {
 .experienceCompany {
   margin: 0 0 20px;
   color: var(--blue);
-  font: 600 14px 'Roboto Mono';
+  font: 600 14px var(--font-roboto-mono);
 }
 
 .experienceRole>p:not(.experienceCompany),
@@ -1111,7 +1047,7 @@ button {
   gap: 10px;
   margin-top: 24px;
   color: var(--blue);
-  font: 700 13px 'Roboto Mono';
+  font: 700 13px var(--font-roboto-mono);
 }
 
 .experienceResumeLink span {
@@ -1177,7 +1113,7 @@ button {
   height: 38px;
   margin-bottom: 28px;
   color: var(--portfolio-muted);
-  font: 700 11px 'Roboto Mono';
+  font: 700 11px var(--font-roboto-mono);
 }
 
 .projectsCarouselTimestamps {
@@ -1272,6 +1208,10 @@ button {
 
 .projectsCarouselViewport {
   width: 100%;
+  overflow-x: auto;
+}
+
+.projectsCarouselViewport.hasHorizontalScroll {
   overflow: hidden;
 }
 
@@ -1296,7 +1236,7 @@ button {
   top: 0;
   right: 4px;
   color: var(--portfolio-muted);
-  font: 700 11px 'Roboto Mono';
+  font: 700 11px var(--font-roboto-mono);
   letter-spacing: .12em;
 }
 
@@ -1330,11 +1270,13 @@ button {
   opacity: 0
 }
 
-.projectMedia:hover video {
+.projectMedia:hover video,
+.projectMedia:focus-visible video {
   opacity: 1
 }
 
-.projectMedia:hover img {
+.projectMedia:hover img,
+.projectMedia:focus-visible img {
   transform: scale(1.025)
 }
 
@@ -1352,8 +1294,8 @@ button {
 }
 
 .projectSubtitle {
-  color: var(--accent);
-  font: 600 14px 'Roboto Mono';
+  color: color-mix(in srgb, var(--accent) 55%, var(--ink));
+  font: 600 14px var(--font-roboto-mono);
 }
 
 .projectContent>div:first-child>p:last-child {
@@ -1371,7 +1313,7 @@ button {
 }
 
 .projectActions .primary {
-  background: var(--accent)
+  background: color-mix(in srgb, var(--accent) 65%, #17151d)
 }
 
 .githubRepositoryButton {
@@ -1436,7 +1378,7 @@ button {
   display: inline-block;
   margin-top: 25px;
   color: var(--footer-link);
-  font: 500 clamp(14px, 2vw, 20px) 'Roboto Mono';
+  font: 500 clamp(14px, 2vw, 20px) var(--font-roboto-mono);
   word-break: break-all
 }
 
@@ -1445,7 +1387,7 @@ button {
   grid-template-columns: 1fr 1fr;
   gap: 18px;
   align-content: center;
-  font: 500 14px 'Roboto Mono'
+  font: 500 14px var(--font-roboto-mono)
 }
 
 .footerLinks a:hover {
@@ -1456,7 +1398,7 @@ button {
   text-align: center;
   margin: 25px 0 0;
   color: var(--portfolio-muted);
-  font: 500 12px 'Roboto Mono'
+  font: 500 12px var(--font-roboto-mono)
 }
 
 .resumePage {
@@ -1476,7 +1418,7 @@ button {
   margin-bottom: 18px;
   display: flex;
   justify-content: space-between;
-  font: 600 13px 'Roboto Mono'
+  font: 600 13px var(--font-roboto-mono)
 }
 
 .printHint {
@@ -1503,7 +1445,7 @@ button {
 .resumeHeader p {
   margin: 0;
   color: var(--blue);
-  font: 600 12px 'Roboto Mono';
+  font: 600 12px var(--font-roboto-mono);
   text-transform: uppercase
 }
 
@@ -1518,7 +1460,7 @@ button {
   flex-direction: column;
   gap: 8px;
   text-align: right;
-  font: 500 13px 'Roboto Mono';
+  font: 500 13px var(--font-roboto-mono);
   font-style: normal
 }
 
@@ -1533,7 +1475,7 @@ button {
 .resumeSection h2 {
   margin: 0 0 14px;
   color: var(--blue);
-  font: 700 15px 'Roboto Mono';
+  font: 700 15px var(--font-roboto-mono);
   text-transform: uppercase;
   letter-spacing: .08em
 }
@@ -1566,13 +1508,13 @@ button {
 
 .resumeItemHeader p {
   margin: 0;
-  font: 600 12px 'Roboto Mono';
+  font: 600 12px var(--font-roboto-mono);
 }
 
 .resumeItemHeader>span {
   flex: 0 0 auto;
   color: var(--blue);
-  font: 600 11px 'Roboto Mono';
+  font: 600 11px var(--font-roboto-mono);
   white-space: nowrap;
 }
 
@@ -1597,7 +1539,7 @@ button {
 
 .resumeSkillGroup h3 {
   margin: 0 0 7px;
-  font: 700 12px 'Roboto Mono';
+  font: 700 12px var(--font-roboto-mono);
 }
 
 .resumeSkillGroup p {
@@ -1697,8 +1639,8 @@ button {
   }
 
   .siteHeader {
-    --header-control-center: 42px;
-    min-height: 70px
+    --header-control-center: 32px;
+    min-height: 118px
   }
 
   .siteHeaderActions {
@@ -1707,10 +1649,19 @@ button {
   }
 
   .siteHeader nav {
-    top: 14px;
+    top: 62px;
+    width: min(430px, calc(100% - 24px));
     gap: 14px;
     padding: 10px 14px;
     font-size: 11px
+  }
+
+  .siteHeader nav a {
+    width: auto;
+    min-width: 0;
+    min-height: 36px;
+    flex: 1;
+    align-items: center;
   }
 
   .brand {
@@ -1956,9 +1907,9 @@ button {
 }
 
 @theme inline {
-  --font-heading: "DM Sans", sans-serif;
-  --font-sans: "DM Sans", sans-serif;
-  --font-mono: "Roboto Mono", monospace;
+  --font-heading: var(--font-dm-sans), sans-serif;
+  --font-sans: var(--font-dm-sans), sans-serif;
+  --font-mono: var(--font-roboto-mono), monospace;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);

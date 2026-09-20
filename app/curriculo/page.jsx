@@ -1,6 +1,13 @@
 import Link from "next/link";
 import { profile } from "@/data/portfolio";
 import { resume } from "@/data/resume";
+import { siteUrl } from "@/lib/site";
+
+export const metadata = {
+  title: "Currículo | Henrique Fiorotti",
+  description: "Experiência profissional, formação e competências de Henrique Fiorotti em desenvolvimento de sistemas e suporte de TI.",
+  ...(siteUrl && { alternates: { canonical: new URL("/curriculo", siteUrl).href } }),
+};
 
 function ListSection({ title, items }) {
   return <section className="resumeSection">
@@ -24,7 +31,7 @@ function ResumeItem({ title, subtitle, period, summary, details }) {
 }
 
 export default function Curriculo() {
-  return <main className="resumePage">
+  return <main id="conteudo" className="resumePage" tabIndex={-1}>
     <div className="resumeToolbar">
       <Link href="/">← Voltar ao portfólio</Link>
       <span className="printHint">Use Ctrl+P para salvar em PDF</span>

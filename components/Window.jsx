@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { useWindowLayout } from "./WindowLayout";
 const DEFAULT_POSITION = {
@@ -51,14 +51,14 @@ export function Window({
       setPosition(positionRef.current);
     });
   };
-  const commitPosition = nextPosition => {
+  const commitPosition = useCallback(nextPosition => {
     positionRef.current = nextPosition;
     if (frame.current !== null) {
       window.cancelAnimationFrame(frame.current);
       frame.current = null;
     }
     setPosition(nextPosition);
-  };
+  }, []);
   const constrainPosition = (nextPosition, origin, windowRect) => {
     const viewportWidth = document.documentElement.clientWidth;
     const horizontalBounds = [origin.x - windowRect.left, origin.x + viewportWidth - windowRect.right];
@@ -89,13 +89,13 @@ export function Window({
     bringToFront();
     setIsDragging(true);
   };
-  const resetWindow = () => {
+  const resetWindow = useCallback(() => {
     commitPosition(DEFAULT_POSITION);
     setIsDragging(false);
     setIsMaximized(false);
     setLayer(0);
-  };
-  useEffect(() => registerWindow(resetWindow), [registerWindow]);
+  }, [commitPosition]);
+  useEffect(() => registerWindow(resetWindow), [registerWindow, resetWindow]);
   useLayoutEffect(() => {
     const windowElement = windowRef.current;
     const startRect = animationStartRect.current;
@@ -166,7 +166,7 @@ export function Window({
       if (frame.current !== null) window.cancelAnimationFrame(frame.current);
       clearTouchTimer();
     };
-  }, [isMaximized]);
+  }, [isMaximized, commitPosition]);
   const handlePointerDown = event => {
     if (event.pointerType === "mouse" && event.button !== 0) return;
     if (event.pointerType === "touch") {
