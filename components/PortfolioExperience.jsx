@@ -30,6 +30,7 @@ export function PortfolioExperience({ children }) {
       content.inert = false;
       content.removeAttribute("aria-busy");
       content.style.removeProperty("opacity");
+      window.dispatchEvent(new Event("portfolio-intro-complete"));
     };
 
     if (window.__portfolioIntroExpired || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {

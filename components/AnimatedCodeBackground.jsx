@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-const SYMBOLS = ["0", "1", "=", "*", "%", "#"];
 const FRAME_INTERVAL = 1000 / 20;
 const hash = (column, row) => {
   const value = Math.sin(column * 12.9898 + row * 78.233) * 43758.5453;
@@ -26,6 +25,28 @@ export function AnimatedCodeBackground() {
     let cellHeight = 0;
     let seeds = [];
     let phases = [];
+    // Rasterize each symbol once per font/theme/size instead of thousands of
+    // fillText calls per frame. Global alpha preserves the continuous field.
+    const glyphAtlas = document.createElement("canvas");
+    const glyphContext = glyphAtlas.getContext("2d");
+    if (!glyphContext) return;
+    const glyphSize = 24;
+    const glyphs = ["0", "1", "=", "*", "%", "#"];
+    let atlasIsDark;
+    let canvasFont = "";
+    let disposed = false;
+    const prepareGlyphs = () => {
+      atlasIsDark = document.documentElement.classList.contains("dark");
+      glyphAtlas.width = glyphSize * glyphs.length;
+      glyphAtlas.height = glyphSize * 2;
+      glyphContext.font = canvasFont;
+      glyphContext.textAlign = "center";
+      glyphContext.textBaseline = "middle";
+      [atlasIsDark ? "#73aaff" : "#004aad", atlasIsDark ? "#dcd6eb" : "#24212b"].forEach((color, row) => {
+        glyphContext.fillStyle = color;
+        glyphs.forEach((glyph, column) => glyphContext.fillText(glyph, column * glyphSize + glyphSize / 2, row * glyphSize + glyphSize / 2));
+      });
+    };
     const resize = () => {
       const pixelRatio = 1;
       width = window.innerWidth;
@@ -49,12 +70,12 @@ export function AnimatedCodeBackground() {
         }
       }
       const fontFamily = getComputedStyle(document.documentElement).getPropertyValue("--font-roboto-mono").trim() || '"Roboto Mono"';
-      context.font = `600 ${width < 640 ? 9 : 10}px ${fontFamily}, monospace`;
-      context.textAlign = "center";
-      context.textBaseline = "middle";
+      canvasFont = `600 ${width < 640 ? 9 : 10}px ${fontFamily}, monospace`;
+      prepareGlyphs();
     };
     const draw = time => {
       const isDark = document.documentElement.classList.contains("dark");
+      if (atlasIsDark !== isDark) prepareGlyphs();
       const seconds = time / 1000;
       const fields = [{
         x: width * (.12 + .35 * (Math.sin(seconds * .21) + 1) / 2),
@@ -98,17 +119,13 @@ export function AnimatedCodeBackground() {
           if (influence > .13) {
             const symbol = influence > .68 ? "#" : influence > .43 ? seed > .48 ? "#" : "%" : seed > .55 ? "%" : "*";
             const alpha = .16 + influence * .47;
-            context.fillStyle = isDark
-              ? `rgba(115, 170, 255, ${alpha * .72})`
-              : `rgba(0, 74, 173, ${alpha})`;
-            context.fillText(symbol, x, y);
+            context.globalAlpha = isDark ? alpha * .72 : alpha;
+            context.drawImage(glyphAtlas, glyphs.indexOf(symbol) * glyphSize, 0, glyphSize, glyphSize, x - glyphSize / 2, y - glyphSize / 2, glyphSize, glyphSize);
           } else {
             const symbolIndex = Math.floor(seed * 3);
             const alpha = .1 + seed * .07;
-            context.fillStyle = isDark
-              ? `rgba(220, 214, 235, ${alpha * .62})`
-              : `rgba(36, 33, 43, ${alpha})`;
-            context.fillText(SYMBOLS[symbolIndex], x, y);
+            context.globalAlpha = isDark ? alpha * .62 : alpha;
+            context.drawImage(glyphAtlas, symbolIndex * glyphSize, glyphSize, glyphSize, glyphSize, x - glyphSize / 2, y - glyphSize / 2, glyphSize, glyphSize);
           }
         }
       }
@@ -123,6 +140,9 @@ export function AnimatedCodeBackground() {
     const start = () => {
       window.cancelAnimationFrame(animationFrame);
       if (document.hidden) return;
+      // The intro covers the canvas. Do not keep repainting hidden decoration
+      // while the browser hydrates the useful content underneath it.
+      if (document.documentElement.classList.contains("portfolio-loading")) return;
       if (motionPreference.matches) {
         draw(0);
       } else {
@@ -146,17 +166,25 @@ export function AnimatedCodeBackground() {
     };
     resize();
     start();
+    document.fonts.ready.then(() => {
+      if (disposed) return;
+      prepareGlyphs();
+      if (motionPreference.matches) draw(0);
+    });
     window.addEventListener("resize", handleResize);
     window.addEventListener("scroll", handleScroll, { passive: true });
     window.addEventListener("portfolio-theme-change", handleThemeChange);
+    window.addEventListener("portfolio-intro-complete", start);
     motionPreference.addEventListener("change", start);
     document.addEventListener("visibilitychange", start);
     return () => {
+      disposed = true;
       window.cancelAnimationFrame(animationFrame);
       window.clearTimeout(scrollResumeTimer);
       window.removeEventListener("resize", handleResize);
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("portfolio-theme-change", handleThemeChange);
+      window.removeEventListener("portfolio-intro-complete", start);
       motionPreference.removeEventListener("change", start);
       document.removeEventListener("visibilitychange", start);
     };
