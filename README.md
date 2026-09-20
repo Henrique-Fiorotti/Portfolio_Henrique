@@ -73,10 +73,53 @@ os plugins React/import/a11y do `eslint-config-next` não suportarem a linha 10.
 - `scripts/`: otimização, testes e medições reproduzíveis.
 - `docs/`: resultados da revisão.
 
-O currículo está disponível em `/curriculo` e pode ser salvo como PDF usando a impressão do navegador.
+O currículo está disponível em `/curriculo`. O PDF em
+`public/curriculo-henrique-fiorotti.pdf` é gerado automaticamente pelo `prebuild`
+a partir de `data/resume.js` e `data/portfolio.js`, os mesmos dados do HTML.
+Use `npm run generate:resume` para regenerar sem compilar o site e inclua o PDF
+atualizado no commit. A CI verifica se o arquivo publicado coincide com a fonte.
 
-O arquivo de download fica em `public/curriculo-henrique-fiorotti.pdf`; revise o
-PDF e os dados HTML quando atualizar sua experiência.
+## Experiências e estudos de caso
+
+Resultados desta etapa e situação do deploy: [revisão STAR e produção](docs/star-and-production-review.md).
+
+A experiência profissional usa `star` em `data/resume.js` (situação, tarefa,
+ação e resultado). As páginas estáticas `/projetos/[slug]` usam
+`data/case-studies.js`. Descreva resultados demonstráveis: não transforme objetivos
+em ganhos medidos nem atribua a uma pessoa o trabalho completo de uma equipe.
+Os resultados atuais descrevem entregas documentadas; métricas de impacto e casos
+específicos de atendimento podem ser acrescentados quando confirmados.
+
+O diretório de projetos permite filtrar por área. Sua abertura usa `<details>`
+nativo para manter a página inicial compacta. Sem JavaScript, a lista pode ser
+aberta com todos os projetos e links; somente os filtros dependem de JavaScript.
+
+## Verificação contínua e produção
+
+- `npm run check:links`: verifica demonstrações e repositórios em pequenos lotes,
+  com timeout e repetição de falhas transitórias. HTTP 404/410 falha o comando;
+  bloqueios como 403/429/999 exigem revisão manual. O workflow semanal publica o
+  relatório como artefato e destaca revisões pendentes, sem remover links sozinho.
+- `npm run profile:runtime -- nome`: perfil de CPU e tarefas longas no celular,
+  com CPU 4x. Saída em `.audit/runtime-nome`. Esses 12 segundos de observação
+  não equivalem ao TBT do Lighthouse nem ao INP de visitantes reais.
+- `AUDIT_URL=https://portfolio-henrique-edi3.vercel.app npm run audit:deployment`:
+  verifica HTTPS, rotas, canonical e cabeçalhos da versão publicada.
+  No PowerShell, use `$env:AUDIT_URL='https://portfolio-henrique-edi3.vercel.app'`
+  antes de executar o comando.
+- `AUDIT_URL` também pode apontar o Lighthouse para a publicação. Guarde resultados
+  de produção separados dos testes locais e registre qual versão foi medida.
+
+O domínio confirmado é `https://portfolio-henrique-edi3.vercel.app`.
+`SITE_URL` e `VERCEL_PROJECT_PRODUCTION_URL` têm precedência sobre esse padrão.
+
+Para coletar métricas reais, a integração de **Vercel Speed Insights** está
+preparada: habilite o recurso no painel do projeto, configure
+`NEXT_PUBLIC_SPEED_INSIGHTS=1` e faça um novo deploy. Confira a disponibilidade
+e o uso no seu plano antes de ativar. A integração está desativada por padrão
+para não solicitar um endpoint inexistente. Não há dados de visitantes reais
+até a ativação, a publicação e a chegada de tráfego.
+Documentação: https://vercel.com/docs/speed-insights/quickstart
 
 ## Segurança e desempenho
 
