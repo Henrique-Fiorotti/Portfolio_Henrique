@@ -9,9 +9,15 @@
     "lint": "eslint app components data lib scripts *.mjs",
     "audit:performance": "node scripts/measure.mjs",
     "test:browser": "node scripts/check-browser.mjs",
-    "optimize:media": "node scripts/optimize-media.mjs"
+    "optimize:media": "node scripts/optimize-media.mjs",
+    "prebuild": "npm run generate:resume",
+    "generate:resume": "node scripts/generate-resume.mjs",
+    "check:links": "node scripts/check-links.mjs",
+    "profile:runtime": "node scripts/profile-runtime.mjs",
+    "audit:deployment": "node scripts/check-deployment.mjs"
   },
   "dependencies": {
+    "@vercel/speed-insights": "^2.0.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "gsap": "^3.15.0",
@@ -33,6 +39,7 @@
     "eslint": "^9.39.5",
     "eslint-config-next": "^16.3.5",
     "lighthouse": "^13.5.0",
+    "pdfkit": "^0.20.2",
     "playwright": "^1.63.0",
     "postcss": "^8.5.25",
     "shadcn": "^4.16.1",
@@ -43,5 +50,6 @@
   },
   "engines": {
     "node": "24.x"
-  }
+  },
+  "type": "module"
 }

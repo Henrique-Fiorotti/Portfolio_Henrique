@@ -21,6 +21,8 @@ jobs:
       - run: npm run lint -- --max-warnings=0
       - run: npm audit --omit=dev --audit-level=high
       - run: npm run build
+      - name: Ensure the downloadable resume matches its source
+        run: git diff --exit-code -- public/curriculo-henrique-fiorotti.pdf
       - run: npx playwright install --with-deps chromium
       - name: Browser checks against the production build
         run: |
