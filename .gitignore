@@ -4,3 +4,8 @@ out/
 .vercel/
 *.log
 .DS_Store
+.env*
+!.env.example
+.audit/
+test-results/
+playwright-report/
