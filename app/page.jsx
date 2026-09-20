@@ -15,6 +15,9 @@ import { ProjectCard } from "@/components/ProjectCard";
 import { profile, projects, skills, tools } from "@/data/portfolio";
 import { resume } from "@/data/resume";
 import { siteUrl } from "@/lib/site";
+import { StarStory } from "@/components/StarStory";
+import { ProjectDirectory } from "@/components/ProjectDirectory";
+import { caseStudies, projectCategories } from "@/data/case-studies";
 
 export const metadata = siteUrl ? { alternates: { canonical: siteUrl.href } } : {};
 
@@ -33,7 +36,7 @@ export default function Home() {
         <div className="siteHeaderActions">
         <nav className="siteHeaderNav" aria-label="Navegação principal">
           <a className="navLink" href="#sobre">Sobre</a>
-          <a className="navLink" href="#projetos">Projetos</a>
+          <a className="navLink" href="#estudos">Projetos</a>
           <Link className="navLink" href="/curriculo">Currículo</Link>
         </nav>
         <WindowLayoutControls />
@@ -100,14 +103,29 @@ export default function Home() {
               <h3>{FEATURED_EXPERIENCE.role}</h3>
               <p className="experienceCompany">{FEATURED_EXPERIENCE.company}</p>
               <p>{FEATURED_EXPERIENCE.summary}</p>
-              <ul>
-                {FEATURED_EXPERIENCE.details.slice(0, 3).map(detail => <li key={detail}>{detail}</li>)}
-              </ul>
+              <StarStory story={FEATURED_EXPERIENCE.star} />
               <Link className="experienceResumeLink" href="/curriculo">Ver currículo completo <span aria-hidden="true">→</span></Link>
             </article>
           </div>
         </Window>
       </section>
+
+      <section id="estudos" className="container caseStudies" aria-labelledby="cases-title">
+        <p className="eyebrow">Contexto, contribuição e entrega</p>
+        <h2 id="cases-title">Por dentro dos projetos</h2>
+        <div className="caseStudyGrid">{Object.entries(caseStudies).map(([slug, study]) => {
+          const project = projects.find(item => item.slug === slug);
+          return <article key={slug}>
+            <p className="eyebrow">{study.context}</p>
+            <h3>{project.title}</h3>
+            <p>{study.role}</p>
+            <p>{study.star.result}</p>
+            <Link href={`/projetos/${slug}`} prefetch={false}>Ver contexto e entrega →</Link>
+          </article>;
+        })}</div>
+      </section>
+
+      <ProjectDirectory projects={projects.map(({ slug, title, subtitle, repository, site }) => ({ slug, title, subtitle, repository, site, category: projectCategories[slug], hasCaseStudy: Boolean(caseStudies[slug]) }))} />
 
       <ProjectsCarousel projects={projects.map(({ slug, title, accent }) => ({ slug, title, accent }))}>
         {projects.map((project, index) => <div className="projectsCarouselSlide" key={project.slug}>

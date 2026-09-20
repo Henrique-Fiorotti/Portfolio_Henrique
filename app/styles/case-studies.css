@@ -1,0 +1,34 @@
+.starStory { display: grid; gap: 1rem; margin: 1.5rem 0; }
+.starStep { border-left: 2px solid var(--ink); padding-left: 1rem; }
+.starStep dt { display: flex; gap: .65rem; align-items: center; font-weight: 700; }
+.starStep dt span { display: grid; place-items: center; width: 1.6rem; height: 1.6rem; border: 1px solid currentColor; border-radius: 4px; font-size: .8rem; }
+.starStep dd { margin: .5rem 0 0; line-height: 1.65; }
+.starStep-result { border-left-width: 4px; }
+.caseStudies, .projectDirectory { margin-block: 4rem; scroll-margin-top: 140px; }
+.caseStudies h2, .projectDirectory h2 { font-size: clamp(1.6rem, 4vw, 2.5rem); margin-bottom: 1.5rem; }
+.caseStudyGrid, .projectDirectoryGrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+.caseStudyGrid article, .projectDirectoryGrid li { padding: 1.5rem; border: 1px solid var(--ink); border-radius: 12px; background: var(--panel); color: var(--ink); }
+.caseStudyGrid article { display: flex; flex-direction: column; gap: .8rem; }
+.caseStudyGrid article > a { margin-top: auto; }
+.caseStudyGrid a, .directoryLinks a, .casePage > a { text-decoration: underline; text-underline-offset: 4px; font-weight: 600; }
+.projectDirectoryGrid { padding: 0; list-style: none; }
+.projectDirectoryGrid h3 { margin-block: .7rem; }
+.projectDirectoryGrid p { line-height: 1.6; }
+.projectFilters, .directoryLinks { display: flex; flex-wrap: wrap; gap: .75rem 1rem; margin-top: 1rem; }
+.projectFilters button { border: 1px solid var(--ink); border-radius: 999px; padding: .6rem 1rem; min-height: 44px; color: var(--ink); background: var(--panel); cursor: pointer; }
+.projectFilters button[aria-pressed="true"] { background: var(--ink); color: var(--panel); }
+.projectCount { margin-block: 1rem; }
+.projectDirectoryDetails > summary { cursor: pointer; border: 1px solid var(--ink); border-radius: 8px; padding: 1rem; background: var(--panel); font-weight: 600; }
+.casePage { max-width: 900px; padding-block: 3rem; line-height: 1.75; }
+.casePage header, .casePage section { margin-block: 2.5rem; }
+.casePage h1 { font-size: clamp(2rem, 6vw, 3.5rem); line-height: 1.15; overflow-wrap: anywhere; }
+.casePage h2 { font-size: 1.6rem; margin-bottom: 1rem; }
+.casePage ul { padding-left: 1.25rem; }
+.caseLead { font-size: 1.25rem; margin-block: 1rem; }
+.caseImage { width: 100%; height: auto; max-height: 420px; object-fit: contain; }
+.resume .starStory { gap: .65rem; margin-block: .8rem; }
+.resume .starStep { break-inside: avoid; }
+.resume .starStep dd { line-height: 1.4; }
+@media (max-width: 900px) { .caseStudyGrid { grid-template-columns: 1fr; } .projectDirectoryGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 540px) { .projectDirectoryGrid { grid-template-columns: 1fr; } }
+@media print { .resume .starStep dt span { display: none; } .resume .starStory { gap: .4rem; } }

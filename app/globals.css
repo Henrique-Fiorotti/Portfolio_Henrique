@@ -2,6 +2,7 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "./styles/loader.css";
+@import "./styles/case-studies.css";
 
 @custom-variant dark (&:is(.dark *));
 

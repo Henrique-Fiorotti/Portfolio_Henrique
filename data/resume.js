@@ -6,6 +6,12 @@ export const resume = {
     location: "São Caetano do Sul, SP",
     period: "jul/2025 – jun/2026",
     summary: "Suporte técnico a usuários e apoio à infraestrutura e aos sistemas corporativos da empresa.",
+    star: {
+      situation: "Ambiente industrial com usuários que dependem de computadores, dispositivos móveis, rede e sistemas corporativos nas rotinas de trabalho.",
+      task: "Atender às demandas de suporte e apoiar a administração dos acessos, dos equipamentos e da infraestrutura de TI.",
+      action: "Realizei atendimento presencial, remoto e telefônico; diagnostiquei problemas; apoiei usuários e chamados no TOTVS Protheus, a infraestrutura de rede e a administração de aparelhos pelo Pulsus.",
+      result: "Entregas realizadas: atendimento técnico aos usuários, configuração de equipamentos e dispositivos móveis e apoio ao gerenciamento de acessos e chamados corporativos.",
+    },
     details: [
       "Atendimento presencial, remoto e telefônico, com diagnóstico de problemas em computadores, dispositivos móveis, impressoras, rede, sistemas corporativos e ambiente Windows.",
       "Criação e gerenciamento básico de usuários e chamados no ERP TOTVS Protheus, apoiando rotinas administrativas e o controle de acessos.",

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { profile } from "@/data/portfolio";
 import { resume } from "@/data/resume";
 import { siteUrl } from "@/lib/site";
+import { StarStory } from "@/components/StarStory";
 
 export const metadata = {
   title: "Currículo | Henrique Fiorotti",
@@ -16,7 +17,7 @@ function ListSection({ title, items }) {
   </section>;
 }
 
-function ResumeItem({ title, subtitle, period, summary, details }) {
+function ResumeItem({ title, subtitle, period, summary, details, star }) {
   return <article className="resumeItem">
     <div className="resumeItemHeader">
       <div>
@@ -26,7 +27,7 @@ function ResumeItem({ title, subtitle, period, summary, details }) {
       {period && <span>{period}</span>}
     </div>
     {summary && <p className="resumeItemSummary">{summary}</p>}
-    <ul>{details.map(detail => <li key={detail}>{detail}</li>)}</ul>
+    {star ? <StarStory story={star} /> : <ul>{details.map(detail => <li key={detail}>{detail}</li>)}</ul>}
   </article>;
 }
 
@@ -34,7 +35,7 @@ export default function Curriculo() {
   return <main id="conteudo" className="resumePage" tabIndex={-1}>
     <div className="resumeToolbar">
       <Link href="/">← Voltar ao portfólio</Link>
-      <span className="printHint">Use Ctrl+P para salvar em PDF</span>
+      <a href="/curriculo-henrique-fiorotti.pdf" download>Baixar currículo em PDF</a>
     </div>
 
     <article className="resume">
@@ -65,6 +66,7 @@ export default function Curriculo() {
           period={item.period}
           summary={item.summary}
           details={item.details}
+          star={item.star}
         />)}
       </section>
 
