@@ -117,3 +117,36 @@ fica em `.audit/links/results.json`; o workflow semanal em
 Referências: [Speed Insights](https://vercel.com/docs/speed-insights/quickstart),
 [laboratório versus campo](https://web.dev/articles/lab-and-field-data-differences),
 [PDFKit](https://pdfkit.org/docs/text.html).
+
+## Verificação após a publicação
+
+Na continuação, a publicação já servia o conteúdo STAR do commit `e291a60`.
+O workflow [Quality checks](https://github.com/Henrique-Fiorotti/Portfolio_Henrique/actions/runs/35545733795)
+terminou com sucesso para esse commit. Home, currículo, PDF, estudo ORBIS,
+robots, sitemap e imagem social responderam 200; CSP, nosniff, HSTS e canonical
+estavam presentes. O verificador foi corrigido para aceitar a equivalência entre
+o canonical da raiz com e sem barra final, mantendo a rejeição de domínio,
+protocolo, caminho ou query diferentes.
+
+Nova medição sobre o domínio público (`.audit/public-star`), com o mesmo número
+de rodadas e perfis da medição pública anterior:
+
+| Medida pública | Antes do deploy | Após o deploy |
+|---|---:|---:|
+| Home mobile — desempenho | 63 | 83 |
+| Home mobile — LCP | 6,86 s | 2,81 s |
+| Home mobile — TBT | 211 ms | 476 ms |
+| Home mobile — transferência inicial | 5,76 MB | 0,35 MB |
+| Home desktop — desempenho | 89 | 100 |
+| Currículo mobile — desempenho | 82 | 98 |
+
+As notas mobile foram 88, 83 e 83. Acessibilidade, boas práticas e SEO ficaram
+em 100 nas sete rodadas. Capturas não indicaram overflow horizontal nem erros
+de JavaScript. O aumento de TBT continua explícito: a melhora do carregamento
+não elimina a necessidade de investigar resposta às interações. Esses testes
+são Lighthouse sobre a publicação, não dados de visitantes reais.
+
+O endpoint do Speed Insights respondeu 200, mas a página ainda não carregava a
+integração habilitada. A coleta de campo depende da configuração no painel e de
+um novo build com `NEXT_PUBLIC_SPEED_INSIGHTS=1`. Consulte o
+[guia de ativação e limites](speed-insights.md).
