@@ -61,7 +61,8 @@ export default function RootLayout({
       <body>
         <a className="skipLink" href="#conteudo">Pular para o conteúdo</a>
         {children}
-        {process.env.NEXT_PUBLIC_SPEED_INSIGHTS === "1" && <SpeedInsights />}
+        {(process.env.NEXT_PUBLIC_SPEED_INSIGHTS === "1"
+          || (process.env.VERCEL_ENV === "production" && process.env.NEXT_PUBLIC_SPEED_INSIGHTS !== "0")) && <SpeedInsights />}
       </body>
     </html>;
 }
