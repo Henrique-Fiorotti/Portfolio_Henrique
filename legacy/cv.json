@@ -1,0 +1,80 @@
+{
+    "nome": "Henrique Berdoldi Fiorotti",
+
+    
+    "email": "hberdoldifiorotti@gmail.com",
+    "github": "Henrique-Fiorotti",
+    "linkedin": "Henrique Berdoldi Fiorotti",
+
+    "objetivo": "Aprendiz em Desenvolvimento de Sistemas. Pretendo fazer parte da equipe desta conceituada empresa, apoiando a automação de rotinas internas com Python e JavaScript para reduzir retrabalho e acelerar entregas. ",
+
+    "formacaoAC": {
+      "formacao1": "Curso Técnico em Desenvolvimento de Sistemas – SENAI Armando de Arruda Pereira, São Caetano do Sul – SP (2º Semestre/2025 – Previsão: 2026)",
+      
+      "formacao2": "Ensino Médio – Colégio Universitário USCS, São Caetano do Sul – SP (2024)"
+    },
+
+    "projetosP": {
+        "projeto1": {
+            "nome": "Sistema de Reserva em Concessionária (SENAI)",
+
+            "conteudo1": "Front‑end completo: desenvolvimento em HTML semântico, CSS (Flexbox) e JavaScript, implementando validações que reduziram em 80% os erros de preenchimento de formulário.",
+
+            "conteudo2": "Design e identidade visual: criei toda a identidade da marca, incluindo paleta de cores, tipografia e wireframes navegáveis.",
+
+            "conteudo3": "Deploy em ambiente real: utilizei uma máquina virtual Linux Debian, clonei o repositório via Git e servi os arquivos estáticos no servidor, garantindo acesso contínuo ao sistema. Não sei usar git"
+        },
+
+        "projeto2": {
+            "nome": "Sistema de Clima Tempo",
+
+            "conteudo1": "Back-end: implementei uma API publica no software, garantindo consultas em tempo real e automatização."
+        }
+    },
+
+    "cursos": {
+        "curso1": "AWS Educate: Introduction to Cloud 101 | Emissão: jun/2025",
+        "curso2": "JavaScript (40 h) - Curso em Vídeo | Concluído: jan/2025",
+        "curso3": "HTML5 e CSS3 (40 h) - Curso em Vídeo | Concluído: jan/2023"
+    },
+
+    "hardSkills":{
+        "skill1": {
+            "skillnome": "Linguagens:",
+
+            "skillconteudo": "Python, JavaScript, PHP (básico)"
+        },
+        "skill2": {
+            "skillnome": "Frameworks:",
+
+            "skillconteudo": "Tailwind, React (básico)"
+        },
+        "skill3": {
+            "skillnome": "Ferramentas:",
+
+            "skillconteudo": "Git/Github, VS Code, Excel, Word"
+        },
+        "skill4": {
+            "skillnome": "Banco de Dados:",
+
+            "skillconteudo": " MySQL (básico)"
+        },
+        "skill5": {
+            "skillnome": "Cloud:",
+
+            "skillconteudo": "AWS Educate (Introduction to Cloud 101)"
+        }
+    },
+
+    "softSkills":{
+        "skill1": "Flexível",
+        "skill2": "Proativo",
+        "skill3": "Habilidade de trabalho em equipe"
+    },
+
+    "idioma":{
+        "idioma1": "Inglês - Intermediário/Avançado",
+        "idioma2": "Espanhol - Básico",
+        "idioma3": "Francês - Básico"
+    }
+}
