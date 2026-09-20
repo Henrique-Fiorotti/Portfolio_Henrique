@@ -59,6 +59,17 @@ try {
     await page.locator(".themeToggle").click();
     record(`${name}: theme switching`);
 
+    await page.locator(".projectDirectoryDetails > summary").click();
+    await page.getByRole("button", { name: "Back-end", exact: true }).click();
+    assert.equal(await page.locator(".projectDirectoryGrid > li").count(), 2);
+    assert.equal(await page.getByRole("button", { name: "Back-end", exact: true }).getAttribute("aria-pressed"), "true");
+    await page.getByRole("button", { name: "Todos", exact: true }).click();
+    assert.equal(await page.locator(".projectDirectoryGrid > li").count(), 10);
+    assert.equal(await page.locator(".experienceRole .starStep").count(), 4);
+    await page.locator(".experienceSection").screenshot({ path: `${output}/${name}-star.png` });
+    await page.locator(".projectDirectory").screenshot({ path: `${output}/${name}-directory.png` });
+    record(`${name}: STAR experience and project filters`);
+
     const timestamps = page.locator(".projectsCarouselTimestamp");
     await timestamps.first().focus();
     await page.keyboard.press("End");
@@ -94,6 +105,18 @@ try {
     assert.equal(response.headers()["x-content-type-options"], "nosniff");
     assert.match(response.headers()["content-security-policy"], /frame-ancestors 'none'/);
     record(`${name}: resume, PDF and security headers`);
+    assert.equal(await page.locator(".resume .starStep").count(), 4);
+    for (const slug of ["orbis", "fastapi-rest-api", "node-express-product-api"]) {
+      const caseResponse = await page.goto(`${base}/projetos/${slug}`);
+      assert.equal(caseResponse.status(), 200);
+      assert.equal(await page.locator(".starStep").count(), 4);
+      assert.equal(await page.locator("canvas").count(), 0);
+      assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
+      const caseAccessibility = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21aa"]).analyze();
+      assert.deepEqual(caseAccessibility.violations.map(v => ({ id: v.id, targets: v.nodes.map(n => n.target) })), []);
+    }
+    assert.equal((await page.request.get(`${base}/projetos/unknown-project`)).status(), 404);
+    record(`${name}: case studies, accessible STAR content and unknown slug 404`);
     await context.close();
   }
 
@@ -103,6 +126,10 @@ try {
   assert.equal(await staticPage.locator("main").evaluate(el => getComputedStyle(el).opacity), "1");
   assert.equal(await staticPage.locator(".loaderOverlay").isVisible(), false);
   assert.notEqual(await staticPage.locator(".projectsCarouselViewport").evaluate(el => getComputedStyle(el).overflowX), "hidden");
+  assert.equal(await staticPage.locator(".projectDirectoryGrid > li").count(), 10);
+  await staticPage.locator(".projectDirectoryDetails > summary").click();
+  assert.equal(await staticPage.locator(".projectDirectoryGrid").isVisible(), true);
+  assert.equal(await staticPage.locator(".experienceRole .starStep").count(), 4);
   record("JavaScript disabled: readable content and native project scrolling");
   await noJs.close();
 
