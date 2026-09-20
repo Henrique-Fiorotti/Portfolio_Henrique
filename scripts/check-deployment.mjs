@@ -21,4 +21,8 @@ await fs.mkdir(".audit/deployment", { recursive: true });
 await fs.writeFile(".audit/deployment/results.json", JSON.stringify({ checkedAt: new Date().toISOString(), origin, results }, null, 2));
 console.log(JSON.stringify(results, null, 2));
 const home = results[0];
-if (results.some(result => result.status !== 200) || !home.csp || home.nosniff !== "nosniff" || !home.hsts || home.canonical !== url.origin + "/") process.exitCode = 1;
+// Next may serialize a root canonical without a trailing slash. Compare parsed
+// URLs so equivalent origins pass while a different path, host or query fails.
+const canonicalMatches = home.canonical && URL.canParse(home.canonical)
+  && new URL(home.canonical).href === new URL("/", url).href;
+if (results.some(result => result.status !== 200) || !home.csp || home.nosniff !== "nosniff" || !home.hsts || !canonicalMatches) process.exitCode = 1;
