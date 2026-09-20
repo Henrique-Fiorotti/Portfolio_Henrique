@@ -113,12 +113,12 @@ aberta com todos os projetos e links; somente os filtros dependem de JavaScript.
 O domínio confirmado é `https://portfolio-henrique-edi3.vercel.app`.
 `SITE_URL` e `VERCEL_PROJECT_PRODUCTION_URL` têm precedência sobre esse padrão.
 
-Para coletar métricas reais, a integração de **Vercel Speed Insights** está
-preparada: habilite o recurso no painel do projeto, configure
-`NEXT_PUBLIC_SPEED_INSIGHTS=1` e faça um novo deploy. Confira a disponibilidade
-e o uso no seu plano antes de ativar. A integração está desativada por padrão
-para não solicitar um endpoint inexistente. Não há dados de visitantes reais
-até a ativação, a publicação e a chegada de tráfego.
+A integração de **Vercel Speed Insights** é ativada automaticamente quando
+`VERCEL_ENV=production`, variável fornecida pela Vercel. Desenvolvimento local
+e previews permanecem desativados. A opção `NEXT_PUBLIC_SPEED_INSIGHTS=0`
+desativa a integração; `1` força a ativação em qualquer ambiente. Alterações
+exigem novo build. Acompanhe a opção gratuita no painel do projeto; dados reais
+dependem da publicação e da chegada de tráfego.
 Documentação: https://vercel.com/docs/speed-insights/quickstart
 
 ## Segurança e desempenho

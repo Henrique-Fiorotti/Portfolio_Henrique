@@ -26,18 +26,19 @@ Verifique as condições atuais no painel e na
 
 1. Abra o projeto na Vercel e a aba **Speed Insights**; habilite a opção gratuita
    se o painel solicitar ativação.
-2. Em **Settings → Environment Variables**, configure
-   `NEXT_PUBLIC_SPEED_INSIGHTS` com o valor `1` para **Production**.
-3. Faça um novo deploy. Variáveis `NEXT_PUBLIC_` entram no build; apenas salvar
-   a variável não modifica o JavaScript da publicação existente.
+2. Publique a versão atual: a integração é ativada automaticamente no ambiente
+   de produção da Vercel (`VERCEL_ENV=production`). Não é necessário criar uma
+   variável para a configuração padrão.
+3. Opcionalmente, `NEXT_PUBLIC_SPEED_INSIGHTS=0` desativa a coleta e `1` força
+   a ativação em qualquer ambiente. Faça novo deploy após mudar esse valor.
 4. Visite algumas páginas e interaja com elas. Depois acompanhe o painel.
    São necessárias visitas para coletar dados; ausência de dados logo após
    ativar não demonstra falha do site.
 
-A integração está em `app/layout.jsx`. Na publicação verificada nesta etapa,
-o endpoint `/_vercel/speed-insights/script.js` respondeu 200, mas a página não
-incluía o componente habilitado. A disponibilidade do endpoint sozinha não
-confirma envio de métricas ou ativação na conta.
+A integração está em `app/layout.jsx`. A configuração anterior exigia uma
+variável de ativação mesmo em produção; essa exigência foi removida. A
+disponibilidade do endpoint sozinha não confirma o envio de métricas: confira
+também o carregamento do script e as respostas das solicitações de coleta.
 
 Para verificar após o novo deploy, use a aba Network do navegador e procure
 solicitações para `/_vercel/speed-insights/`, além de conferir o painel. Extensões
