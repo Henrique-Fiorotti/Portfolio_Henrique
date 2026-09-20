@@ -2,6 +2,7 @@ import { DM_Sans, Roboto_Mono } from "next/font/google";
 import { siteUrl, siteTitle, siteDescription } from "@/lib/site";
 import "lenis/dist/lenis.css";
 import "./globals.css";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const sans = DM_Sans({ subsets: ["latin"], display: "swap", variable: "--font-dm-sans" });
 const mono = Roboto_Mono({ subsets: ["latin"], display: "swap", variable: "--font-roboto-mono" });
@@ -60,6 +61,7 @@ export default function RootLayout({
       <body>
         <a className="skipLink" href="#conteudo">Pular para o conteúdo</a>
         {children}
+        {process.env.NEXT_PUBLIC_SPEED_INSIGHTS === "1" && <SpeedInsights />}
       </body>
     </html>;
 }

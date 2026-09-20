@@ -47,10 +47,9 @@ export const projects = [{
   windowTitle: "Cultura.exe",
   title: "IDENTIDADE & CULTURA",
   subtitle: "Experiência institucional para Paula Sanchez",
-  description: "Projeto web institucional publicado na Vercel, criado para apresentar identidade e cultura por meio de uma experiência visual acessível em diferentes dispositivos.",
+  description: "Projeto web institucional criado para apresentar identidade e cultura por meio de uma experiência visual acessível em diferentes dispositivos.",
   image: "/images/optimized/identidade-project.webp",
   technologies: ["HTML", "CSS", "Design responsivo", "Vercel"],
-  site: "https://identidade-cultura-paula-sanchez.vercel.app",
   repository: "https://github.com/Henrique-Fiorotti/identidade-cultura-paula-sanchez",
   accent: "#d85872"
 }, {
