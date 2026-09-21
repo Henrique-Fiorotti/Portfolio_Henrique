@@ -1,6 +1,8 @@
 import { SkillPill } from "./SkillPill";
 import { StaticWindow as Window } from "./StaticWindow";
 import { ProjectMedia } from "./ProjectMedia";
+import { ProjectDetails } from "./ProjectDetails";
+import { ProjectDetailsModal } from "./ProjectDetailsModal";
 export function ProjectCard({
   project
 }) {
@@ -19,6 +21,9 @@ export function ProjectCard({
             {project.technologies.map(technology => <SkillPill key={technology} name={technology} />)}
           </div>
           <div className="projectActions">
+            <ProjectDetailsModal slug={project.slug} title={project.title} subtitle={project.subtitle}>
+              <ProjectDetails project={project} compact />
+            </ProjectDetailsModal>
             {project.site && <a className="button primary" href={project.site} target="_blank" rel="noreferrer">Ver projeto</a>}
             <a className="button secondary githubRepositoryButton" href={project.repository} target="_blank" rel="noreferrer" aria-label="Repositório GitHub">
               <svg className="githubRepositoryIcon" viewBox="0 0 24 24" aria-hidden="true">

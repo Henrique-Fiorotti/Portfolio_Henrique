@@ -46,9 +46,9 @@ try {
 
     const contact = page.getByRole("button", { name: "Entrar em contato" });
     await contact.click();
-    assert.equal(await page.locator("dialog").evaluate(el => el.open), true);
+    assert.equal(await page.locator(".contactDialog").evaluate(el => el.open), true);
     await page.keyboard.press("Escape");
-    await page.waitForFunction(() => !document.querySelector("dialog").open);
+    await page.waitForFunction(() => !document.querySelector(".contactDialog").open);
     assert.equal(await contact.evaluate(el => document.activeElement === el), true);
     record(`${name}: contact dialog, Escape and focus restoration`);
 
@@ -59,16 +59,12 @@ try {
     await page.locator(".themeToggle").click();
     record(`${name}: theme switching`);
 
-    await page.locator(".projectDirectoryDetails > summary").click();
-    await page.getByRole("button", { name: "Back-end", exact: true }).click();
-    assert.equal(await page.locator(".projectDirectoryGrid > li").count(), 2);
-    assert.equal(await page.getByRole("button", { name: "Back-end", exact: true }).getAttribute("aria-pressed"), "true");
-    await page.getByRole("button", { name: "Todos", exact: true }).click();
-    assert.equal(await page.locator(".projectDirectoryGrid > li").count(), 10);
+    assert.equal(await page.locator(".projectDirectory, .caseStudies").count(), 0);
+    assert.equal(await page.locator(".projectDetailsTrigger").count(), 10);
+    assert.equal(await page.locator(".projectDetailsDialog").count(), 0, "Details are mounted only when opened");
     assert.equal(await page.locator(".experienceRole .starStep").count(), 4);
     await page.locator(".experienceSection").screenshot({ path: `${output}/${name}-star.png` });
-    await page.locator(".projectDirectory").screenshot({ path: `${output}/${name}-directory.png` });
-    record(`${name}: STAR experience and project filters`);
+    record(`${name}: STAR experience and details available only through carousel`);
 
     const timestamps = page.locator(".projectsCarouselTimestamp");
     await timestamps.first().focus();
@@ -89,8 +85,45 @@ try {
       await page.waitForTimeout(800);
       const contrast = await new AxeBuilder({ page }).include(".projectsCarouselViewport").withRules(["color-contrast"]).analyze();
       assert.deepEqual(contrast.violations.map(v => v.nodes.map(n => n.target)), [], `Project ${index + 1} contrast`);
+      const trigger = page.locator(".projectDetailsTrigger").nth(index);
+      const title = await page.locator(".projectContent h3").nth(index).textContent();
+      // Record at pointerdown, after Playwright brings the trigger into view.
+      await page.evaluate(() => document.addEventListener("pointerdown", () => {
+        window.__beforeModalScroll = { y: scrollY, x: document.querySelector(".projectsCarouselViewport").scrollLeft };
+      }, { once: true }));
+      await trigger.click();
+      const beforeOpen = await page.evaluate(() => window.__beforeModalScroll);
+      const modal = page.getByRole("dialog", { name: title, exact: true });
+      await modal.waitFor({ state: "visible" });
+      assert.equal(await modal.locator("h2").textContent(), title);
+      assert.equal(await modal.locator(".starStep").count(), [0, 4, 5].includes(index) ? 4 : 0);
+      assert.equal(await modal.evaluate(el => el.scrollWidth > el.clientWidth), false);
+      assert.equal(await page.evaluate(() => document.body.style.overflow), "hidden");
+      if (index === 0) {
+        await page.keyboard.press("Shift+Tab");
+        assert.equal(await modal.evaluate(el => el.contains(document.activeElement)), true, "Focus stays inside modal");
+        await page.keyboard.press("Tab");
+        assert.equal(await modal.evaluate(el => el.contains(document.activeElement)), true);
+        const modalAccessibility = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21aa"]).analyze();
+        assert.deepEqual(modalAccessibility.violations.map(v => ({ id: v.id, targets: v.nodes.map(n => n.target) })), []);
+        await modal.locator(".projectDetailsBody").evaluate(el => { el.scrollTop = 0; });
+        await page.screenshot({ path: `${output}/${name}-project-modal.png` });
+        const body = modal.locator(".projectDetailsBody");
+        const bounds = await body.boundingBox();
+        await page.mouse.move(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
+        await page.mouse.wheel(0, 600);
+        await page.waitForTimeout(300);
+        if (await body.evaluate(el => el.scrollHeight > el.clientHeight)) assert((await body.evaluate(el => el.scrollTop)) > 0, "Modal scrolls independently");
+      }
+      if (index % 3 === 0) await page.keyboard.press("Escape");
+      else if (index % 3 === 1) await modal.getByRole("button", { name: `Fechar detalhes de ${title}` }).click();
+      else await page.mouse.click(4, 4);
+      await modal.waitFor({ state: "detached" });
+      assert.equal(await trigger.evaluate(el => document.activeElement === el), true);
+      const afterClose = await page.evaluate(() => ({ y: scrollY, x: document.querySelector(".projectsCarouselViewport").scrollLeft }));
+      assert(Math.abs(afterClose.y - beforeOpen.y) < 3 && Math.abs(afterClose.x - beforeOpen.x) < 3, "Opening details preserves carousel position");
     }
-    record(`${name}: contrast checked through all projects`);
+    record(`${name}: all project modals, contrast, closing methods, focus and carousel position`);
 
     const accessibility = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21aa"]).analyze();
     await fs.writeFile(`${output}/${name}-axe.json`, JSON.stringify(accessibility, null, 2));
@@ -126,11 +159,16 @@ try {
   assert.equal(await staticPage.locator("main").evaluate(el => getComputedStyle(el).opacity), "1");
   assert.equal(await staticPage.locator(".loaderOverlay").isVisible(), false);
   assert.notEqual(await staticPage.locator(".projectsCarouselViewport").evaluate(el => getComputedStyle(el).overflowX), "hidden");
-  assert.equal(await staticPage.locator(".projectDirectoryGrid > li").count(), 10);
-  await staticPage.locator(".projectDirectoryDetails > summary").click();
-  assert.equal(await staticPage.locator(".projectDirectoryGrid").isVisible(), true);
+  assert.equal(await staticPage.locator(".projectDetailsTrigger").count(), 10);
   assert.equal(await staticPage.locator(".experienceRole .starStep").count(), 4);
   record("JavaScript disabled: readable content and native project scrolling");
+  await staticPage.locator(".projectDetailsTrigger").first().click();
+  await staticPage.waitForURL("**/projetos/orbis");
+  assert.equal(await staticPage.locator(".starStep").count(), 4);
+  const fallbackResponse = await staticPage.goto(base + "/projetos/producplus");
+  assert.equal(fallbackResponse.status(), 200);
+  assert.equal(await staticPage.locator("h1").textContent(), "PRODUCPLUS");
+  record("JavaScript disabled: project details open as accessible pages");
   await noJs.close();
 
   const blocked = await browser.newContext();

@@ -1131,13 +1131,13 @@ button {
   border: 0;
   appearance: none;
   background: transparent;
-  color: var(--project-color);
+  color: var(--ink);
   font: inherit;
   text-align: center;
-  opacity: .40;
+  opacity: 1;
   cursor: pointer;
   transform: scale(1);
-  transition: opacity .2s ease, transform .2s ease;
+  transition: color .2s ease, transform .2s ease;
 }
 
 .projectsCarouselTimestamp:first-child {
@@ -1174,12 +1174,12 @@ button {
 }
 
 .projectsCarouselTimestamp.isActive {
-  opacity: 1;
+  color: var(--blue);
   transform: scale(1.16);
 }
 
 .projectsCarouselTimestamp:focus-visible {
-  outline: 2px solid var(--project-color);
+  outline: 2px solid var(--blue);
   outline-offset: 5px;
 }
 

@@ -52,10 +52,3 @@ export const caseStudies = {
     evidence: "O repositório permite consultar as rotas e a implementação do estudo.",
   },
 };
-
-export const projectCategories = {
-  orbis: "Front-end", producplus: "Full stack", hubit: "Front-end",
-  "identidade-cultura": "Front-end", "fastapi-rest-api": "Back-end",
-  "node-express-product-api": "Back-end", "hcg-auto": "Full stack",
-  "brutalist-gallery": "Front-end", leitzo: "Front-end", crud: "Front-end",
-};

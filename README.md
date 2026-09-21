@@ -90,9 +90,13 @@ em ganhos medidos nem atribua a uma pessoa o trabalho completo de uma equipe.
 Os resultados atuais descrevem entregas documentadas; métricas de impacto e casos
 específicos de atendimento podem ser acrescentados quando confirmados.
 
-O diretório de projetos permite filtrar por área. Sua abertura usa `<details>`
-nativo para manter a página inicial compacta. Sem JavaScript, a lista pode ser
-aberta com todos os projetos e links; somente os filtros dependem de JavaScript.
+Os detalhes ficam no botão **Saber mais** de cada card do carrossel horizontal.
+O conteúdo do modal só é montado ao abrir; o diálogo nativo mantém foco, Escape
+e rolagem interna. Fechar devolve o foco ao card sem alterar a posição do
+carrossel. Sem JavaScript, o mesmo link abre `/projetos/[slug]`, disponível para
+os dez projetos. Modal e página compartilham `ProjectDetails`: STAR onde há
+estudo de caso documentado, descrição e tecnologias nos demais. As seções
+separadas de destaques e filtros por área foram removidas.
 
 ## Verificação contínua e produção
 
