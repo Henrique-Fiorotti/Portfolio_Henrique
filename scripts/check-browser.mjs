@@ -204,6 +204,25 @@ try {
   record("Storage blocked: theme still works");
   await noStorage.close();
 
+  // The intro flies the name into the header with transforms only. If that
+  // measurement breaks, the crossfade jumps instead of landing on the logo.
+  const intro = await browser.newContext({ viewport: { width: 1440, height: 1000 } });
+  const introPage = await intro.newPage();
+  await introPage.goto(base);
+  await introPage.waitForFunction(() => {
+    const overlay = document.querySelector(".loaderOverlay");
+    const opacity = overlay && Number(getComputedStyle(overlay).opacity);
+    return opacity > 0.05 && opacity < 0.95;
+  }, null, { timeout: 15000 });
+  const landing = await introPage.evaluate(() => {
+    const loader = document.querySelectorAll(".loaderLetter")[0].getBoundingClientRect();
+    const logo = document.querySelector(".brandInitial").getBoundingClientRect();
+    return { left: Math.abs(loader.left - logo.left), bottom: Math.abs(loader.bottom - logo.bottom) };
+  });
+  assert(landing.left <= 1 && landing.bottom <= 1, `Intro must land on the logo, off by ${JSON.stringify(landing)}`);
+  record("Intro lands the name on the header logo");
+  await intro.close();
+
   const narrow = await browser.newContext({ viewport: { width: 320, height: 740 }, reducedMotion: "reduce" });
   const narrowPage = await narrow.newPage();
   await narrowPage.goto(base);

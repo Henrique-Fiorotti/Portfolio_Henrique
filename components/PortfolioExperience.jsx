@@ -54,8 +54,47 @@ export function PortfolioExperience({ children }) {
         const removableLetters = letters
           .filter((_, index) => !LOADER_INITIALS.has(index))
           .reverse();
-        const logoRect = brand.getBoundingClientRect();
-        const logoStyle = window.getComputedStyle(brand);
+        const name = loaderNameRef.current;
+        const dot = loaderDotRef.current;
+
+        // The intro used to animate width, left, top and font-size, which
+        // relaid out the page on every frame. Everything below moves with
+        // transforms instead: the widths are measured once and the pieces are
+        // repositioned from their current scale, so the browser never reflows.
+        const pieces = [...letters, dot];
+        const widths = pieces.map(piece => piece.offsetWidth);
+        const setPieceX = pieces.map(piece => gsap.quickSetter(piece, "x", "px"));
+        const setNameX = gsap.quickSetter(name, "x", "px");
+        const layout = () => {
+          let collapsed = 0;
+          pieces.forEach((piece, index) => {
+            setPieceX[index](-collapsed);
+            collapsed += widths[index] * (1 - gsap.getProperty(piece, "scaleX"));
+          });
+          // The box keeps its full width, so re-centre the visible glyphs.
+          setNameX(collapsed / 2);
+        };
+        layout();
+
+        // Measured when the flight starts, while the name is still unscaled:
+        // changing the origin of a translation-only transform is invisible.
+        let flight = { x: 0, y: 0, scale: 1 };
+        const measureFlight = () => {
+          const initial = letters[0].getBoundingClientRect();
+          const nameRect = name.getBoundingClientRect();
+          // Land the loader's H on the header's H so the crossfade does not
+          // jump. The two boxes have different line heights, so match the
+          // baseline side rather than the top.
+          const logoRect = (brand.querySelector(".brandInitial") || brand).getBoundingClientRect();
+          const scale = parseFloat(window.getComputedStyle(brand).fontSize) / parseFloat(window.getComputedStyle(name).fontSize);
+          gsap.set(name, { transformOrigin: `${initial.left - nameRect.left}px ${initial.bottom - nameRect.top}px` });
+          flight = {
+            x: gsap.getProperty(name, "x") + logoRect.left - initial.left,
+            y: gsap.getProperty(name, "y") + logoRect.bottom - initial.bottom,
+            scale,
+          };
+        };
+
         const tl = gsap.timeline({
           defaults: { ease: "power3.inOut" },
           onComplete: () => {
@@ -82,12 +121,12 @@ export function PortfolioExperience({ children }) {
           duration: 0.13,
           autoAlpha: 0,
           y: -8,
-          width: 0,
           scaleX: 0,
           stagger: 0.045,
           ease: "power2.in",
           force3D: true,
-          autoRound: false
+          autoRound: false,
+          onUpdate: layout
         }, "+=0.5");
 
         tl.to(letters[LOADER_NAME.indexOf("F")], {
@@ -95,28 +134,25 @@ export function PortfolioExperience({ children }) {
           color: "var(--ink)"
         }, "<");
 
-        tl.to(loaderDotRef.current, {
+        tl.to(dot, {
           duration: 0.28,
           autoAlpha: 1,
-          width: "auto",
           scale: 1,
           ease: "back.out(2)",
-          force3D: true
+          force3D: true,
+          onUpdate: layout
         });
 
-        tl.to(loaderNameRef.current, {
+        tl.call(measureFlight, null, "+=0.25");
+        tl.to(name, {
           duration: 0.75,
-          left: logoRect.left,
-          top: logoRect.top,
-          xPercent: 0,
-          yPercent: 0,
-          fontSize: logoStyle.fontSize,
-          fontWeight: logoStyle.fontWeight,
-          letterSpacing: logoStyle.letterSpacing,
+          x: () => flight.x,
+          y: () => flight.y,
+          scale: () => flight.scale,
           ease: "power3.inOut",
           force3D: true,
           autoRound: false
-        }, "+=0.25");
+        });
 
         tl.to(loaderRef.current, {
           duration: 0.5,
