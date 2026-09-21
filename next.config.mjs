@@ -9,6 +9,8 @@ const contentSecurityPolicy = [
   "font-src 'self'",
   "media-src 'self'",
   `connect-src 'self'${isDevelopment ? " ws: wss:" : ""}`,
+  // The animated background runs in a worker served from this origin.
+  "worker-src 'self'",
   "object-src 'none'",
   "base-uri 'self'",
   "form-action 'self'",

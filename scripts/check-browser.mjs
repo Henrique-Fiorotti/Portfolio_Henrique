@@ -44,6 +44,13 @@ try {
     assert.deepEqual(navigationContrast.violations.map(v => v.nodes.map(n => n.target)), [], `${name} navigation contrast`);
     record(`${name}: visible content, no overflow, no initial video download`);
 
+    // The animated background must stay off the main thread wherever the
+    // browser can transfer the canvas, otherwise it competes with interactions.
+    assert.equal(await page.evaluate(() => "transferControlToOffscreen" in HTMLCanvasElement.prototype), true);
+    assert.equal(await page.evaluate(() => { try { document.querySelector(".animatedCodeBackground").getContext("2d"); return false; } catch { return true; } }), true, "Background canvas is owned by the worker");
+    assert.equal(page.workers().filter(worker => worker.url().startsWith(base)).length, 1);
+    record(`${name}: animated background rendered in a worker`);
+
     const contact = page.getByRole("button", { name: "Entrar em contato" });
     await contact.click();
     assert.equal(await page.locator(".contactDialog").evaluate(el => el.open), true);
@@ -87,12 +94,17 @@ try {
       assert.deepEqual(contrast.violations.map(v => v.nodes.map(n => n.target)), [], `Project ${index + 1} contrast`);
       const trigger = page.locator(".projectDetailsTrigger").nth(index);
       const title = await page.locator(".projectContent h3").nth(index).textContent();
-      // Record at pointerdown, after Playwright brings the trigger into view.
-      await page.evaluate(() => document.addEventListener("pointerdown", () => {
-        window.__beforeModalScroll = { y: scrollY, x: document.querySelector(".projectsCarouselViewport").scrollLeft };
-      }, { once: true }));
+      // Bring the trigger into view first and let smooth scrolling settle, so
+      // the comparison below measures the modal and not an unfinished scroll.
+      await trigger.scrollIntoViewIfNeeded();
+      await page.waitForFunction(() => {
+        const current = { y: Math.round(scrollY), x: Math.round(document.querySelector(".projectsCarouselViewport").scrollLeft) };
+        const previous = window.__scrollProbe;
+        window.__scrollProbe = current;
+        return Boolean(previous) && previous.x === current.x && previous.y === current.y;
+      }, null, { polling: 150, timeout: 5000 });
+      const beforeOpen = await page.evaluate(() => window.__scrollProbe);
       await trigger.click();
-      const beforeOpen = await page.evaluate(() => window.__beforeModalScroll);
       const modal = page.getByRole("dialog", { name: title, exact: true });
       await modal.waitFor({ state: "visible" });
       assert.equal(await modal.locator("h2").textContent(), title);
