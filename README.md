@@ -137,3 +137,12 @@ movimento reduzido. O conteúdo permanece acessível sem JavaScript; um temporiz
 libera a página se o loader falhar. O tema funciona com armazenamento bloqueado;
 posições de janelas não são persistidas. E-mail, telefone e currículo continuam
 públicos intencionalmente.
+
+Duas decisões mantêm a thread principal livre. O fundo animado é desenhado num
+worker via `transferControlToOffscreen`; `lib/code-background.js` contém o
+renderizador, usado tanto pelo worker quanto pelo laço de reserva em navegadores
+sem OffscreenCanvas, e a CSP declara `worker-src 'self'`. A introdução anima
+apenas transforms e opacidade: as larguras das letras são medidas uma vez e o
+voo até o logo é um FLIP, de modo que a animação não provoca novo layout. Os
+números medidos e o que **não** melhorou estão em
+[docs/performance-review.md](docs/performance-review.md).

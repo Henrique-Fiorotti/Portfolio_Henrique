@@ -105,6 +105,59 @@ do domínio público precisam ser conferidos depois do deploy. E-mail, telefone 
 currículo continuam públicos. O domínio definitivo não foi inventado: sem variável
 de domínio no build local, o sitemap fica vazio e não é emitido canonical.
 
+## Rodada de trabalho na thread principal
+
+Esta rodada partiu de uma medição, não de uma suposição. O perfil de CPU da
+página inicial sob desaceleração de 4x (`npm run profile:runtime`) mostrou que,
+dos 2643 ms de trabalho na thread principal após o carregamento, 2240 ms eram o
+desenho do fundo animado em canvas, que gerava long tasks a cada poucas centenas
+de milissegundos com a página parada.
+
+O renderizador foi extraído para `lib/code-background.js`, que só precisa de um
+contexto 2D, e passou a rodar num worker através de `transferControlToOffscreen`.
+Navegadores sem OffscreenCanvas mantêm o laço anterior na thread principal. A
+matemática do desenho não mudou. Medido no mesmo build e perfil: long tasks
+caíram de 20 para 8 e o desenho deixou de aparecer na thread principal.
+
+Em seguida, o detalhamento do Lighthouse apontou 927 ms em "Style & Layout" no
+celular. A animação de entrada animava `width` em cada letra e `left`, `top`,
+`font-size`, `font-weight` e `letter-spacing` no nome, propriedades que forçam
+novo layout a cada quadro. Comparando a mesma página com e sem a introdução:
+
+| Medida (4x de desaceleração) | Antes | Depois |
+|---|---:|---:|
+| Layouts durante a introdução | 120 | 17 |
+| Layouts sem a introdução (referência) | 12 | 14 |
+| Tempo de layout com introdução | 1216 ms | ~570 ms |
+| Tempo de layout sem introdução | 640 ms | ~590 ms |
+| Cumulative layout shift | 0,0001–0,0003 | 0 |
+
+As larguras passaram a ser medidas uma única vez; o colapso é recalculado a
+partir da escala atual das letras e reposiciona tudo com transforms, e o voo até
+o logo virou um FLIP. O custo de layout da introdução ficou dentro do ruído de
+zero.
+
+O que **não** mudou: o TBT e a nota de desempenho do Lighthouse. As três rodadas
+móveis deram 232, 140 e 239 ms de TBT contra 272, 193 e 134 ms antes — a mesma
+faixa. O TBT aqui é dominado pela avaliação inicial dos scripts (o pacote de
+animação com GSAP, ScrollTrigger e Lenis custa 426 ms de CPU na janela de
+carregamento, mais que o react-dom), e o LCP de ~3,4 s é determinado pela
+duração da introdução, que segura o conteúdo. Nenhuma das duas mudanças ataca
+esses dois pontos; elas reduzem trabalho sustentado, resposta a interação e
+consumo de bateria.
+
+A suíte de navegador passou a ter 27 grupos, com duas verificações novas: o
+fundo precisa estar sob o controle do worker (o canvas da página não pode mais
+devolver um contexto 2D) e a introdução precisa pousar o nome exatamente sobre o
+logo do cabeçalho, com tolerância de 1 px. Capturas quadro a quadro da introdução
+antes e depois coincidem na entrada e no colapso; o pouso, que antes errava o
+logo em cerca de 13 px, agora é exato. Lint, build e os 27 grupos passam.
+
+Dois caminhos permanecem em aberto, ambos com contrapartidas de produto:
+encurtar a introdução (melhora o LCP diretamente) e adiar o carregamento do
+GSAP, hoje impossível sem reestruturar a introdução, que depende dele para
+revelar o conteúdo.
+
 ## Evidências e reprodução
 
 - [Relatórios anteriores](../.audit/before/summary.json)
