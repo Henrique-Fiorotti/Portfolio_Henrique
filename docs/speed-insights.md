@@ -40,10 +40,17 @@ variável de ativação mesmo em produção; essa exigência foi removida. A
 disponibilidade do endpoint sozinha não confirma o envio de métricas: confira
 também o carregamento do script e as respostas das solicitações de coleta.
 
-Para verificar após o novo deploy, use a aba Network do navegador e procure
-solicitações para `/_vercel/speed-insights/`, além de conferir o painel. Extensões
-de bloqueio podem impedir a coleta. Evite confundir o acesso do auditor automático
-com uma amostra representativa de visitantes.
+Para verificar após o novo deploy, use a aba Network do navegador e confira o
+script com `data-sdkn="@vercel/speed-insights/next"`, além do painel. A Vercel pode
+usar um caminho gerado (`/<identificador>/script.js`) em vez do caminho padrão
+`/_vercel/speed-insights/`. Extensões de bloqueio podem impedir a coleta.
+
+Após a publicação da ativação automática, o navegador carregou o SDK 2.0.0
+com HTTP 200 e sem erros de console. O script servido pela Vercel ignora
+`navigator.webdriver` e navegadores Headless: por isso a visita automatizada de
+verificação não enviou métricas, comportamento esperado. Não foi confirmada a
+presença de dados no painel autenticado. Verifique com uma visita normal e
+acompanhe a chegada de dados reais, sem tratar auditorias como visitantes.
 
 Referências: [primeiros passos](https://vercel.com/docs/speed-insights/quickstart)
 e [métricas](https://vercel.com/docs/speed-insights/metrics).
