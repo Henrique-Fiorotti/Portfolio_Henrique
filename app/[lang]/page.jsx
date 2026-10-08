@@ -73,10 +73,16 @@ export default async function Home({
         <h2>{t.aboutTitle}</h2>
         <div>
           <p>{localize(profile.about, locale)}</p>
-          <dl className="stack">
-            <dt>{t.stack}</dt><dd>{skills.join(" · ")}</dd>
-            <dt>{t.tools}</dt><dd>{tools.join(" · ")}</dd>
-          </dl>
+          <div className="toolGroups">
+            <section>
+              <h3>{t.stack}</h3>
+              <ul className="keycaps">{skills.map(skill => <li key={skill}>{skill}</li>)}</ul>
+            </section>
+            <section>
+              <h3>{t.tools}</h3>
+              <ul className="keycaps">{tools.map(tool => <li key={tool}>{tool}</li>)}</ul>
+            </section>
+          </div>
         </div>
       </section>
 
