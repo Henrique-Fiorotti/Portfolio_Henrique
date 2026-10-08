@@ -32,7 +32,7 @@ export const projects = [{
     fr: "Plateforme de surveillance de machines et de capteurs, de gestion des alertes et des équipes, de rapports et d'assistance opérationnelle par IA, avec mises à jour en temps réel.",
     de: "Plattform zur Überwachung von Maschinen und Sensoren, zur Verwaltung von Alarmen und Teams, für Berichte und KI-gestützte Betriebsunterstützung – mit Echtzeit-Updates."
   },
-  image: "/images/orbis.svg",
+  image: "/images/orbis.webp",
   technologies: ["Next.js", "React", "TypeScript", "Tailwind", "Socket.IO", "IA"],
   site: "https://orbis-3td.com.br",
   repository: "https://github.com/Henrique-Fiorotti/orbis",

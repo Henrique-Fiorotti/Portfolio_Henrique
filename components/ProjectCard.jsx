@@ -8,15 +8,14 @@ const playPreview = event => {
 const pausePreview = event => event.currentTarget.querySelector("video")?.pause();
 export function ProjectCard({
   project,
-  t,
-  eager = false
+  t
 }) {
   const href = project.site ?? project.repository;
   return <article id={project.slug} className="panel projectCard" style={{
     "--project-accent": project.accent
   }}>
       <a className="projectMedia" href={href} target="_blank" rel="noreferrer" tabIndex={-1} aria-hidden="true" onMouseEnter={playPreview} onMouseLeave={pausePreview}>
-        <img src={project.image} alt="" loading={eager ? "eager" : "lazy"} decoding="async" />
+        <img src={project.image} alt="" loading="lazy" decoding="async" />
         {project.video && <video src={project.video} muted loop playsInline preload="none" />}
       </a>
       <div className="projectContent">

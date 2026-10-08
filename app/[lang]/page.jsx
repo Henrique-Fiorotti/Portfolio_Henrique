@@ -57,7 +57,7 @@ export default async function Home({
           <h2>{t.nav.projects}</h2>
           <p>{t.projectsIntro}</p>
         </div>
-        <div className="projectsGrid">{projects.map((project, index) => <ProjectCard key={project.slug} project={{
+        <div className="projectsGrid">{projects.map(project => <ProjectCard key={project.slug} project={{
             ...project,
             subtitle: localize(project.subtitle, locale),
             description: localize(project.description, locale)
@@ -66,7 +66,7 @@ export default async function Home({
             newTab: t.newTab,
             technologies: t.technologies,
             tech: t.tech
-          }} eager={index === 0} />)}</div>
+          }} />)}</div>
       </section>
 
       <section id="sobre" className="container panel aboutSection">
