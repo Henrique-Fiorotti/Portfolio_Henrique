@@ -3,6 +3,8 @@
 import { useEffect, useRef } from "react";
 const SYMBOLS = ["0", "1", "=", "*", "%", "#"];
 const FRAME_INTERVAL = 1000 / 30;
+// Glyph size in px (desktop, mobile); the grid spacing scales with it.
+const GLYPH_SIZE = [15, 12];
 const hash = (column, row) => {
   const value = Math.sin(column * 12.9898 + row * 78.233) * 43758.5453;
   return value - Math.floor(value);
@@ -14,10 +16,58 @@ export function AnimatedCodeBackground() {
     const context = canvas?.getContext("2d");
     if (!canvas || !context) return;
     const motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
+    // Colors and the glyph face come from the design tokens on <html>.
+    const tokens = getComputedStyle(document.documentElement);
+    const blue = tokens.getPropertyValue("--blue").trim();
+    const line = tokens.getPropertyValue("--line").trim();
+    const mono = tokens.getPropertyValue("--font-mono").trim() || "monospace";
     let width = 0;
     let height = 0;
     let animationFrame = 0;
     let lastFrame = 0;
+    // The cursor drags its own field through the glyphs; it trails the pointer and fades when it leaves.
+    const pointer = {
+      x: 0,
+      y: 0,
+      targetX: 0,
+      targetY: 0,
+      power: 0,
+      targetPower: 0
+    };
+    const handlePointerMove = event => {
+      if (event.pointerType !== "mouse") return;
+      pointer.targetX = event.clientX;
+      pointer.targetY = event.clientY;
+      if (pointer.targetPower === 0) {
+        pointer.x = event.clientX;
+        pointer.y = event.clientY;
+      }
+      pointer.targetPower = 1.15;
+    };
+    const handlePointerLeave = () => {
+      pointer.targetPower = 0;
+    };
+    // Rings of glyphs that travel outward through the field: jackpots and clicks on the background.
+    let waves = [];
+    const addWave = (x, y, glyphs, color, speed, life, thickness) => {
+      if (motionPreference.matches) return;
+      waves.push({
+        x,
+        y,
+        glyphs,
+        color,
+        speed,
+        life,
+        thickness,
+        start: performance.now() / 1000
+      });
+    };
+    // A won jackpot sends $ and 7 out from the middle of the screen, where the drawn card lands.
+    const handleJackpot = event => addWave(width / 2, height / 2, "$7", event.detail?.color ?? blue, 900, 1.4, 80);
+    const handleClick = event => {
+      if (event.target.closest(".panel, a, button, header, h2, p")) return;
+      addWave(event.clientX, event.clientY, "#%", blue, 650, 1, 50);
+    };
     const resize = () => {
       const pixelRatio = Math.min(window.devicePixelRatio || 1, 1.5);
       width = window.innerWidth;
@@ -35,8 +85,9 @@ export function AnimatedCodeBackground() {
     };
     const draw = time => {
       const seconds = time / 1000;
-      const cellWidth = width < 640 ? 15 : 18;
-      const cellHeight = width < 640 ? 17 : 20;
+      const glyphSize = GLYPH_SIZE[width < 640 ? 1 : 0];
+      const cellWidth = Math.round(glyphSize * 1.8);
+      const cellHeight = Math.round(glyphSize * 2);
       const columns = Math.ceil(width / cellWidth) + 1;
       const rows = Math.ceil(height / cellHeight) + 1;
       const fields = [{
@@ -58,8 +109,24 @@ export function AnimatedCodeBackground() {
         ry: Math.max(180, height * .28),
         power: .72
       }];
+      pointer.x += (pointer.targetX - pointer.x) * .18;
+      pointer.y += (pointer.targetY - pointer.y) * .18;
+      pointer.power += (pointer.targetPower - pointer.power) * .08;
+      if (pointer.power > .01) fields.push({
+        x: pointer.x,
+        y: pointer.y,
+        rx: 150,
+        ry: 150,
+        power: pointer.power
+      });
+      waves = waves.filter(wave => seconds - wave.start < wave.life);
+      for (const wave of waves) {
+        const age = seconds - wave.start;
+        wave.radius = age * wave.speed;
+        wave.fade = 1 - age / wave.life;
+      }
       context.clearRect(0, 0, width, height);
-      context.font = `600 ${width < 640 ? 9 : 10}px "Roboto Mono", monospace`;
+      context.font = `600 ${glyphSize}px ${mono}`;
       context.textAlign = "center";
       context.textBaseline = "middle";
       for (let row = 0; row < rows; row += 1) {
@@ -67,6 +134,23 @@ export function AnimatedCodeBackground() {
         for (let column = 0; column < columns; column += 1) {
           const x = column * cellWidth;
           const seed = hash(column, row);
+          let strongest = null;
+          let strength = .2;
+          for (const wave of waves) {
+            const ring = (Math.hypot(x - wave.x, y - wave.y) - wave.radius) / wave.thickness;
+            const value = Math.exp(-ring * ring) * wave.fade;
+            if (value > strength) {
+              strongest = wave;
+              strength = value;
+            }
+          }
+          if (strongest) {
+            context.globalAlpha = .25 + strength * .7;
+            context.fillStyle = strongest.color;
+            context.fillText(strongest.glyphs[seed > .5 ? 0 : 1], x, y);
+            context.globalAlpha = 1;
+            continue;
+          }
           let influence = 0;
           for (const field of fields) {
             influence += fieldStrength(x, y, field.x, field.y, field.rx, field.ry) * field.power;
@@ -76,12 +160,14 @@ export function AnimatedCodeBackground() {
           if (influence > .13) {
             const symbol = influence > .68 ? "#" : influence > .43 ? seed > .48 ? "#" : "%" : seed > .55 ? "%" : "*";
             const alpha = .16 + influence * .47;
-            context.fillStyle = `rgba(0, 74, 173, ${alpha})`;
+            context.globalAlpha = alpha;
+            context.fillStyle = blue;
             context.fillText(symbol, x, y);
           } else {
             const symbolIndex = Math.floor(seed * 3);
             const alpha = .1 + seed * .07;
-            context.fillStyle = `rgba(36, 33, 43, ${alpha})`;
+            context.globalAlpha = alpha;
+            context.fillStyle = line;
             context.fillText(SYMBOLS[symbolIndex], x, y);
           }
         }
@@ -108,10 +194,20 @@ export function AnimatedCodeBackground() {
     resize();
     start();
     window.addEventListener("resize", handleResize);
+    window.addEventListener("pointermove", handlePointerMove, {
+      passive: true
+    });
+    document.documentElement.addEventListener("pointerleave", handlePointerLeave);
+    window.addEventListener("jackpot", handleJackpot);
+    window.addEventListener("click", handleClick);
     motionPreference.addEventListener("change", start);
     return () => {
       window.cancelAnimationFrame(animationFrame);
       window.removeEventListener("resize", handleResize);
+      window.removeEventListener("pointermove", handlePointerMove);
+      document.documentElement.removeEventListener("pointerleave", handlePointerLeave);
+      window.removeEventListener("jackpot", handleJackpot);
+      window.removeEventListener("click", handleClick);
       motionPreference.removeEventListener("change", start);
     };
   }, []);
