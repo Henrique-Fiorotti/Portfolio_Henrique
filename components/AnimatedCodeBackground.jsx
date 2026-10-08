@@ -1,8 +1,9 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useRef } from "react";
 const SYMBOLS = ["0", "1", "=", "*", "%", "#"];
-const FRAME_INTERVAL = 1000 / 30;
+// The field drifts slowly, so 20 fps reads as smooth; each frame costs ~7 ms of glyph raster on a mid-range phone.
+const FRAME_INTERVAL = 1000 / 20;
 // Glyph size in px (desktop, mobile); the grid spacing scales with it.
 const GLYPH_SIZE = [15, 12];
 const hash = (column, row) => {
@@ -25,6 +26,8 @@ export function AnimatedCodeBackground() {
     let height = 0;
     let animationFrame = 0;
     let lastFrame = 0;
+    let seeds = new Float32Array(0);
+    let seedColumns = 0;
     // The cursor drags its own field through the glyphs; it trails the pointer and fades when it leaves.
     const pointer = {
       x: 0,
@@ -90,6 +93,11 @@ export function AnimatedCodeBackground() {
       const cellHeight = Math.round(glyphSize * 2);
       const columns = Math.ceil(width / cellWidth) + 1;
       const rows = Math.ceil(height / cellHeight) + 1;
+      if (seedColumns !== columns || seeds.length !== columns * rows) {
+        seeds = new Float32Array(columns * rows);
+        for (let index = 0; index < seeds.length; index += 1) seeds[index] = hash(index % columns, Math.floor(index / columns));
+        seedColumns = columns;
+      }
       const fields = [{
         x: width * (.12 + .35 * (Math.sin(seconds * .21) + 1) / 2),
         y: height * (.18 + .52 * (Math.cos(seconds * .16) + 1) / 2),
@@ -109,9 +117,9 @@ export function AnimatedCodeBackground() {
         ry: Math.max(180, height * .28),
         power: .72
       }];
-      pointer.x += (pointer.targetX - pointer.x) * .18;
-      pointer.y += (pointer.targetY - pointer.y) * .18;
-      pointer.power += (pointer.targetPower - pointer.power) * .08;
+      pointer.x += (pointer.targetX - pointer.x) * .26;
+      pointer.y += (pointer.targetY - pointer.y) * .26;
+      pointer.power += (pointer.targetPower - pointer.power) * .12;
       if (pointer.power > .01) fields.push({
         x: pointer.x,
         y: pointer.y,
@@ -133,7 +141,7 @@ export function AnimatedCodeBackground() {
         const y = row * cellHeight;
         for (let column = 0; column < columns; column += 1) {
           const x = column * cellWidth;
-          const seed = hash(column, row);
+          const seed = seeds[row * columns + column];
           let strongest = null;
           let strength = .2;
           for (const wave of waves) {
