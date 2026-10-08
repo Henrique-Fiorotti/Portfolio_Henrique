@@ -7,6 +7,7 @@
   --line: #24212b;
   --shadow: 8px 8px 0 #24212b;
   --on-blue-muted: #d6e3ff;
+  --scrim: rgba(23, 21, 29, .86);
   --white: #fff;
   --violet: #6f57d9;
   --success: #1f9d55;
@@ -638,7 +639,7 @@ video {
 
   .projectCard,
   .aboutSection,
-  .resumePanel {
+  .sheetThumb {
     animation: lift linear backwards;
     animation-timeline: view();
     animation-range: entry 0% entry 60%;
@@ -830,22 +831,94 @@ video {
   padding-top: 80px;
 }
 
-.resumeBlock .sectionHeading {
-  align-items: center;
-}
-
-.resumePanel {
-  padding: clamp(28px, 5vw, 56px);
+.resumeStage {
   display: grid;
-  grid-template-columns: 1.2fr 1fr;
-  gap: 0 64px;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: clamp(32px, 6vw, 80px);
 }
 
-.resumePanel section {
-  margin-bottom: 32px;
+/* The mini A4 page is the real résumé rendered at 794px (A4 at 96dpi) and scaled into the frame. */
+.sheetThumb {
+  --thumb: 320;
+  position: relative;
+  width: calc(var(--thumb) * 1px);
+  aspect-ratio: 210 / 297;
+  overflow: hidden;
+  border: 2px solid var(--line);
+  border-radius: 4px;
+  background: var(--white);
+  box-shadow: 8px 8px 0 var(--line);
+  transition: transform .25s var(--ease-out), box-shadow .25s var(--ease-out);
 }
 
-.resumePanel h3 {
+.sheetThumb:hover,
+.sheetThumb:has(:focus-visible) {
+  transform: translate(-3px, -3px) rotate(-1.5deg);
+  box-shadow: 11px 11px 0 var(--line);
+}
+
+.sheetThumbPage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 794px;
+  transform: scale(calc(var(--thumb) / 794));
+  transform-origin: top left;
+  pointer-events: none;
+}
+
+.sheetThumbPage .resumeSheet {
+  border: 0;
+  box-shadow: none;
+}
+
+.sheetThumbButton {
+  position: absolute;
+  inset: 0;
+  padding-bottom: 18px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  border: 0;
+  background: linear-gradient(to top, var(--glass) 0%, transparent 32%);
+  cursor: zoom-in;
+}
+
+.sheetThumbButton:focus-visible {
+  outline-offset: -8px;
+}
+
+.sheetThumbHint {
+  padding: 9px 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 2px solid var(--line);
+  border-radius: 5px;
+  background: var(--ink);
+  color: var(--white);
+  font: 700 12px var(--font-mono);
+  white-space: nowrap;
+}
+
+.sheetThumbHint svg {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.resumeSummary {
+  padding: 24px;
+  border-radius: 8px;
+  background: var(--lavender);
+}
+
+.resumeSummary h3 {
   margin-bottom: 12px;
   color: var(--blue);
   font: 700 13px var(--font-mono);
@@ -853,23 +926,176 @@ video {
   text-transform: uppercase;
 }
 
-.resumePanel p,
-.resumePanel li {
-  color: var(--paper-text);
-  line-height: 1.65;
+.resumeSummary p {
+  max-width: 46ch;
+  font-size: clamp(19px, 2vw, 24px);
+  line-height: 1.5;
 }
 
-.resumePanel ul {
+.resumeActions {
+  margin-top: 28px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* The full sheet keeps A4 proportions and reflows by its own width, so the scaled thumbnail always shows the desktop page. */
+.resumeSheet {
+  container-type: inline-size;
+  aspect-ratio: 210 / 297;
+  padding: 7% 7.5%;
+  border: 2px solid var(--line);
+  background: var(--white);
+  color: var(--ink);
+  box-shadow: var(--shadow);
+}
+
+.sheetHeader {
+  padding-bottom: 22px;
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  border-bottom: 3px solid var(--blue);
+}
+
+.sheetHeader p {
+  color: var(--blue);
+  font: 700 12px var(--font-mono);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.sheetHeader h2 {
+  margin-top: 6px;
+  font: 700 40px/1 var(--font-sans);
+  letter-spacing: -.03em;
+}
+
+.sheetHeader address {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: right;
+  font: 500 12.5px var(--font-mono);
+  font-style: normal;
+}
+
+.sheetHeader a {
+  color: var(--blue);
+}
+
+.resumeSheet section {
+  margin-top: 24px;
+}
+
+.resumeSheet h3 {
+  margin-bottom: 10px;
+  color: var(--blue);
+  font: 700 12.5px var(--font-mono);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.resumeSheet p,
+.resumeSheet li {
+  color: var(--paper-text);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.resumeSheet ul {
   padding-left: 18px;
 }
 
-.resumeItem+.resumeItem {
-  margin-top: 18px;
+.sheetItem+.sheetItem {
+  margin-top: 14px;
 }
 
-.resumeItem h4 {
-  margin-bottom: 6px;
+.sheetItem h4 {
+  margin-bottom: 4px;
+  font-size: 15px;
   font-weight: 600;
+}
+
+.sheetColumns {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: 24px;
+}
+
+@container (max-width: 560px) {
+  .sheetHeader {
+    display: block;
+  }
+
+  .sheetHeader h2 {
+    font-size: 32px;
+  }
+
+  .sheetHeader address {
+    margin-top: 14px;
+    text-align: left;
+  }
+
+  .sheetColumns {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}
+
+/* Modal: a full-screen dialog over a dark scrim; the page behind stops scrolling while it is open. */
+html:has(.resumeDialog[open]) {
+  overflow: hidden;
+}
+
+.resumeDialog {
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+}
+
+.resumeDialog::backdrop {
+  background: transparent;
+}
+
+.resumeOverlay {
+  position: fixed;
+  inset: 0;
+  background: var(--scrim);
+}
+
+.resumeDialogBody {
+  position: relative;
+  min-height: 100%;
+  padding: 20px 16px 56px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  pointer-events: none;
+}
+
+.resumeToolbar,
+.resumeSheetFrame {
+  width: min(794px, 100%);
+  pointer-events: auto;
+}
+
+.resumeToolbar {
+  position: sticky;
+  z-index: 1;
+  top: 16px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
 }
 
 @media (max-width:850px) {
@@ -917,9 +1143,6 @@ video {
     grid-template-columns: 1fr;
   }
 
-  .resumePanel {
-    grid-template-columns: 1fr;
-  }
 }
 
 @media (max-width:620px) {
@@ -1008,6 +1231,19 @@ video {
 
   .keycaps {
     grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  }
+
+  .resumeStage {
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+
+  .sheetThumb {
+    --thumb: 250;
+  }
+
+  .resumeSummary {
+    justify-self: stretch;
   }
 
   .keycaps li {

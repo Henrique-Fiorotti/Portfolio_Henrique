@@ -4,6 +4,8 @@ import { CasinoProjectButton } from "@/components/CasinoProjectButton";
 import { DecodeName } from "@/components/DecodeName";
 import { Greeting } from "@/components/Greeting";
 import { ProjectCard } from "@/components/ProjectCard";
+import { ResumeSheet } from "@/components/ResumeSheet";
+import { ResumeViewer } from "@/components/ResumeViewer";
 import { SiteHeader } from "@/components/SiteHeader";
 import { messages } from "@/data/i18n";
 import { localize, profile, projects, skills, tools } from "@/data/portfolio";
@@ -89,26 +91,17 @@ export default async function Home({
       <section id="curriculo" className="container resumeBlock">
         <div className="sectionHeading">
           <h2>{t.nav.resume}</h2>
-          <a className="button secondary" href="/curriculo-henrique-fiorotti.pdf" download="curriculo-henrique-fiorotti.pdf">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M12 3v12m0 0 4-4m-4 4-4-4M5 19h14" />
-            </svg>
-            {t.resume.pdf}
-          </a>
         </div>
-        <div className="panel resumePanel">
-          <div>
-            <section><h3>{t.resume.objective}</h3><p>{resume.objective}</p></section>
-            <section><h3>{t.resume.education}</h3><ul>{resume.education.map(item => <li key={item}>{item}</li>)}</ul></section>
-            <section><h3>{t.resume.experience}</h3>{resume.experience.map(item => <div className="resumeItem" key={item.title}><h4>{item.title}</h4><ul>{item.details.map(detail => <li key={detail}>{detail}</li>)}</ul></div>)}</section>
-          </div>
-          <div>
-            <section><h3>{t.resume.courses}</h3><ul>{resume.courses.map(item => <li key={item}>{item}</li>)}</ul></section>
-            <section><h3>{t.resume.hardSkills}</h3><ul>{resume.hardSkills.map(item => <li key={item}>{item}</li>)}</ul></section>
-            <section><h3>{t.resume.softSkills}</h3><ul>{resume.softSkills.map(item => <li key={item}>{item}</li>)}</ul></section>
-            <section><h3>{t.resume.languages}</h3><ul>{resume.languages.map(item => <li key={item}>{item}</li>)}</ul></section>
-          </div>
-        </div>
+        <ResumeViewer sheet={<ResumeSheet t={t.resume} resume={resume} profile={profile} />} summary={<>
+            <h3>{t.resume.objective}</h3>
+            <p>{resume.objective}</p>
+          </>} labels={{
+          title: `${t.nav.resume} · ${profile.name}`,
+          open: t.resume.open,
+          close: t.resume.close,
+          hint: t.resume.hint,
+          pdf: t.resume.pdf
+        }} />
       </section>
     </main>
 
