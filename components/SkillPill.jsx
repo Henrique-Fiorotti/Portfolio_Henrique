@@ -6,19 +6,15 @@ const iconMap = {
   PHP: "php01-svgrepo-com.svg",
   Tailwind: "tailwind-svgrepo-com.svg",
   GitHub: "github-icon-1.svg",
-  "VS Code": "vscode-svgrepo-com.svg",
-  Excel: "excel-svgrepo-com.svg",
-  Word: "word-svgrepo-com.svg",
-  Canva: "canva-svgrepo-com.svg",
-  Illustrator: "adobe-illustrator-svgrepo-com.svg",
-  Photoshop: "adobe-photoshop-svgrepo-com.svg"
+  Canva: "canva-svgrepo-com.svg"
 };
 export function SkillPill({
-  name
+  name,
+  label = name
 }) {
   const icon = iconMap[name];
   return <span className="skillPill">
       {icon && <img src={`/images/${icon}`} alt="" width="18" height="18" />}
-      {name}
+      {label}
     </span>;
 }
