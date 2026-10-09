@@ -60,48 +60,6 @@ export const projects = [{
   repository: "https://github.com/Henrique-Fiorotti/identidade-cultura-paula-sanchez",
   accent: "#d85872"
 }, {
-  slug: "fastapi-rest-api",
-  title: "USER MANAGEMENT API",
-  subtitle: {
-    pt: "API REST com arquitetura organizada",
-    en: "REST API with a clean architecture",
-    es: "API REST con arquitectura organizada",
-    fr: "API REST à l'architecture soignée",
-    de: "REST-API mit sauberer Architektur"
-  },
-  description: {
-    pt: "API para gerenciamento de usuários com CRUD, validação via Pydantic, respostas seguras, tratamento de erros e documentação automática com Swagger e ReDoc.",
-    en: "User management API with CRUD, Pydantic validation, safe responses, error handling and automatic Swagger and ReDoc documentation.",
-    es: "API de gestión de usuarios con CRUD, validación con Pydantic, respuestas seguras, manejo de errores y documentación automática con Swagger y ReDoc.",
-    fr: "API de gestion des utilisateurs avec CRUD, validation Pydantic, réponses sécurisées, gestion des erreurs et documentation automatique avec Swagger et ReDoc.",
-    de: "API zur Benutzerverwaltung mit CRUD, Pydantic-Validierung, sicheren Antworten, Fehlerbehandlung und automatischer Dokumentation mit Swagger und ReDoc."
-  },
-  image: "https://opengraph.githubassets.com/portfolio/henrique-fiorotti/fastapi-rest-api",
-  technologies: ["Python", "FastAPI", "Pydantic", "REST API"],
-  repository: "https://github.com/Henrique-Fiorotti/fastapi-rest-api",
-  accent: "#009688"
-}, {
-  slug: "node-express-product-api",
-  title: "PRODUCT API",
-  subtitle: {
-    pt: "Consulta de produtos com Node.js",
-    en: "Product lookup with Node.js",
-    es: "Consulta de productos con Node.js",
-    fr: "Consultation de produits avec Node.js",
-    de: "Produktabfrage mit Node.js"
-  },
-  description: {
-    pt: "API REST simples para consulta de produtos, desenvolvida como estudo prático de rotas, recursos HTTP e construção de serviços com Node.js e Express.",
-    en: "Simple REST API for looking up products, built as a hands-on study of routes, HTTP resources and building services with Node.js and Express.",
-    es: "API REST sencilla para consultar productos, desarrollada como estudio práctico de rutas, recursos HTTP y creación de servicios con Node.js y Express.",
-    fr: "API REST simple de consultation de produits, développée comme étude pratique des routes, des ressources HTTP et de la création de services avec Node.js et Express.",
-    de: "Einfache REST-API zur Produktabfrage, entwickelt als Praxisstudie zu Routen, HTTP-Ressourcen und dem Aufbau von Services mit Node.js und Express."
-  },
-  image: "https://opengraph.githubassets.com/portfolio/henrique-fiorotti/node-express-product-api",
-  technologies: ["JavaScript", "Node.js", "Express", "REST API"],
-  repository: "https://github.com/Henrique-Fiorotti/node-express-product-api",
-  accent: "#43853d"
-}, {
   slug: "hcg-auto",
   title: "HCG-AUTO",
   subtitle: {
