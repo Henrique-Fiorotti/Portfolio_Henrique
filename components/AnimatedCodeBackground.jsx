@@ -17,10 +17,16 @@ export function AnimatedCodeBackground() {
     const context = canvas?.getContext("2d");
     if (!canvas || !context) return;
     const motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
-    // Colors and the glyph face come from the design tokens on <html>.
+    const colorScheme = window.matchMedia("(prefers-color-scheme: dark)");
+    // Colors and the glyph face come from the design tokens on <html>; colors are re-read when the OS theme flips.
     const tokens = getComputedStyle(document.documentElement);
-    const blue = tokens.getPropertyValue("--blue").trim();
-    const line = tokens.getPropertyValue("--line").trim();
+    let blue = "";
+    let line = "";
+    const readColors = () => {
+      blue = tokens.getPropertyValue("--blue").trim();
+      line = tokens.getPropertyValue("--line").trim();
+    };
+    readColors();
     const mono = tokens.getPropertyValue("--font-mono").trim() || "monospace";
     let width = 0;
     let height = 0;
@@ -209,6 +215,11 @@ export function AnimatedCodeBackground() {
     window.addEventListener("jackpot", handleJackpot);
     window.addEventListener("click", handleClick);
     motionPreference.addEventListener("change", start);
+    const handleScheme = () => {
+      readColors();
+      start();
+    };
+    colorScheme.addEventListener("change", handleScheme);
     return () => {
       window.cancelAnimationFrame(animationFrame);
       window.removeEventListener("resize", handleResize);
@@ -217,6 +228,7 @@ export function AnimatedCodeBackground() {
       window.removeEventListener("jackpot", handleJackpot);
       window.removeEventListener("click", handleClick);
       motionPreference.removeEventListener("change", start);
+      colorScheme.removeEventListener("change", handleScheme);
     };
   }, []);
   return <canvas ref={canvasRef} className="animatedCodeBackground" aria-hidden="true" />;

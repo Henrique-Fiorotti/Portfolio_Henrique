@@ -1,31 +1,46 @@
 :root {
+  color-scheme: light dark;
   --ink: #17151d;
   --portfolio-muted: #696570;
   --blue: #004aad;
+  --blue-surface: var(--blue);
   --lavender: #eeeaff;
   --panel: #fff;
   --line: #24212b;
-  --shadow: 8px 8px 0 #24212b;
+  --shadow: 8px 8px 0 var(--line);
   --on-blue-muted: #d6e3ff;
   --scrim: rgba(23, 21, 29, .86);
   --white: #fff;
   --violet: #6f57d9;
-  --success: #1f9d55;
+  --ink-surface: var(--ink);
   --on-ink-accent: #9ec7ff;
   --on-ink-link: #bcd6ff;
   --on-ink-muted: #a9a6b3;
   --pill-surface: #faf9fc;
   --pill-border: #cbc6d3;
-  --paper: #e9e7ed;
   --paper-text: #4e4b54;
-  --paper-shadow: 0 12px 45px rgba(36, 33, 43, .15);
-  --wash: rgba(36, 33, 43, .06);
-  --hairline: rgba(36, 33, 43, .12);
   --glass: rgba(255, 255, 255, .82);
-  --glass-soft: rgba(255, 255, 255, .7);
-  --glass-lavender: rgba(238, 234, 255, .55);
-  --float-shadow: 0 1px 2px rgba(36, 33, 43, .06), 0 12px 32px -12px rgba(36, 33, 43, .22);
   --ease-out: cubic-bezier(.16, 1, .3, 1);
+}
+
+/* Dark follows the OS. --blue is the accent on text; --blue-surface is the deeper blue that carries white text. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ink: #ece9f3;
+    --portfolio-muted: #a6a1b0;
+    --blue: #5b8def;
+    --blue-surface: #2a62d6;
+    --lavender: #14121a;
+    --panel: #1e1b26;
+    --line: #8a82a3;
+    --on-blue-muted: #e8efff;
+    --scrim: rgba(0, 0, 0, .8);
+    --ink-surface: #0c0b10;
+    --pill-surface: #24212d;
+    --pill-border: #4a4556;
+    --paper-text: #c4bfcd;
+    --glass: rgba(30, 27, 38, .82);
+  }
 }
 
 /* Panels start pressed flat against the page and lift into their shadow. */
@@ -84,7 +99,7 @@ video {
 }
 
 ::selection {
-  background: var(--blue);
+  background: var(--blue-surface);
   color: var(--white);
 }
 
@@ -109,7 +124,7 @@ video {
   left: 16px;
   padding: 12px 16px;
   border-radius: 5px;
-  background: var(--ink);
+  background: var(--ink-surface);
   color: var(--white);
   font: 600 13px var(--font-mono);
 }
@@ -211,7 +226,7 @@ video {
 .topbarLink[aria-current],
 .languageMenu a[aria-current] {
   border-color: var(--line);
-  background: var(--blue);
+  background: var(--blue-surface);
   color: var(--white);
 }
 
@@ -382,11 +397,11 @@ video {
 
 .button.primary {
   color: var(--white);
-  background: var(--blue);
+  background: var(--blue-surface);
 }
 
 .button.secondary {
-  background: var(--white);
+  background: var(--panel);
 }
 
 .button svg {
@@ -407,7 +422,7 @@ video {
 
 .casinoButton {
   overflow: hidden;
-  background: linear-gradient(110deg, var(--blue) 0%, var(--blue) 42%, var(--violet) 72%, var(--blue) 100%);
+  background: linear-gradient(110deg, var(--blue-surface) 0%, var(--blue-surface) 42%, var(--violet) 72%, var(--blue-surface) 100%);
   background-size: 230% 100%;
   background-position: 0% 50%;
   transition: transform .18s, box-shadow .18s, background-position .45s ease;
@@ -544,13 +559,13 @@ video {
   display: grid;
   grid-template-columns: .9fr 1.1fr;
   gap: 60px;
-  background: var(--blue);
+  background: var(--blue-surface);
   color: var(--white);
 }
 
 .aboutSection ::selection {
   background: var(--white);
-  color: var(--blue);
+  color: var(--blue-surface);
 }
 
 .aboutSection p {
@@ -763,7 +778,7 @@ video {
   display: grid;
   grid-template-columns: 2fr 1fr;
   gap: 70px;
-  background: var(--ink);
+  background: var(--ink-surface);
   color: var(--white);
 }
 
@@ -847,7 +862,7 @@ video {
   overflow: hidden;
   border: 2px solid var(--line);
   border-radius: 4px;
-  background: var(--white);
+  background: var(--panel);
   box-shadow: 8px 8px 0 var(--line);
   transition: transform .25s var(--ease-out), box-shadow .25s var(--ease-out);
 }
@@ -896,7 +911,7 @@ video {
   gap: 8px;
   border: 2px solid var(--line);
   border-radius: 5px;
-  background: var(--ink);
+  background: var(--ink-surface);
   color: var(--white);
   font: 700 12px var(--font-mono);
   white-space: nowrap;
@@ -945,7 +960,7 @@ video {
   aspect-ratio: 210 / 297;
   padding: 7% 7.5%;
   border: 2px solid var(--line);
-  background: var(--white);
+  background: var(--panel);
   color: var(--ink);
   box-shadow: var(--shadow);
 }
