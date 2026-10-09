@@ -9,18 +9,23 @@ export function SiteHeader({
 }) {
   const [active, setActive] = useState(null);
   useEffect(() => {
-    // A section counts as current while it crosses the middle band of the viewport.
-    const observer = new IntersectionObserver(entries => entries.forEach(entry => {
-      if (entry.isIntersecting) setActive(SECTIONS.includes(entry.target.id) ? entry.target.id : null);
-    }), {
-      rootMargin: "-45% 0px -50% 0px"
+    // The current section is the last one whose top has reached the line where anchor jumps land
+    // (scroll-margin-top in globals.css, plus slack); at the bottom of the page the last section wins,
+    // since the footer can never scroll that high.
+    const update = () => {
+      const ids = ["top", ...SECTIONS];
+      const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
+      const current = atBottom ? ids.at(-1) : ids.findLast(id => document.getElementById(id)?.getBoundingClientRect().top <= 100);
+      setActive(SECTIONS.includes(current) ? current : null);
+    };
+    update();
+    window.addEventListener("scroll", update, {
+      passive: true
     });
-    ["top", ...SECTIONS].forEach(id => {
-      const section = document.getElementById(id);
-      if (section) observer.observe(section);
-    });
+    window.addEventListener("resize", update);
     return () => {
-      observer.disconnect();
+      window.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
     };
   }, []);
   const link = (id, label) => <a className="topbarLink" href={`#${id}`} aria-current={active === id ? "location" : undefined}>{label}</a>;

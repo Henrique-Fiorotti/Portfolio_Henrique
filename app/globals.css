@@ -542,8 +542,9 @@ video {
   margin-top: 80px;
 }
 
+/* Clears the sticky top bar (12px offset + 64px bar) with room to breathe; SiteHeader reads the same line. */
 [id] {
-  scroll-margin-top: 30px;
+  scroll-margin-top: 96px;
 }
 
 .aboutSection h2,
