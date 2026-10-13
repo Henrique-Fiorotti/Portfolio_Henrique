@@ -6,7 +6,7 @@ export const profile = {
   github: "https://github.com/Henrique-Fiorotti",
   linkedin: "https://www.linkedin.com/in/henrique-berdoldi-fiorotti-4594bb291/",
   about: {
-    pt: "Sou estudante de Técnico em Desenvolvimento de Sistemas pelo SENAI e atuo na automação de rotinas com Python e JavaScript. Desenvolvo soluções front-end e back-end, sempre buscando unir uma boa experiência visual a código organizado.",
+    pt: "Sou Técnico em Desenvolvimento de Sistemas pelo SENAI e atuo na automação de rotinas com Python e JavaScript. Desenvolvo soluções front-end e back-end, sempre buscando unir uma boa experiência visual, código organizado e boa semântica.",
     en: "I'm a Systems Development technical student at SENAI and I automate routines with Python and JavaScript. I build front-end and back-end solutions, always aiming to combine a good visual experience with well-organized code.",
     es: "Soy estudiante de Técnico en Desarrollo de Sistemas en el SENAI y trabajo en la automatización de rutinas con Python y JavaScript. Desarrollo soluciones front-end y back-end, buscando siempre unir una buena experiencia visual con código organizado.",
     fr: "Je suis en formation technique en développement de systèmes au SENAI et j'automatise des routines avec Python et JavaScript. Je développe des solutions front-end et back-end, en cherchant toujours à allier une bonne expérience visuelle à un code bien organisé.",

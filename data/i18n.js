@@ -76,10 +76,9 @@ export const messages = {
       pdf: "Baixar PDF",
       objective: "Objetivo",
       education: "Formação acadêmica",
-      experience: "Projetos pessoais",
+      experience: "Experiência e projetos",
       courses: "Cursos e certificações",
       hardSkills: "Hard skills",
-      softSkills: "Soft skills",
       languages: "Idiomas"
     }
   },
@@ -139,10 +138,9 @@ export const messages = {
       pdf: "Download PDF (PT)",
       objective: "Objective",
       education: "Education",
-      experience: "Personal projects",
+      experience: "Experience and projects",
       courses: "Courses and certifications",
       hardSkills: "Hard skills",
-      softSkills: "Soft skills",
       languages: "Languages"
     }
   },
@@ -201,10 +199,9 @@ export const messages = {
       pdf: "Descargar PDF (PT)",
       objective: "Objetivo",
       education: "Formación académica",
-      experience: "Proyectos personales",
+      experience: "Experiencia y proyectos",
       courses: "Cursos y certificaciones",
       hardSkills: "Habilidades técnicas",
-      softSkills: "Habilidades blandas",
       languages: "Idiomas"
     }
   },
@@ -263,10 +260,9 @@ export const messages = {
       pdf: "Télécharger le PDF (PT)",
       objective: "Objectif",
       education: "Formation",
-      experience: "Projets personnels",
+      experience: "Expérience et projets",
       courses: "Cours et certifications",
       hardSkills: "Compétences techniques",
-      softSkills: "Savoir-être",
       languages: "Langues"
     }
   },
@@ -326,10 +322,9 @@ export const messages = {
       pdf: "PDF herunterladen (PT)",
       objective: "Ziel",
       education: "Ausbildung",
-      experience: "Persönliche Projekte",
+      experience: "Erfahrung und Projekte",
       courses: "Kurse und Zertifikate",
       hardSkills: "Fachkenntnisse",
-      softSkills: "Soziale Kompetenzen",
       languages: "Sprachen"
     }
   }

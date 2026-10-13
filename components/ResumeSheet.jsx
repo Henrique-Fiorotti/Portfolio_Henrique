@@ -26,7 +26,6 @@ export function ResumeSheet({
       <section><h3>{t.courses}</h3>{list(resume.courses)}</section>
       <div className="sheetColumns">
         <section><h3>{t.hardSkills}</h3>{list(resume.hardSkills)}</section>
-        <section><h3>{t.softSkills}</h3>{list(resume.softSkills)}</section>
         <section><h3>{t.languages}</h3>{list(resume.languages)}</section>
       </div>
     </article>;
