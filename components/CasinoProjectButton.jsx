@@ -40,11 +40,6 @@ export function CasinoProjectButton({
       card.classList.remove("isJackpot");
       void card.offsetWidth;
       card.classList.add("isJackpot");
-      window.dispatchEvent(new CustomEvent("jackpot", {
-        detail: {
-          color: project.accent
-        }
-      }));
       timersRef.current.push(setTimeout(() => card.classList.remove("isJackpot"), 2400));
     }
     timersRef.current.push(setTimeout(() => setPhase("idle"), 1800));

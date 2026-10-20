@@ -1,7 +1,7 @@
-import { AnimatedCodeBackground } from "@/components/AnimatedCodeBackground";
 import { Footer } from "@/components/Footer";
 import { CasinoProjectButton } from "@/components/CasinoProjectButton";
 import { DecodeName } from "@/components/DecodeName";
+import Grainient from "@/components/Grainient";
 import FolderFloat from "@/components/FolderFloat";
 import { Greeting } from "@/components/Greeting";
 import { ProjectCard } from "@/components/ProjectCard";
@@ -21,7 +21,12 @@ export default async function Home({
   const t = messages[locale];
   const resume = resumes[locale];
   return <>
-    <AnimatedCodeBackground />
+    <Grainient style={{
+      position: "fixed",
+      inset: 0,
+      zIndex: -1,
+      pointerEvents: "none"
+    }} colors={["#12154a", "#1a1a31", "#1a1a31", "#1a1a31", "#1b1f5a"]} angle={47} flow={0.75} silk={0.21} grainAmount={0.12} scale={0.45} speed={0.15} saturation={0.92} variation={2} interactive={false} stir={0.7} clickSwirl={false} />
     <a className="skipLink" href="#conteudo">{t.skip}</a>
     <SiteHeader locale={locale} t={{
       navLabel: t.navLabel,
