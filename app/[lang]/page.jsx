@@ -2,11 +2,13 @@ import { AnimatedCodeBackground } from "@/components/AnimatedCodeBackground";
 import { Footer } from "@/components/Footer";
 import { CasinoProjectButton } from "@/components/CasinoProjectButton";
 import { DecodeName } from "@/components/DecodeName";
+import FolderFloat from "@/components/FolderFloat";
 import { Greeting } from "@/components/Greeting";
 import { ProjectCard } from "@/components/ProjectCard";
 import { ResumeSheet } from "@/components/ResumeSheet";
 import { ResumeViewer } from "@/components/ResumeViewer";
 import { SiteHeader } from "@/components/SiteHeader";
+import { iconMap } from "@/components/SkillPill";
 import { messages } from "@/data/i18n";
 import { localize, profile, projects, skills, tools } from "@/data/portfolio";
 import { resume as resumes } from "@/data/resume";
@@ -76,14 +78,11 @@ export default async function Home({
         <div>
           <p>{localize(profile.about, locale)}</p>
           <div className="toolGroups">
-            <section>
-              <h3>{t.stack}</h3>
-              <ul className="keycaps">{skills.map(skill => <li key={skill}>{skill}</li>)}</ul>
-            </section>
-            <section>
-              <h3>{t.tools}</h3>
-              <ul className="keycaps">{tools.map(tool => <li key={tool}>{tool}</li>)}</ul>
-            </section>
+            {[[t.stack, skills], [t.tools, tools]].map(([label, list]) => <FolderFloat key={label} className="skillFolder" items={list.map(name => ({
+              label: name,
+              value: name,
+              icon: iconMap[name] && `/images/${iconMap[name]}`
+            }))} label={label} sublabel={`${list.slice(0, 3).join(" · ")} +${list.length - 3}`} spread={150} folderColor="var(--line)" frontColor="var(--panel)" paperColor="var(--lavender)" itemColor="var(--pill-surface)" itemTextColor="var(--ink)" labelColor="var(--ink)" />)}
           </div>
         </div>
       </section>

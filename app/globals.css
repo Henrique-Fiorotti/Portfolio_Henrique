@@ -576,40 +576,9 @@ video {
 }
 
 .toolGroups {
-  margin-top: 32px;
   display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 24px;
-}
-
-.toolGroups h3 {
-  margin-bottom: 12px;
-  color: var(--white);
-  font: 700 12px var(--font-mono);
-  letter-spacing: .08em;
-  text-transform: uppercase;
-}
-
-/* Each technology is a key on a keyboard: one item per cap, scannable at a glance. */
-.keycaps {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
-  gap: 10px 8px;
-  list-style: none;
-}
-
-.keycaps li {
-  min-height: 44px;
-  padding: 8px 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 2px solid var(--line);
-  border-radius: 6px;
-  background: var(--panel);
-  color: var(--ink);
-  box-shadow: 0 4px 0 var(--line);
-  font: 700 13px var(--font-mono);
-  text-align: center;
 }
 
 .sectionHeading {
@@ -1245,10 +1214,6 @@ html:has(.resumeDialog[open]) {
     font-size: 16px;
   }
 
-  .keycaps {
-    grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
-  }
-
   .resumeStage {
     grid-template-columns: 1fr;
     justify-items: center;
@@ -1260,10 +1225,6 @@ html:has(.resumeDialog[open]) {
 
   .resumeSummary {
     justify-self: stretch;
-  }
-
-  .keycaps li {
-    font-size: 12px;
   }
 
   .heroActions {
@@ -1284,8 +1245,6 @@ html:has(.resumeDialog[open]) {
     margin-top: 60px;
   }
 
-
-
   .sectionHeading {
     display: block;
   }
@@ -1305,10 +1264,6 @@ html:has(.resumeDialog[open]) {
   .footerContent {
     gap: 35px;
   }
-
-
-
-
 
 }
 
@@ -1357,3 +1312,8 @@ html:has(.resumeDialog[open]) {
   }
 }
 
+/* Stack and tools folders: centred so each floating cloud stays inside the panel. */
+.skillFolder {
+  display: block;
+  margin: 150px auto 0;
+}
