@@ -96,15 +96,13 @@ export default async function Home({
         <div className="sectionHeading">
           <h2>{t.nav.resume}</h2>
         </div>
-        <ResumeViewer sheet={<ResumeSheet t={t.resume} resume={resume} profile={profile} />} summary={<>
-            <h3>{t.resume.objective}</h3>
-            <p>{resume.objective}</p>
-          </>} labels={{
+        <ResumeViewer sheet={<ResumeSheet t={t.resume} resume={resume} profile={profile} />} image={`/images/curriculo-${locale}.webp`} labels={{
           title: `${t.nav.resume} · ${profile.name}`,
           open: t.resume.open,
           close: t.resume.close,
-          hint: t.resume.hint,
-          pdf: t.resume.pdf
+          pdf: t.resume.pdf,
+          approved: t.resume.approved,
+          restore: t.resume.restore
         }} />
       </section>
     </main>

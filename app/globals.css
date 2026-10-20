@@ -613,8 +613,7 @@ video {
 @supports (animation-timeline: view()) {
 
   .projectCard,
-  .aboutSection,
-  .sheetThumb {
+  .aboutSection {
     animation: lift linear backwards;
     animation-timeline: view();
     animation-range: entry 0% entry 60%;
@@ -805,81 +804,123 @@ video {
 .resumeBlock {
   padding-top: 80px;
 }
+.resumeBlock .sectionHeading {
+  justify-content: center;
+  text-align: center;
+}
+
 
 .resumeStage {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  align-items: center;
-  gap: clamp(32px, 6vw, 80px);
-}
-
-/* The mini A4 page is the real résumé rendered at 794px (A4 at 96dpi) and scaled into the frame. */
-.sheetThumb {
-  --thumb: 320;
   position: relative;
-  width: calc(var(--thumb) * 1px);
-  aspect-ratio: 210 / 297;
-  overflow: hidden;
-  border: 2px solid var(--line);
-  border-radius: 4px;
-  background: var(--panel);
-  box-shadow: 8px 8px 0 var(--line);
-  transition: transform .25s var(--ease-out), box-shadow .25s var(--ease-out);
-}
-
-.sheetThumb:hover,
-.sheetThumb:has(:focus-visible) {
-  transform: translate(-3px, -3px) rotate(-1.5deg);
-  box-shadow: 11px 11px 0 var(--line);
-}
-
-.sheetThumbPage {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 794px;
-  transform: scale(calc(var(--thumb) / 794));
-  transform-origin: top left;
-  pointer-events: none;
-}
-
-.sheetThumbPage .resumeSheet {
-  border: 0;
-  box-shadow: none;
-}
-
-.sheetThumbButton {
-  position: absolute;
-  inset: 0;
-  padding-bottom: 18px;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  border: 0;
-  background: linear-gradient(to top, var(--glass) 0%, transparent 32%);
-  cursor: zoom-in;
-}
-
-.sheetThumbButton:focus-visible {
-  outline-offset: -8px;
-}
-
-.sheetThumbHint {
-  padding: 9px 12px;
-  display: inline-flex;
-  align-items: center;
+  display: grid;
+  justify-items: center;
   gap: 8px;
-  border: 2px solid var(--line);
-  border-radius: 5px;
-  background: var(--ink-surface);
-  color: var(--white);
-  font: 700 12px var(--font-mono);
-  white-space: nowrap;
 }
 
-.sheetThumbHint svg {
-  width: 14px;
-  height: 14px;
+/* The paper scene spans the section so the sheet can be dragged to either side; the slot marks where it rests, for the modal's FLIP. */
+/* Full-bleed, so the sheet can be dragged to the screen edges where the bin and the approval tray wait. */
+main {
+  overflow-x: clip;
+}
+
+.resumePaper {
+  position: relative;
+  justify-self: start;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+}
+
+/* Off screen until the sheet is grabbed: the bin slides in on the right (about 65% shows, the rest past the screen edge),
+   the green approval tray on the left. Both sit level with the sheet. */
+.resumeBin,
+.resumeApprove {
+  position: absolute;
+  top: 50%;
+  pointer-events: none;
+  opacity: 0;
+  transition: transform .5s var(--ease-out), opacity .3s;
+}
+
+/* Above the paper, so a sheet dropped in sits behind its mesh. */
+.resumeBin {
+  z-index: 1;
+  right: 0;
+  width: 260px;
+  filter: drop-shadow(0 14px 18px rgb(0 0 0 / .4));
+  transform: translate(110%, -50%) rotate(-8deg);
+}
+
+.resumeApprove {
+  left: 24px;
+  width: clamp(150px, 28vw, 400px);
+  height: min(590px, 92%);
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 12px;
+  border: 3px dashed #34c26a;
+  border-radius: 18px;
+  background: rgb(52 194 106 / .14);
+  color: #4fe08a;
+  font: 800 clamp(16px, 2.2vw, 30px) var(--font-mono);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  transform: translate(calc(-100% - 40px), -50%);
+}
+
+.resumeApprove svg {
+  width: clamp(40px, 5vw, 72px);
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+[data-grabbing] .resumeBin,
+[data-phase="trashing"] .resumeBin {
+  opacity: 1;
+  transform: translate(35%, -50%) rotate(-8deg);
+}
+
+[data-grabbing] .resumeApprove,
+[data-phase="approving"] .resumeApprove {
+  opacity: 1;
+  transform: translate(0, -50%);
+}
+
+/* Thrown away: the crumpled sheet fades inside the bin and stays gone until the page reloads. */
+[data-phase^="trash"] .paper-crumple {
+  opacity: 0;
+  transition: opacity .4s .6s;
+}
+
+/* After the sheet went in the bin: a quiet way to bring it back, in the corner of the section. */
+.resumeRestore {
+  position: absolute;
+  z-index: 3;
+  top: 8px;
+  right: 0;
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgb(255 255 255 / .25);
+  border-radius: 50%;
+  background: rgb(255 255 255 / .06);
+  color: rgb(255 255 255 / .6);
+  cursor: pointer;
+  transition: color .2s, background .2s;
+}
+
+.resumeRestore:hover,
+.resumeRestore:focus-visible {
+  background: rgb(255 255 255 / .16);
+  color: #fff;
+}
+
+.resumeRestore svg {
+  width: 18px;
   fill: none;
   stroke: currentColor;
   stroke-width: 2;
@@ -887,35 +928,78 @@ video {
   stroke-linejoin: round;
 }
 
-.resumeSummary {
-  padding: 24px;
-  border-radius: 8px;
-  background: var(--lavender);
+.resumeActions .button:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+  transform: none;
 }
 
-.resumeSummary h3 {
-  margin-bottom: 12px;
-  color: var(--blue);
-  font: 700 13px var(--font-mono);
-  letter-spacing: .08em;
-  text-transform: uppercase;
+.resumeStampTool {
+  position: absolute;
+  z-index: 2;
+  visibility: hidden;
+  pointer-events: none;
+  filter: drop-shadow(0 18px 14px rgb(0 0 0 / .45));
 }
 
-.resumeSummary p {
-  max-width: 46ch;
-  font-size: clamp(19px, 2vw, 24px);
-  line-height: 1.5;
+.resumeStampLayer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  aspect-ratio: 794 / 1216;
+  pointer-events: none;
+}
+
+.resumeStampLayer img {
+  position: absolute;
+  width: 42%;
+  max-width: none;
+  mix-blend-mode: multiply;
+}
+
+.resumePaperSlot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(360px, 100% - 48px);
+  aspect-ratio: 360 / 551;
+  overflow: hidden;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  background: #fff;
+}
+
+.resumePaper:has(.paper-crumple[data-settled="false"]) .resumePaperSlot {
+  visibility: hidden;
+}
+
+.resumePaperSheet {
+  width: 794px;
+  transform: scale(var(--scale, .45));
+  transform-origin: top left;
+}
+
+.resumePaperSheet .resumeSheet {
+  border: 0;
+  box-shadow: none;
 }
 
 .resumeActions {
-  margin-top: 28px;
   display: flex;
+  justify-content: center;
   flex-wrap: wrap;
   gap: 12px;
 }
 
 /* The full sheet keeps A4 proportions and reflows by its own width, so the scaled thumbnail always shows the desktop page. */
+/* Paper stays white in dark mode too: the light theme's colors, here and in the modal (and in the pictures of it). */
 .resumeSheet {
+  --ink: #17151d;
+  --blue: #004aad;
+  --line: #24212b;
+  --panel: #fff;
+  --paper-text: #4e4b54;
   container-type: inline-size;
   aspect-ratio: 210 / 297;
   padding: 7% 7.5%;
@@ -1060,6 +1144,7 @@ html:has(.resumeDialog[open]) {
 
 .resumeToolbar,
 .resumeSheetFrame {
+  position: relative;
   width: min(794px, 100%);
   pointer-events: auto;
 }
@@ -1204,19 +1289,6 @@ html:has(.resumeDialog[open]) {
     font-size: 16px;
   }
 
-  .resumeStage {
-    grid-template-columns: 1fr;
-    justify-items: center;
-  }
-
-  .sheetThumb {
-    --thumb: 250;
-  }
-
-  .resumeSummary {
-    justify-self: stretch;
-  }
-
   .heroActions {
     flex-direction: column;
   }
@@ -1306,4 +1378,14 @@ html:has(.resumeDialog[open]) {
 .skillFolder {
   display: block;
   margin: 150px auto 0;
+}
+
+@media (max-width: 620px) {
+  .resumeBin {
+    width: 160px;
+  }
+
+  .resumeApprove {
+    left: 8px;
+  }
 }
