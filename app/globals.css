@@ -402,8 +402,34 @@ video {
 }
 
 .hero h1 span {
+  position: relative;
   display: block;
   animation: rise .7s var(--ease-out) .15s backwards;
+}
+
+/* DecodeName: the glyphs show over the real word, which keeps its place hidden until the name has resolved. */
+.hero h1:not([data-decoded]) span {
+  -webkit-text-fill-color: transparent;
+}
+
+.hero h1:not([data-decoded]) span::after {
+  content: attr(data-mask);
+  position: absolute;
+  top: 0;
+  left: 0;
+  -webkit-text-fill-color: currentColor;
+  white-space: nowrap;
+}
+
+/* Without the script, or without motion, the name is just there. */
+@media (scripting: none), (prefers-reduced-motion: reduce) {
+  .hero h1 span {
+    -webkit-text-fill-color: currentColor !important;
+  }
+
+  .hero h1 span::after {
+    content: none !important;
+  }
 }
 
 .hero h1 span:last-child {
