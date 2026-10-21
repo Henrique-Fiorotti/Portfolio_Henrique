@@ -272,6 +272,7 @@ const PaperCrumple = ({
   homeKey = 0,
   paintKey = 0,
   onDrop,
+  onTap,
   onPaint,
   onStateChange,
   onError,
@@ -314,6 +315,7 @@ const PaperCrumple = ({
     returnToOrigin,
     disabled,
     onDrop,
+    onTap,
     onPaint,
     onStateChange,
     onError
@@ -533,7 +535,9 @@ const PaperCrumple = ({
       pointerY = 0,
       lastX = 0,
       lastY = 0,
-      lastMove = 0;
+      lastMove = 0,
+      downX = 0,
+      downY = 0;
     let speedX = 0,
       speedY = 0;
     let held = false,
@@ -841,7 +845,8 @@ const PaperCrumple = ({
       if (!ready || options.current.disabled || held || event.button !== 0 || !event.isPrimary) return;
       const rect = root.getBoundingClientRect();
       pointerX = lastX = event.clientX - rect.left;
-      pointerY = lastY = event.clientY - rect.top;
+      pointerY = lastY = downY = event.clientY - rect.top;
+      downX = pointerX;
       setPointer(pointerX, pointerY);
       sheet.updateMatrixWorld(true);
       const intersection = raycaster.intersectObjects([front, back], false)[0];
@@ -885,7 +890,11 @@ const PaperCrumple = ({
       wake();
     }
     function pointerUp(event) {
-      if (event.pointerId === pointerId) finish();
+      if (event.pointerId !== pointerId) return;
+      // Portfolio change: a press that barely moved is a click, not a drag.
+      const tap = event.type === 'pointerup' && Math.hypot(lastX - downX, lastY - downY) < 6;
+      finish();
+      if (tap) options.current.onTap?.(event);
     }
     function pointerCancel(event) {
       if (event.pointerId === pointerId) finish(true);

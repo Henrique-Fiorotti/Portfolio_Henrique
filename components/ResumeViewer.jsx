@@ -278,7 +278,7 @@ export function ResumeViewer({
           <rect x="10" y="130" width="100" height="10" rx="3" fill="url(#stampMetal)" />
           <rect x="14" y="140" width="92" height="14" rx="2" fill="#1d6b33" />
         </svg>
-        <PaperCrumple onStateChange={state => setGrabbing(state === "holding")} onDrop={drop} onPaint={paint} paintKey={stamps.length} homeKey={homeKey} resetKey={resetKey} disabled={phase !== "idle"} src={image} alt={labels.title} width={360} height={551} sceneHeight={640} releaseBehavior="restore" crumpleAmount={0.95} shrinkTo={shrink} crumpleDuration={0.55} releaseDuration={0.4} foldCount={6} foldSharpness={0.6} wrinkleDepth={0.65} creaseStrength={0.18} paperColor="#f4f0e8" paperTexture={0.08} draggable returnToOrigin />
+        <PaperCrumple onStateChange={state => setGrabbing(state === "holding")} onDrop={drop} onTap={open} onPaint={paint} paintKey={stamps.length} homeKey={homeKey} resetKey={resetKey} disabled={phase !== "idle"} src={image} alt={labels.title} width={360} height={551} sceneHeight={640} releaseBehavior="restore" crumpleAmount={0.95} shrinkTo={shrink} crumpleDuration={0.55} releaseDuration={0.4} foldCount={6} foldSharpness={0.6} wrinkleDepth={0.65} creaseStrength={0.18} paperColor="#f4f0e8" paperTexture={0.08} draggable returnToOrigin />
         <div ref={thumbRef} className="resumePaperSlot" aria-hidden="true" inert>
           <div className="resumePaperSheet">{sheet}</div>
           {marks}
