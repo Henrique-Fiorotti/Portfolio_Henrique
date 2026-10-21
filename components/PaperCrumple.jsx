@@ -687,6 +687,13 @@ const PaperCrumple = ({
           posX.velocity = posY.velocity = 0;
         }
       }
+      // Portfolio change: while held, the sheet's own edges (as drawn, crumpled or shrunk) stop at the scene's edges.
+      if (held) {
+        const bounds = geometry.boundingBox,
+          s = scale * size();
+        posX.value = posX.target = clamp(posX.value, -viewportWidth / 2 - bounds.min.x * s, viewportWidth / 2 - bounds.max.x * s);
+        posY.value = posY.target = clamp(posY.value, -viewportHeight / 2 - bounds.min.y * s, viewportHeight / 2 - bounds.max.y * s);
+      }
       sheet.position.set(posX.value, posY.value, 0);
       sheet.updateMatrixWorld(true);
       const shadowBounds = geometry.boundingBox;
