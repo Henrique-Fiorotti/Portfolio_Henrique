@@ -57,7 +57,6 @@ export default async function Home({
           <Greeting {...t.greeting} />
           <DecodeName />
           <p className="role">{t.role}</p>
-          <p className="heroText">{t.heroText}</p>
           <div className="heroActions">
             <CasinoProjectButton {...t.casino} />
             <a className="button secondary" href="#curriculo">

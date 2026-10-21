@@ -382,12 +382,6 @@ video {
   font: 600 clamp(18px, 2vw, 25px)/1.3 var(--font-mono);
 }
 
-.heroText {
-  color: var(--portfolio-muted);
-  font-size: 17px;
-  line-height: 1.7;
-}
-
 .heroActions,
 .projectActions {
   display: flex;
@@ -1414,11 +1408,6 @@ html:has(.resumeDialog[open], .projectDialog[open]) {
   .role {
     margin: 22px 0 10px;
     font-size: 15px;
-  }
-
-  .heroText {
-    font-size: 16px;
-    line-height: 1.6;
   }
 
   .heroActions {

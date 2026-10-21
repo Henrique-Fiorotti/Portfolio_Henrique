@@ -44,8 +44,7 @@ export const messages = {
       afternoon: "Opa, boa tarde! Eu sou",
       evening: "Opa, boa noite! Eu sou"
     },
-    role: "Desenvolvedor de sistemas & criador de experiências digitais",
-    heroText: "Transformo ideias em interfaces responsivas, automações e aplicações web funcionais.",
+    role: "Desenvolvedor de sistemas",
     casino: {
       label: "Conhecer Projetos",
       hover: "Sortear Projeto ✦",
@@ -104,8 +103,7 @@ export const messages = {
       afternoon: "Hey, good afternoon! I'm",
       evening: "Hey, good evening! I'm"
     },
-    role: "Systems developer & digital experience creator",
-    heroText: "I turn ideas into responsive interfaces, automations and working web applications.",
+    role: "Systems developer",
     casino: {
       label: "See Projects",
       hover: "Spin a Project ✦",
@@ -167,8 +165,7 @@ export const messages = {
       afternoon: "¡Hola, buenas tardes! Soy",
       evening: "¡Hola, buenas noches! Soy"
     },
-    role: "Desarrollador de sistemas y creador de experiencias digitales",
-    heroText: "Transformo ideas en interfaces responsivas, automatizaciones y aplicaciones web funcionales.",
+    role: "Desarrollador de sistemas",
     casino: {
       label: "Ver Proyectos",
       hover: "Sortear Proyecto ✦",
@@ -229,8 +226,7 @@ export const messages = {
       afternoon: "Bonjour ! Je suis",
       evening: "Bonsoir ! Je suis"
     },
-    role: "Développeur de systèmes et créateur d'expériences numériques",
-    heroText: "Je transforme des idées en interfaces responsives, en automatisations et en applications web fonctionnelles.",
+    role: "Développeur de systèmes",
     casino: {
       label: "Voir les projets",
       hover: "Tirer un projet ✦",
@@ -291,8 +287,7 @@ export const messages = {
       afternoon: "Guten Tag! Ich bin",
       evening: "Guten Abend! Ich bin"
     },
-    role: "Systementwickler & Gestalter digitaler Erlebnisse",
-    heroText: "Ich verwandle Ideen in responsive Oberflächen, Automatisierungen und funktionierende Webanwendungen.",
+    role: "Systementwickler",
     casino: {
       label: "Projekte ansehen",
       hover: "Projekt ziehen ✦",
