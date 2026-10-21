@@ -355,10 +355,33 @@ video {
   max-width: 560px;
 }
 
+/* A white speech bubble from the portrait; it stays white in dark mode, so it keeps the light blue for contrast. */
 .greeting {
-  margin-bottom: 10px;
+  --blue: #004aad;
+  position: relative;
+  width: fit-content;
+  margin-bottom: 18px;
+  padding: 10px 16px;
+  border: 2px solid var(--line);
+  border-radius: 14px;
+  background: var(--white);
+  box-shadow: 3px 3px 0 var(--line);
   color: var(--blue);
   font: 600 18px var(--font-mono);
+}
+
+/* The tail points left at the face beside it, or up when the photo sits above. */
+.greeting::before {
+  content: "";
+  position: absolute;
+  top: calc(50% - 7px);
+  left: -8px;
+  width: 14px;
+  height: 14px;
+  border: solid var(--line);
+  border-width: 0 0 2px 2px;
+  background: inherit;
+  rotate: 45deg;
 }
 
 .hero h1 {
@@ -1285,6 +1308,12 @@ html:has(.resumeDialog[open], .projectDialog[open]) {
     max-width: 620px;
   }
 
+  .greeting::before {
+    top: -8px;
+    left: 22px;
+    border-width: 2px 0 0 2px;
+  }
+
   .aboutSection {
     grid-template-columns: 1fr;
     gap: 25px;
@@ -1385,16 +1414,10 @@ html:has(.resumeDialog[open], .projectDialog[open]) {
     padding: 0 18px;
   }
 
-  /* The greeting is a sticker slapped across the seam between photo and text. */
+  /* The bubble sits across the seam between photo and text. */
   .greeting {
-    position: relative;
-    width: fit-content;
     margin: -18px 0 22px;
     padding: 8px 12px;
-    border: 2px solid var(--line);
-    border-radius: 5px;
-    background: var(--panel);
-    box-shadow: 3px 3px 0 var(--line);
     font-size: 13px;
     rotate: -2deg;
   }
