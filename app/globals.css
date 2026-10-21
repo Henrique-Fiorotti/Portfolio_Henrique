@@ -707,10 +707,12 @@ video {
   }
 }
 
+/* Capped by the screen's height, so a card (picture + text) fits on a short laptop screen. */
 .projectMedia {
   position: relative;
   overflow: hidden;
   aspect-ratio: 16/10;
+  max-height: 36svh;
   border-bottom: 2px solid var(--line);
   background: color-mix(in oklch, var(--project-accent) 14%, white);
 }
@@ -751,6 +753,7 @@ video {
 .projectCard:first-child .projectMedia,
 .projectCard:nth-child(even):last-child .projectMedia {
   aspect-ratio: auto;
+  max-height: none;
   border-right: 2px solid var(--line);
   border-bottom: 0;
 }
@@ -961,10 +964,17 @@ main {
 }
 
 .resumePaper {
+  /* The scene never outgrows the visible screen (svh: measured with the browser's bars showing, so it doesn't jump
+     as they hide), leaving room for the bar above and the buttons below. PaperCrumple fits the sheet to it. */
+  --resume-scene: min(640px, 100svh - 140px);
   position: relative;
   justify-self: start;
   width: 100vw;
   margin-left: calc(50% - 50vw);
+}
+
+.resumePaper .paper-crumple {
+  height: var(--resume-scene) !important;
 }
 
 /* Off screen until the sheet is grabbed: the bin slides in on the right (about 65% shows, the rest past the screen edge),
@@ -1099,7 +1109,8 @@ main {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: min(360px, 100% - 48px);
+  /* Same fit as PaperCrumple: the 360 × 551 sheet inside the scene, less 24px each side. */
+  width: min(360px, 100% - 48px, (var(--resume-scene) - 48px) * 360 / 551);
   aspect-ratio: 360 / 551;
   overflow: hidden;
   transform: translate(-50%, -50%);
@@ -1356,6 +1367,7 @@ html:has(.resumeDialog[open], .projectDialog[open], .staggered-menu-wrapper[data
   .projectCard:first-child .projectMedia,
   .projectCard:nth-child(even):last-child .projectMedia {
     aspect-ratio: 16/10;
+    max-height: 36svh;
     border-right: 0;
     border-bottom: 2px solid var(--line);
   }
@@ -1666,12 +1678,8 @@ html:has(.resumeDialog[open], .projectDialog[open], .staggered-menu-wrapper[data
     isolation: isolate;
   }
 
-  .resumePaper .paper-crumple {
-    height: 420px !important;
-  }
-
-  .resumePaperSlot {
-    width: min(calc((420px - 48px) * 360 / 551), 100% - 48px);
+  .resumePaper {
+    --resume-scene: min(420px, 100svh - 140px);
   }
 
   .resumeBin {
