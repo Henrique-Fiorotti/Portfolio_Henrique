@@ -790,11 +790,12 @@ video {
   padding-bottom: 30px;
 }
 
+/* The contact card: title and email on the left, the links as tiles on the right, and a bottom bar across both. */
 .footerContent {
-  padding: clamp(32px, 6vw, 70px);
+  padding: clamp(32px, 6vw, 70px) clamp(32px, 6vw, 70px) clamp(16px, 2.5vw, 28px);
   display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 70px;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 48px 70px;
   background: var(--ink-surface);
   color: var(--white);
 }
@@ -804,29 +805,47 @@ video {
 }
 
 .copyEmail {
-  margin-top: 25px;
+  margin-top: 28px;
   display: flex;
   flex-wrap: wrap;
-  align-items: baseline;
-  gap: 6px 16px;
+  align-items: center;
+  gap: 10px 16px;
 }
 
 .footerEmail {
-  padding: 0;
-  border: 0;
-  background: none;
+  max-width: 100%;
+  min-height: 48px;
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 16px;
+  border: 2px solid rgb(255 255 255 / .2);
+  border-radius: 5px;
+  background: rgb(255 255 255 / .04);
   color: var(--on-ink-link);
-  font: 500 clamp(14px, 2vw, 20px) var(--font-mono);
+  font: 600 clamp(14px, 2vw, 18px) var(--font-mono);
   text-align: left;
-  word-break: break-all;
+  overflow-wrap: anywhere;
   cursor: copy;
-  text-decoration: underline transparent;
-  text-underline-offset: 6px;
-  transition: text-decoration-color .18s;
+  transition: border-color .18s, background-color .18s;
 }
 
 .footerEmail:hover {
-  text-decoration-color: currentColor;
+  border-color: var(--on-ink-accent);
+  background: rgb(255 255 255 / .08);
+}
+
+.footerEmail svg,
+.footerLinks svg,
+.footerTop svg {
+  width: 18px;
+  height: 18px;
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .copyStatus {
@@ -834,29 +853,60 @@ video {
   font: 500 12px var(--font-mono);
 }
 
+/* The links as a plain list: one row each between hairlines, the arrow at the far end. */
 .footerLinks {
   display: grid;
-  gap: 10px;
   align-content: center;
-  font: 500 14px var(--font-mono);
+  border-top: 1px solid rgb(255 255 255 / .12);
 }
 
 .footerLinks a {
-  padding-block: 4px;
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-bottom: 1px solid rgb(255 255 255 / .12);
+  font: 500 clamp(18px, 2vw, 21px)/1.2 var(--font-sans);
+  letter-spacing: -.01em;
+  transition: color .18s;
 }
 
-.footerLinks a:hover {
+.footerLinks a svg {
+  color: var(--on-ink-muted);
+  transition: color .18s;
+}
+
+.footerLinks a:hover,
+.footerLinks a:hover svg {
   color: var(--on-ink-accent);
 }
 
-.copyright {
-  width: fit-content;
-  margin: 25px auto 0;
-  padding: 4px 10px;
-  border-radius: 4px;
-  background: var(--lavender);
-  color: var(--portfolio-muted);
-  font: 500 12px var(--font-mono);
+.footerBottom {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  color: var(--on-ink-muted);
+  font: 500 12px/1.5 var(--font-mono);
+}
+
+.footerTop {
+  width: 44px;
+  height: 44px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgb(255 255 255 / .2);
+  border-radius: 50%;
+  color: var(--white);
+  transition: border-color .18s, color .18s;
+}
+
+.footerTop:hover {
+  border-color: var(--on-ink-accent);
+  color: var(--on-ink-accent);
 }
 
 .resumeBlock {
@@ -1491,7 +1541,14 @@ html:has(.resumeDialog[open], .projectDialog[open]) {
   }
 
   .footerContent {
-    gap: 35px;
+    gap: 32px;
+  }
+
+  /* Phones: the email box spans the card. */
+  .footerEmail {
+    width: 100%;
+    justify-content: space-between;
+    font-size: 14px;
   }
 
 }
@@ -1501,9 +1558,7 @@ html:has(.resumeDialog[open], .projectDialog[open]) {
   .brand,
   .topbarLink,
   .languageButton,
-  .socialLinks a,
-  .footerLinks a,
-  .footerEmail {
+  .socialLinks a {
     min-height: 44px;
     display: inline-flex;
     align-items: center;
