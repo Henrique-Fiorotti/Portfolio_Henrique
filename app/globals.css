@@ -1541,6 +1541,18 @@ html:has(.resumeDialog[open], .projectDialog[open]) {
 }
 
 @media (max-width: 620px) {
+  .aboutSection p {
+    font-size: 17px;
+    line-height: 1.6;
+  }
+
+  /* On phones the icon clouds rise over the text above them instead of keeping 150px of empty room each. */
+  /* Each folder is its own layer, so the Tools cloud passes over the Stack folder instead of under its front. */
+  .skillFolder {
+    margin-top: 28px;
+    isolation: isolate;
+  }
+
   .resumeBin {
     width: 160px;
   }
