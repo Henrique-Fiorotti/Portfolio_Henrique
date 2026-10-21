@@ -141,6 +141,11 @@ export function ResumeViewer({
     }} />)}
     </div>;
   const paint = (context, width, height) => {
+    // The same 2px border the HTML sheet wears (.resumePaperSlot::after), at the 360px the sheet rests at.
+    const line = width * 2 / 360;
+    context.strokeStyle = "#24212b";
+    context.lineWidth = line;
+    context.strokeRect(line / 2, line / 2, width - line, height - line);
     const image = stampImage.current;
     if (!image?.complete) return;
     const w = width * STAMP_WIDTH;

@@ -1107,6 +1107,15 @@ main {
   background: #fff;
 }
 
+/* Drawn over the sheet's content; the 3D paper paints the same line into its texture (paint in ResumeViewer). */
+.resumePaperSlot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  /* 2px at the 360px resting size, scaled with the sheet so it matches the texture's line. */
+  border: calc(var(--scale, .45) * 794 / 360 * 2px) solid var(--line);
+}
+
 .resumePaper:has(.paper-crumple[data-settled="false"]) .resumePaperSlot {
   visibility: hidden;
 }
