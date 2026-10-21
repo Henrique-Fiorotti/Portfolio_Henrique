@@ -29,13 +29,13 @@
 /* Logo and toggle are two small panels at the corners, nothing joining them, so the page shows between. */
 .sm-logo,
 .sm-toggle {
-  min-height: 44px;
+  min-height: 36px;
   display: inline-flex;
   align-items: center;
   border: 2px solid var(--line);
   border-radius: 7px;
   background: var(--panel);
-  box-shadow: 4px 4px 0 var(--line);
+  box-shadow: 3px 3px 0 var(--line);
   pointer-events: auto;
   transition: background-color .25s, border-color .25s, box-shadow .25s;
 }
@@ -47,21 +47,22 @@
   box-shadow: 0 0 0 transparent;
 }
 
-/* The link fills its panel, so the whole 44px box is the tap target. */
+/* The link fills its panel, so the whole 36px box is the tap target. */
 .sm-logo .brand {
-  min-height: 40px;
+  min-height: 32px;
   display: inline-flex;
   align-items: center;
-  padding: 0 10px;
+  padding: 0 8px;
+  font-size: 15px;
 }
 
 .sm-toggle {
   position: relative;
-  gap: 8px;
-  padding: 0 12px;
+  gap: 6px;
+  padding: 0 10px;
   cursor: pointer;
   color: var(--ink);
-  font: 700 12px/1 var(--font-mono);
+  font: 700 11px/1 var(--font-mono);
   letter-spacing: .04em;
   text-transform: uppercase;
 }

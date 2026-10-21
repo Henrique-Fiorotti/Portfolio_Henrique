@@ -1375,7 +1375,7 @@ html:has(.resumeDialog[open], .projectDialog[open], .staggered-menu-wrapper[data
     width: min(100% - 24px, 1180px);
   }
 
-  /* Phones swap the top bar for the staggered menu, whose fixed bar takes the same 8px + 44px. */
+  /* Phones swap the top bar for the staggered menu, whose fixed bar takes 8px + 36px. */
   .siteHeader {
     display: none;
   }
@@ -1385,7 +1385,7 @@ html:has(.resumeDialog[open], .projectDialog[open], .staggered-menu-wrapper[data
   }
 
   body {
-    padding-top: 52px;
+    padding-top: 44px;
   }
 
   .languageMenu {
