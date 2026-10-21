@@ -31,7 +31,6 @@ export const StaggeredMenu = ({
   const [open, setOpen] = useState(false);
   const openRef = useRef(false);
   const wrapperRef = useRef(null);
-  const headerRef = useRef(null);
   const panelRef = useRef(null);
   const preLayersRef = useRef(null);
   const preLayerElsRef = useRef([]);
@@ -76,11 +75,11 @@ export const StaggeredMenu = ({
     return () => ctx.revert();
   }, []);
 
-  // The header bar's box as a clip-path on the full-screen layers, measured on each open and close.
+  // The Menu button's box as a clip-path on the full-screen layers, measured on each open and close.
   const headerClip = useCallback(() => {
-    const bar = headerRef.current.getBoundingClientRect();
+    const bar = toggleBtnRef.current.getBoundingClientRect();
     const box = wrapperRef.current.getBoundingClientRect();
-    const radius = parseFloat(getComputedStyle(headerRef.current).borderTopLeftRadius) || 0;
+    const radius = parseFloat(getComputedStyle(toggleBtnRef.current).borderTopLeftRadius) || 0;
     return `inset(${bar.top - box.top}px ${box.right - bar.right}px ${box.bottom - bar.bottom}px ${bar.left - box.left}px round ${radius}px)`;
   }, []);
 
@@ -334,7 +333,7 @@ export const StaggeredMenu = ({
           return arr.map((c, i) => <div key={i} className="sm-prelayer" style={{ background: c }} />);
         })()}
       </div>
-      <header ref={headerRef} className="staggered-menu-header">
+      <header className="staggered-menu-header">
         <div className="sm-logo">{logo}</div>
         <button
           ref={toggleBtnRef}

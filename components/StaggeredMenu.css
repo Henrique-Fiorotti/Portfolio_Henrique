@@ -21,42 +21,44 @@
   top: 8px;
   left: 12px;
   right: 12px;
-  min-height: 44px;
   display: flex;
+  justify-content: space-between;
+  z-index: 20;
+}
+
+/* Logo and toggle are two small panels at the corners, nothing joining them, so the page shows between. */
+.sm-logo,
+.sm-toggle {
+  min-height: 44px;
+  display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 0 2px 0 12px;
   border: 2px solid var(--line);
   border-radius: 7px;
   background: var(--panel);
   box-shadow: 4px 4px 0 var(--line);
   pointer-events: auto;
-  z-index: 20;
   transition: background-color .25s, border-color .25s, box-shadow .25s;
 }
 
-/* Open, the bar's own panel look hands over to the layers that grew out of it; logo and toggle stay on top. */
-.staggered-menu-wrapper[data-open] .staggered-menu-header {
+/* Open, their panel look hands over to the layers that grew out of the toggle; logo and toggle stay on top. */
+.staggered-menu-wrapper[data-open] :is(.sm-logo, .sm-toggle) {
   border-color: transparent;
   background-color: transparent;
   box-shadow: 0 0 0 transparent;
 }
 
-.sm-logo {
-  display: flex;
+/* The link fills its panel, so the whole 44px box is the tap target. */
+.sm-logo .brand {
+  min-height: 40px;
+  display: inline-flex;
   align-items: center;
-  margin-right: auto;
+  padding: 0 10px;
 }
 
 .sm-toggle {
   position: relative;
-  display: inline-flex;
-  align-items: center;
   gap: 8px;
-  min-height: 40px;
-  padding: 0 10px;
-  background: transparent;
-  border: none;
+  padding: 0 12px;
   cursor: pointer;
   color: var(--ink);
   font: 700 12px/1 var(--font-mono);
@@ -67,7 +69,6 @@
 .sm-toggle:focus-visible {
   outline: 2px solid var(--blue);
   outline-offset: 2px;
-  border-radius: 5px;
 }
 
 .sm-toggle-textWrap {
