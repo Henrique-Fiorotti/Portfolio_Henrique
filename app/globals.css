@@ -1082,7 +1082,12 @@ main {
   visibility: hidden;
 }
 
+/* Out of flow: a transform doesn't shrink layout, so in flow the full-size sheet (794 × ~1200) would give the slot its
+   height, and WebKit (Safari, every iOS browser) lets that content height beat the slot's aspect-ratio. */
 .resumePaperSheet {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 794px;
   transform: scale(var(--scale, .45));
   transform-origin: top left;
