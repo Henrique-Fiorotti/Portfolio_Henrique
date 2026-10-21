@@ -1633,7 +1633,10 @@ html:has(.resumeDialog[open], .projectDialog[open]) {
 
   /* On phones the icon clouds rise over the text above them instead of keeping 150px of empty room each. */
   /* Each folder is its own layer, so the Tools cloud passes over the Stack folder instead of under its front. */
+  /* A bit smaller on phones; !important beats the size FolderFloat sets inline. */
   .skillFolder {
+    --ff-w: 170px !important;
+    --ff-h: 126px !important;
     margin-top: 28px;
     isolation: isolate;
   }
