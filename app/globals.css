@@ -1239,8 +1239,10 @@ main {
   }
 }
 
-html:has(.resumeDialog[open], .projectDialog[open]) {
+/* Anything open over the page holds it still; the gutter stays so the layout doesn't jump sideways. */
+html:has(.resumeDialog[open], .projectDialog[open], .staggered-menu-wrapper[data-open], .languageMenu) {
   overflow: hidden;
+  scrollbar-gutter: stable;
 }
 
 .resumeDialog {

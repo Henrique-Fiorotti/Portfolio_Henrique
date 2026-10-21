@@ -189,7 +189,9 @@
     scale 160ms var(--ff-ease-out);
 }
 
+/* Live items are dragged, so a touch on them never scrolls the page. */
 .folder-float[data-live] .folder-float__item {
+  touch-action: none;
   cursor: grab;
   transition: scale 160ms var(--ff-ease-out);
 }

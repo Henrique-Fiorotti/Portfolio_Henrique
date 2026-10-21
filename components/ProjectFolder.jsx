@@ -36,7 +36,7 @@ export function ProjectFolder({
     }));
   };
   return <div className="projectFolder">
-      <Folder label={label} color="#2a62d6" layout="grid" tilt={0} draggable={false} onOpenChange={holdFolder} items={projects.map(project => ({
+      <Folder label={label} color="#2a62d6" layout="grid" tilt={0} draggable={false} closeOnOutsideClick={false} onOpenChange={holdFolder} items={projects.map(project => ({
       content: <div className="folderProject">
             <img src={project.image} alt="" draggable={false} />
             <span>{project.title}</span>
