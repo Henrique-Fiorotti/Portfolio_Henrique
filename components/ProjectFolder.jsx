@@ -25,15 +25,22 @@ export function ProjectFolder({
 }) {
   const dialogRef = useRef(null);
   const [shown, setShown] = useState(null);
-  // Opening adds room above the folder (padding in globals.css), which would shove it down the screen in one cut;
-  // the page scrolls by the same amount before the next paint, so the folder stays put and the projects rise above it.
+  // Opening eases in room above the folder (padding transition in globals.css); while it grows, the page scrolls by the
+  // same amount every frame, so the folder stays put and the page above slides up. Off screen (the hero button) there is
+  // nothing to hold, and openFolder's smooth scroll must not be fought.
   const holdFolder = () => {
     const folder = document.querySelector(".projectFolder .folder-root");
     const before = folder.getBoundingClientRect().top;
-    requestAnimationFrame(() => window.scrollBy({
-      top: folder.getBoundingClientRect().top - before,
-      behavior: "instant"
-    }));
+    if (before < 0 || before > window.innerHeight) return;
+    const until = performance.now() + 550;
+    const hold = () => {
+      window.scrollBy({
+        top: folder.getBoundingClientRect().top - before,
+        behavior: "instant"
+      });
+      if (performance.now() < until) requestAnimationFrame(hold);
+    };
+    requestAnimationFrame(hold);
   };
   return <div className="projectFolder">
       <Folder label={label} color="#2a62d6" layout="grid" tilt={0} draggable={false} closeOnOutsideClick={false} onOpenChange={holdFolder} items={projects.map(project => ({
