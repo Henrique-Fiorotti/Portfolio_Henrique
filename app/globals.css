@@ -618,7 +618,9 @@ video {
   line-height: 1.6;
 }
 
+/* Section titles sit straight on the Grainient, which is dark in both themes. */
 .sectionHeading h2 {
+  color: var(--white);
   font-size: clamp(48px, 7vw, 80px);
 }
 
