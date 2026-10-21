@@ -59,11 +59,11 @@ export default async function Home({
           <p className="role">{t.role}</p>
           <div className="heroActions">
             <CasinoProjectButton {...t.casino} />
-            <a className="button secondary" href="#curriculo">
+            <a className="button secondary" href="#sobre">
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M12 5v14m0 0 6-6m-6 6-6-6" />
               </svg>
-              {t.viewResume}
+              {t.aboutMe}
             </a>
           </div>
           <div className="socialLinks">

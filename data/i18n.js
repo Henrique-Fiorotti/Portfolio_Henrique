@@ -51,7 +51,7 @@ export const messages = {
       aria: "Sortear um projeto",
       drawn: "Projeto sorteado:"
     },
-    viewResume: "Ver currículo",
+    aboutMe: "Sobre mim",
     projectsIntro: "Uma seleção de aplicações, experiências visuais e estudos de desenvolvimento.",
     projectsHint: "Clique na pasta",
     viewProject: "Ver projeto",
@@ -110,7 +110,7 @@ export const messages = {
       aria: "Draw a random project",
       drawn: "Drawn project:"
     },
-    viewResume: "View résumé",
+    aboutMe: "About me",
     projectsIntro: "A selection of applications, visual experiences and development studies.",
     projectsHint: "Click the folder",
     viewProject: "View project",
@@ -172,7 +172,7 @@ export const messages = {
       aria: "Sortear un proyecto",
       drawn: "Proyecto sorteado:"
     },
-    viewResume: "Ver currículum",
+    aboutMe: "Sobre mí",
     projectsIntro: "Una selección de aplicaciones, experiencias visuales y estudios de desarrollo.",
     projectsHint: "Haz clic en la carpeta",
     viewProject: "Ver proyecto",
@@ -233,7 +233,7 @@ export const messages = {
       aria: "Tirer un projet au hasard",
       drawn: "Projet tiré :"
     },
-    viewResume: "Voir le CV",
+    aboutMe: "À propos de moi",
     projectsIntro: "Une sélection d'applications, d'expériences visuelles et d'études de développement.",
     projectsHint: "Cliquez sur le dossier",
     viewProject: "Voir le projet",
@@ -294,7 +294,7 @@ export const messages = {
       aria: "Zufälliges Projekt ziehen",
       drawn: "Gezogenes Projekt:"
     },
-    viewResume: "Lebenslauf ansehen",
+    aboutMe: "Über mich",
     projectsIntro: "Eine Auswahl an Anwendungen, visuellen Erlebnissen und Entwicklungsstudien.",
     projectsHint: "Klicke auf den Ordner",
     viewProject: "Projekt ansehen",
