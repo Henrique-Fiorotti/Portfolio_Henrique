@@ -246,6 +246,7 @@ const PaperCrumple = ({
   imageFit = 'cover',
   releaseBehavior = 'restore',
   crumpleAmount = 0.85,
+  shrinkTo = 1,
   crumpleDuration = 0.55,
   releaseDuration = 0.4,
   foldCount = 6,
@@ -303,6 +304,7 @@ const PaperCrumple = ({
   options.current = {
     releaseBehavior,
     crumpleAmount,
+    shrinkTo,
     crumpleDuration,
     releaseDuration,
     creaseStrength,
@@ -508,8 +510,11 @@ const PaperCrumple = ({
       posX = spring(),
       posY = spring(),
       tiltX = spring(),
-      tiltY = spring();
-    const springs = [amount, memory, posX, posY, tiltX, tiltY];
+      tiltY = spring(),
+      shrink = spring();
+    const springs = [amount, memory, posX, posY, tiltX, tiltY, shrink];
+    // Portfolio change: the sheet's size as a share of its fitted size; shrink runs 0 (full) to 1 (shrinkTo).
+    const size = () => 1 - (1 - clamp(finite(options.current.shrinkTo, 1), 0.05, 1)) * shrink.value;
     const raycaster = new THREE.Raycaster();
     const pointer = new THREE.Vector2();
     const plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
@@ -657,11 +662,14 @@ const PaperCrumple = ({
         amount.target =
           clamp(posX.value / Math.max(1, (viewportWidth - scale) / 2), 0, 1) *
           clamp(finite(opts.crumpleAmount, 0.85), 0, 1);
+      // Portfolio change: with shrinkTo, the sheet also shrinks the further left it is held, reaching shrinkTo 40px from the edge.
+      if (held) shrink.target = clamp(-posX.value / Math.max(1, viewportWidth / 2 - 40), 0, 1);
       const duration = held ? finite(opts.crumpleDuration, 0.55) : finite(opts.releaseDuration, 0.4);
       for (const s of springs)
         moving = advance(s, dt, s === amount || s === memory ? duration : 0.42, reduceMotion || keyboard) || moving;
       peak = Math.max(peak, amount.value);
       deform();
+      sheet.scale.setScalar(scale * size());
       sheet.rotation.set(tiltX.value, tiltY.value, baseRotation);
       if (held && !keyboard && opts.draggable) {
         const attribute = geometry.attributes.position;
@@ -670,7 +678,7 @@ const PaperCrumple = ({
           a.fromBufferAttribute(attribute, gripIndices[i]);
           anchor.addScaledVector(a, weights.getComponent(i));
         }
-        anchor.multiplyScalar(scale).applyEuler(sheet.rotation);
+        anchor.multiplyScalar(scale * size()).applyEuler(sheet.rotation);
         plane.constant = -anchor.z;
         setPointer(pointerX, pointerY);
         if (raycaster.ray.intersectPlane(plane, world)) {
@@ -697,7 +705,7 @@ const PaperCrumple = ({
       }
       renderer.render(scene, camera);
       // Portfolio change: tells the page when the sheet is back at rest (flat, centred), so it can lay the sharp HTML sheet over it.
-      root.dataset.settled = String(!held && !moving && !posX.value && !posY.value && !amount.value);
+      root.dataset.settled = String(!held && !moving && !posX.value && !posY.value && !amount.value && !shrink.value);
       placeHitTarget();
       if (moving) wake();
     }
@@ -762,6 +770,8 @@ const PaperCrumple = ({
             : 0;
       }
       tiltX.target = tiltY.target = 0;
+      // Portfolio change: a drop can keep the sheet at its smallest (shrunk), or it grows back.
+      shrink.target = drop?.shrunk ? 1 : 0;
       if (drop) {
         posX.target = drop.x;
         posY.target = drop.y;
@@ -808,7 +818,7 @@ const PaperCrumple = ({
     resetRef.current = reset;
     homeRef.current = () => {
       if (held) return;
-      posX.target = posY.target = amount.target = memory.target = 0;
+      posX.target = posY.target = amount.target = memory.target = shrink.target = 0;
       wake();
     };
     cancelRef.current = () => finish(true);

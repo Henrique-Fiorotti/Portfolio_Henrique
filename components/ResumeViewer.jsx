@@ -7,6 +7,8 @@ const PDF = "/curriculo-henrique-fiorotti.pdf";
 // Where approval stamps land on the sheet, in order: [x, y] as fractions of the sheet, then rotation in degrees.
 const SPOTS = [[.66, .17, -12], [.32, .42, 8], [.68, .62, -6], [.3, .8, 10], [.62, .36, 14], [.38, .6, -14], [.7, .86, 4], [.5, .27, -4]];
 const STAMP_WIDTH = .42;
+// On phones the sheet shrinks to this share of its size as it is dragged left, small enough to sit in the square tray.
+const PHONE_SHRINK = .28;
 // One stamp picture serves both the HTML sheet and the 3D paper's texture, so the two always match.
 const stampSrc = text => `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="300" height="120" viewBox="0 0 300 120"><filter id="ink"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="4"/><feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -1.5 1.45"/><feComposite in="SourceGraphic" operator="in"/></filter><g filter="url(#ink)" fill="none" stroke="#1d8a3c"><rect x="6" y="6" width="288" height="108" rx="14" stroke-width="8"/><rect x="20" y="20" width="260" height="80" rx="8" stroke-width="3"/><text x="150" y="76" text-anchor="middle" textLength="230" lengthAdjust="spacingAndGlyphs" font-family="Courier New, monospace" font-weight="700" font-size="46" fill="#1d8a3c" stroke="none">${text.toUpperCase()}</text></g></svg>`)}`;
 
@@ -37,6 +39,15 @@ export function ResumeViewer({
   const [homeKey, setHomeKey] = useState(0);
   const [resetKey, setResetKey] = useState(0);
   const trashed = phase.startsWith("trash");
+  const [phone, setPhone] = useState(false);
+  useEffect(() => {
+    const query = window.matchMedia("(max-width: 620px)");
+    const update = () => setPhone(query.matches);
+    update();
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
+  const shrink = phone ? PHONE_SHRINK : 1;
   const stamp = stampSrc(labels.approved);
   useEffect(() => {
     const image = new Image();
@@ -51,11 +62,12 @@ export function ResumeViewer({
     const scene = paperRef.current;
     const sheetBox = thumbRef.current;
     const tool = toolRef.current;
+    const sheetWidth = sheetBox.offsetWidth * shrink;
     // The tool's rubber (92 of its 120 units) lands exactly on the spot.
     gsap.set(tool, {
-      left: scene.offsetWidth / 2 + park.x + (spot[0] - .5) * sheetBox.offsetWidth,
-      top: scene.offsetHeight / 2 - park.y + (spot[1] - .5) * sheetBox.offsetHeight,
-      width: sheetBox.offsetWidth * STAMP_WIDTH * 120 / 92,
+      left: scene.offsetWidth / 2 + park.x + (spot[0] - .5) * sheetWidth,
+      top: scene.offsetHeight / 2 - park.y + (spot[1] - .5) * sheetBox.offsetHeight * shrink,
+      width: sheetWidth * STAMP_WIDTH * 120 / 92,
       xPercent: -50,
       yPercent: -100,
       rotation,
@@ -110,10 +122,11 @@ export function ResumeViewer({
     }
     const tray = approveRef.current.getBoundingClientRect();
     if (over(tray)) {
-      const limit = scene.width / 2 - thumbRef.current.offsetWidth / 2 - 12;
+      const limit = scene.width / 2 - thumbRef.current.offsetWidth * shrink / 2 - 12;
       const park = {
         x: Math.max(-limit, (tray.left + tray.right) / 2 - centerX),
-        y: 0
+        y: 0,
+        shrunk: phone
       };
       approve(park);
       return park;
@@ -265,7 +278,7 @@ export function ResumeViewer({
           <rect x="10" y="130" width="100" height="10" rx="3" fill="url(#stampMetal)" />
           <rect x="14" y="140" width="92" height="14" rx="2" fill="#1d6b33" />
         </svg>
-        <PaperCrumple onStateChange={state => setGrabbing(state === "holding")} onDrop={drop} onPaint={paint} paintKey={stamps.length} homeKey={homeKey} resetKey={resetKey} disabled={phase !== "idle"} src={image} alt={labels.title} width={360} height={551} sceneHeight={640} releaseBehavior="restore" crumpleAmount={0.95} crumpleDuration={0.55} releaseDuration={0.4} foldCount={6} foldSharpness={0.6} wrinkleDepth={0.65} creaseStrength={0.18} paperColor="#f4f0e8" paperTexture={0.08} draggable returnToOrigin />
+        <PaperCrumple onStateChange={state => setGrabbing(state === "holding")} onDrop={drop} onPaint={paint} paintKey={stamps.length} homeKey={homeKey} resetKey={resetKey} disabled={phase !== "idle"} src={image} alt={labels.title} width={360} height={551} sceneHeight={640} releaseBehavior="restore" crumpleAmount={0.95} shrinkTo={shrink} crumpleDuration={0.55} releaseDuration={0.4} foldCount={6} foldSharpness={0.6} wrinkleDepth={0.65} creaseStrength={0.18} paperColor="#f4f0e8" paperTexture={0.08} draggable returnToOrigin />
         <div ref={thumbRef} className="resumePaperSlot" aria-hidden="true" inert>
           <div className="resumePaperSheet">{sheet}</div>
           {marks}

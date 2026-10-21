@@ -1540,6 +1540,8 @@ html:has(.resumeDialog[open], .projectDialog[open]) {
   margin: 150px auto 0;
 }
 
+/* Phones: a shorter scene shrinks the sheet (PaperCrumple fits it to the scene's height minus 48px), and the slot that
+   covers it follows the same math; the bin and the tray shrink with it so they wait at the edges instead of over the sheet. */
 @media (max-width: 620px) {
   .aboutSection p {
     font-size: 17px;
@@ -1553,11 +1555,31 @@ html:has(.resumeDialog[open], .projectDialog[open]) {
     isolation: isolate;
   }
 
-  .resumeBin {
-    width: 160px;
+  .resumePaper .paper-crumple {
+    height: 420px !important;
   }
 
+  .resumePaperSlot {
+    width: min(calc((420px - 48px) * 360 / 551), 100% - 48px);
+  }
+
+  .resumeBin {
+    width: 120px;
+  }
+
+  /* A small upright tray: the sheet shrinks to fit it on its way left (PHONE_SHRINK in ResumeViewer). */
   .resumeApprove {
-    left: 8px;
+    left: 12px;
+    width: 108px;
+    height: 148px;
+    gap: 6px;
+    border-width: 2px;
+    border-radius: 12px;
+    font-size: 10px;
+    letter-spacing: .06em;
+  }
+
+  .resumeApprove svg {
+    width: 28px;
   }
 }
