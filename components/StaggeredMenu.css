@@ -1,0 +1,241 @@
+/* React Bits StaggeredMenu, restyled with the site's tokens: the header is one more bordered panel with a hard shadow. */
+.staggered-menu-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  z-index: 40;
+  pointer-events: none;
+}
+
+.staggered-menu-wrapper.fixed-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+.staggered-menu-header {
+  position: absolute;
+  top: 8px;
+  left: 12px;
+  right: 12px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 2px 0 12px;
+  border: 2px solid var(--line);
+  border-radius: 7px;
+  background: var(--panel);
+  box-shadow: 4px 4px 0 var(--line);
+  pointer-events: auto;
+  z-index: 20;
+  transition: background-color .25s, border-color .25s, box-shadow .25s;
+}
+
+/* Open, the bar's own panel look hands over to the layers that grew out of it; logo and toggle stay on top. */
+.staggered-menu-wrapper[data-open] .staggered-menu-header {
+  border-color: transparent;
+  background-color: transparent;
+  box-shadow: 0 0 0 transparent;
+}
+
+.sm-logo {
+  display: flex;
+  align-items: center;
+  margin-right: auto;
+}
+
+.sm-toggle {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 10px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--ink);
+  font: 700 12px/1 var(--font-mono);
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.sm-toggle:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
+  border-radius: 5px;
+}
+
+.sm-toggle-textWrap {
+  position: relative;
+  display: inline-block;
+  height: 1em;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.sm-toggle-textInner {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+}
+
+.sm-toggle-line {
+  display: block;
+  height: 1em;
+  line-height: 1;
+}
+
+.sm-icon {
+  position: relative;
+  width: 14px;
+  height: 14px;
+  flex: 0 0 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  will-change: transform;
+}
+
+.sm-icon-line {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 100%;
+  height: 2px;
+  background: currentColor;
+  border-radius: 2px;
+  transform: translate(-50%, -50%);
+  will-change: transform;
+}
+
+.staggered-menu-panel,
+.sm-prelayers {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+}
+
+.staggered-menu-panel {
+  display: flex;
+  flex-direction: column;
+  padding: 84px 24px calc(24px + env(safe-area-inset-bottom));
+  overflow-y: auto;
+  z-index: 10;
+  pointer-events: auto;
+  background: var(--panel);
+}
+
+.sm-prelayers {
+  pointer-events: none;
+  z-index: 5;
+}
+
+.sm-prelayer {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+}
+
+.sm-panel-inner {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.sm-panel-list,
+.sm-socials {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+
+.sm-panel-list {
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.sm-panel-itemWrap {
+  position: relative;
+  overflow: hidden;
+  line-height: 1;
+}
+
+.sm-panel-item {
+  position: relative;
+  display: inline-block;
+  padding-right: 1.4em;
+  color: var(--ink);
+  font-weight: 700;
+  font-size: clamp(2rem, 11vw, 3rem);
+  line-height: 1;
+  letter-spacing: -.04em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: color 0.25s;
+}
+
+.sm-panel-itemLabel {
+  display: inline-block;
+  will-change: transform;
+  transform-origin: 50% 100%;
+}
+
+.sm-panel-item:hover,
+.sm-panel-item[aria-current] {
+  color: var(--sm-accent, #5227ff);
+}
+
+.sm-panel-list[data-numbering] {
+  counter-reset: smItem;
+}
+
+.sm-panel-list[data-numbering] .sm-panel-item::after {
+  counter-increment: smItem;
+  content: counter(smItem, decimal-leading-zero);
+  position: absolute;
+  top: 0.1em;
+  right: 0;
+  font: 500 14px var(--font-mono);
+  color: var(--sm-accent, #5227ff);
+  letter-spacing: 0;
+  pointer-events: none;
+  user-select: none;
+  opacity: var(--sm-num-opacity, 0);
+}
+
+.sm-socials {
+  margin-top: auto;
+  padding-top: 2rem;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.sm-socials-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  color: var(--ink);
+  transition: color 0.3s ease;
+}
+
+.sm-socials-link svg {
+  width: 26px;
+  height: 26px;
+  fill: currentColor;
+}
+
+.sm-socials-link:hover {
+  color: var(--sm-accent, #5227ff);
+}

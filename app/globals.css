@@ -155,6 +155,36 @@ video {
   margin: 12px auto 0;
 }
 
+.phoneMenu {
+  display: none;
+}
+
+/* In the phone menu the language dropdown sits at the foot of the panel, so it opens upward, over the links. */
+.phoneMenu .languageSwitcher {
+  align-self: flex-start;
+}
+
+.phoneMenu .languageButton {
+  height: 44px;
+  padding: 0 12px;
+  border-color: var(--line);
+}
+
+.phoneMenu .languageMenu {
+  top: auto;
+  right: auto;
+  bottom: calc(100% + 8px);
+  left: 0;
+}
+
+.phoneMenu .languageButton .languageChevron {
+  transform: rotate(180deg);
+}
+
+.phoneMenu .languageButton[aria-expanded="true"] .languageChevron {
+  transform: none;
+}
+
 /* The top bar is one more panel: the same border, corners and hard shadow as the cards. */
 .topbar {
   display: flex;
@@ -1210,51 +1240,21 @@ html:has(.resumeDialog[open]) {
     width: min(100% - 24px, 1180px);
   }
 
+  /* Phones swap the top bar for the staggered menu, whose fixed bar takes the same 8px + 44px. */
   .siteHeader {
-    top: calc(8px - var(--hide, 0px));
-    width: min(100% - 24px, 1180px);
-    max-width: none;
-    margin-top: 8px;
+    display: none;
+  }
+
+  .phoneMenu {
+    display: block;
+  }
+
+  body {
+    padding-top: 52px;
   }
 
   .languageMenu {
     right: -6px;
-  }
-
-  .topbar {
-    justify-content: space-between;
-    gap: 4px;
-    min-height: 52px;
-    padding: 4px 4px 4px 12px;
-    border-radius: 7px;
-  }
-
-  /* On phones the section links move to a tab bar at the bottom: in reach of the thumb, and wide enough for every language. */
-  .topbarLinks {
-    position: fixed;
-    z-index: 10;
-    right: 12px;
-    bottom: calc(10px + env(safe-area-inset-bottom));
-    left: 12px;
-    justify-content: space-around;
-    gap: 2px;
-    padding: 4px;
-    border: 2px solid var(--line);
-    border-radius: 7px;
-    background: var(--panel);
-    box-shadow: 4px 4px 0 var(--line);
-  }
-
-  .topbarLink {
-    flex: 1 0 auto;
-    padding: 12px 4px;
-    font-size: 11px;
-    letter-spacing: .02em;
-    text-align: center;
-  }
-
-  body {
-    padding-bottom: calc(84px + env(safe-area-inset-bottom));
   }
 
   .brand {
@@ -1347,13 +1347,6 @@ html:has(.resumeDialog[open]) {
   .languageButton {
     min-width: 44px;
     justify-content: center;
-  }
-}
-
-@media (max-width:340px) {
-  .topbarLink {
-    padding-inline: 2px;
-    letter-spacing: 0;
   }
 }
 

@@ -32,7 +32,8 @@ export default async function Home({
       navLabel: t.navLabel,
       home: t.home,
       nav: t.nav,
-      language: t.language
+      language: t.language,
+      close: t.resume.close
     }} />
 
     <main id="conteudo">

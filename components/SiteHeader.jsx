@@ -2,7 +2,10 @@
 
 import { gsap } from "gsap";
 import { useEffect, useRef, useState } from "react";
+import { profile } from "@/data/portfolio";
 import { LanguageSwitcher } from "./LanguageSwitcher";
+import StaggeredMenu from "./StaggeredMenu";
+import { GITHUB, LINKEDIN } from "./icons";
 const SECTIONS = ["projetos", "sobre", "curriculo", "contato"];
 export function SiteHeader({
   locale,
@@ -28,7 +31,7 @@ export function SiteHeader({
       const hide = scrolledAway && !pointerAtTop && !header.matches(":has(:focus-visible)");
       if (hide === hidden) return;
       hidden = hide;
-      // --hide pulls the sticky top above the viewport; a transform would break the phone tab bar, which is position: fixed inside.
+      // --hide pulls the sticky top above the viewport.
       gsap.to(header, {
         "--hide": hide ? `${header.offsetHeight + 24}px` : "0px",
         duration: reduce.matches ? 0 : hide ? .3 : .45,
@@ -86,21 +89,39 @@ export function SiteHeader({
       window.removeEventListener("resize", update);
     };
   }, []);
-  const link = (id, label) => <a className="topbarLink" href={`#${id}`} aria-current={active === id ? "location" : undefined}>{label}</a>;
-  return <header ref={headerRef} className="siteHeader container">
+  const link = (id, label) => <a key={id} className="topbarLink" href={`#${id}`} aria-current={active === id ? "location" : undefined}>{label}</a>;
+  const brand = <a className="brand" href="#top" aria-label={`HF. ${t.home}`}>HF<span>.</span></a>;
+  const labels = {
+    projetos: t.nav.projects,
+    sobre: t.nav.about,
+    curriculo: t.nav.resume,
+    contato: t.nav.contact
+  };
+  // Phones get the full-screen staggered menu instead of the top bar; CSS swaps them at 620px.
+  return <>
+    <StaggeredMenu className="phoneMenu" isFixed logo={brand} closeLabel={t.close} items={SECTIONS.map(id => ({
+      label: labels[id],
+      link: `#${id}`,
+      current: active === id ? "location" : undefined
+    }))} socialItems={[{
+      label: <svg viewBox="0 0 24 24" aria-hidden="true"><path d={GITHUB} /></svg>,
+      ariaLabel: "GitHub",
+      link: profile.github
+    }, {
+      label: <svg viewBox="0 0 24 24" aria-hidden="true"><path d={LINKEDIN} /></svg>,
+      ariaLabel: "LinkedIn",
+      link: profile.linkedin
+    }]} colors={["#B497CF", "#5227FF"]} accentColor="var(--blue)">
+      <LanguageSwitcher locale={locale} label={t.language} />
+    </StaggeredMenu>
+    <header ref={headerRef} className="siteHeader container">
       <nav className="topbar" aria-label={t.navLabel}>
-        <div className="topbarStart">
-          <a className="brand" href="#top" aria-label={`HF. ${t.home}`}>HF<span>.</span></a>
-        </div>
-        <div className="topbarLinks">
-          {link("projetos", t.nav.projects)}
-          {link("sobre", t.nav.about)}
-          {link("curriculo", t.nav.resume)}
-          {link("contato", t.nav.contact)}
-        </div>
+        <div className="topbarStart">{brand}</div>
+        <div className="topbarLinks">{SECTIONS.map(id => link(id, labels[id]))}</div>
         <div className="topbarEnd">
           <LanguageSwitcher locale={locale} label={t.language} />
         </div>
       </nav>
-    </header>;
+    </header>
+  </>;
 }
