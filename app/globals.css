@@ -79,6 +79,18 @@ body {
   font-family: var(--font-sans), sans-serif;
 }
 
+/* A soft blur over the top edge, so content scrolling up past the bar fades out instead of competing with it. */
+body::before {
+  content: "";
+  position: fixed;
+  z-index: 9;
+  inset: 0 0 auto;
+  height: 40px;
+  backdrop-filter: blur(6px);
+  mask: linear-gradient(#000, transparent);
+  pointer-events: none;
+}
+
 h1,
 h2,
 h3 {
