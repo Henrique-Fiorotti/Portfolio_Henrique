@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { projects } from "@/data/portfolio";
+import { openFolder } from "./ProjectFolder";
 const SPIN_CHARACTERS = ["◆", "7", "✦"];
 const SPIN_MS = 1150;
 const isBlank = character => character === " " || character === " ";
@@ -45,6 +46,10 @@ export function CasinoProjectButton({
     timersRef.current.push(setTimeout(() => setPhase("idle"), 1800));
   };
   const spin = () => {
+    if (window.matchMedia("(max-width: 620px)").matches) {
+      openFolder();
+      return;
+    }
     if (phase !== "idle") return;
     let winner = Math.floor(Math.random() * projects.length);
     if (winner === winnerRef.current) winner = (winner + 1) % projects.length;

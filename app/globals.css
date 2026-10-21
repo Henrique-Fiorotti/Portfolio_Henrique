@@ -624,6 +624,32 @@ video {
   font-size: clamp(48px, 7vw, 80px);
 }
 
+/* Phone only (see the 620px block): the folder that holds the projects, each one a thumbnail with its title. */
+.projectFolder {
+  display: none;
+}
+
+.folderProject {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-rows: 1fr auto;
+}
+
+.folderProject img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.folderProject span {
+  padding: 6px 7px;
+  color: #17151d;
+  font: 700 9px/1.2 var(--font-mono);
+  letter-spacing: .02em;
+}
+
 .projectsGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1135,7 +1161,13 @@ main {
 }
 
 /* Modal: a full-screen dialog over a dark scrim; the page behind stops scrolling while it is open. */
-html:has(.resumeDialog[open]) {
+@keyframes sheetUp {
+  from {
+    translate: 0 100%;
+  }
+}
+
+html:has(.resumeDialog[open], .projectDialog[open]) {
   overflow: hidden;
 }
 
@@ -1366,6 +1398,92 @@ html:has(.resumeDialog[open]) {
 
   .projectContent {
     padding: 24px 20px;
+  }
+
+  /* No casino on phones (the button opens the project folder), so the label never rolls over to "Sortear". */
+  .casinoButton:is(:hover, :focus-visible) .casinoButtonReel {
+    translate: none;
+  }
+
+  /* Open, the projects rise out of the folder in two rows, so the folder steps down to make room for them. */
+  .projectFolder {
+    display: grid;
+    justify-items: center;
+    gap: 8px;
+    margin-bottom: 28px;
+  }
+
+  .projectFolder:has([data-open]) {
+    padding-top: 170px;
+  }
+
+  .projectFolder > p {
+    color: var(--on-ink-muted);
+    font: 600 12px var(--font-mono);
+  }
+
+  /* Only the card picked from the folder (or by the casino button) shows. */
+  .projectsGrid {
+    display: none;
+  }
+
+  /* A project picked from the folder: its card fills the screen and slides up from the bottom. */
+  .projectDialog {
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: var(--panel);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .projectDialog[open] {
+    animation: sheetUp .4s var(--ease-out);
+  }
+
+  .projectDialog::backdrop {
+    background: var(--scrim);
+  }
+
+  .projectDialog .projectCard {
+    min-height: 100%;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    animation: none;
+  }
+
+  .projectDialog .projectSkills {
+    margin-top: 0;
+  }
+
+  .projectDialogClose {
+    position: fixed;
+    z-index: 1;
+    top: calc(12px + env(safe-area-inset-top));
+    right: 12px;
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+    border: 2px solid var(--line);
+    border-radius: 50%;
+    background: var(--panel);
+    color: var(--ink);
+    box-shadow: 3px 3px 0 var(--line);
+    cursor: pointer;
+  }
+
+  .projectDialogClose svg {
+    width: 20px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.2;
+    stroke-linecap: round;
   }
 
   .projectMedia video {

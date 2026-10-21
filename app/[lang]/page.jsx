@@ -5,6 +5,7 @@ import Grainient from "@/components/Grainient";
 import FolderFloat from "@/components/FolderFloat";
 import { Greeting } from "@/components/Greeting";
 import { ProjectCard } from "@/components/ProjectCard";
+import { ProjectFolder } from "@/components/ProjectFolder";
 import { ResumeSheet } from "@/components/ResumeSheet";
 import { ResumeViewer } from "@/components/ResumeViewer";
 import { SiteHeader } from "@/components/SiteHeader";
@@ -20,6 +21,17 @@ export default async function Home({
   } = await params;
   const t = messages[locale];
   const resume = resumes[locale];
+  const cards = projects.map(project => ({
+    ...project,
+    subtitle: localize(project.subtitle, locale),
+    description: localize(project.description, locale)
+  }));
+  const cardT = {
+    viewProject: t.viewProject,
+    newTab: t.newTab,
+    technologies: t.technologies,
+    tech: t.tech
+  };
   return <>
     <Grainient style={{
       position: "fixed",
@@ -67,16 +79,8 @@ export default async function Home({
           <h2>{t.nav.projects}</h2>
           <p>{t.projectsIntro}</p>
         </div>
-        <div className="projectsGrid">{projects.map(project => <ProjectCard key={project.slug} project={{
-            ...project,
-            subtitle: localize(project.subtitle, locale),
-            description: localize(project.description, locale)
-          }} t={{
-            viewProject: t.viewProject,
-            newTab: t.newTab,
-            technologies: t.technologies,
-            tech: t.tech
-          }} />)}</div>
+        <ProjectFolder label={t.nav.projects} hint={t.projectsHint} close={t.resume.close} projects={cards} t={cardT} />
+        <div className="projectsGrid">{cards.map(project => <ProjectCard key={project.slug} project={project} t={cardT} />)}</div>
       </section>
 
       <section id="sobre" className="container panel aboutSection">
