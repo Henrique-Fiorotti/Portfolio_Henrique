@@ -341,13 +341,13 @@ video {
 
 .hero {
   animation: lift .7s var(--ease-out) backwards;
-  margin-top: clamp(32px, 4vw, 56px);
-  padding: clamp(36px, 5vw, 72px);
+  margin-top: clamp(28px, 3vw, 44px);
+  padding: clamp(28px, 4vw, 52px);
   display: grid;
-  grid-template-columns: minmax(280px, .9fr) minmax(320px, 1fr);
+  grid-template-columns: minmax(240px, .9fr) minmax(300px, 1fr);
   align-items: center;
   justify-items: center;
-  column-gap: clamp(32px, 5vw, 72px);
+  column-gap: clamp(24px, 4vw, 56px);
 }
 
 .portrait {
@@ -357,14 +357,14 @@ video {
 }
 
 .portrait img {
-  width: min(100%, 420px);
-  max-height: 380px;
+  width: min(100%, 340px);
+  max-height: 300px;
   object-fit: contain;
 }
 
 .heroContent {
   width: 100%;
-  max-width: 560px;
+  max-width: 480px;
 }
 
 /* A white speech bubble from the portrait; it stays white in dark mode, so it keeps the light blue for contrast. */
@@ -372,14 +372,14 @@ video {
   --blue: #004aad;
   position: relative;
   width: fit-content;
-  margin-bottom: 18px;
-  padding: 10px 16px;
+  margin-bottom: 14px;
+  padding: 8px 14px;
   border: 2px solid var(--line);
   border-radius: 14px;
   background: var(--white);
   box-shadow: 3px 3px 0 var(--line);
   color: var(--blue);
-  font: 600 18px var(--font-mono);
+  font: 600 15px var(--font-mono);
 }
 
 /* The tail points left at the face beside it, or up when the photo sits above. */
@@ -397,7 +397,7 @@ video {
 }
 
 .hero h1 {
-  font: 700 clamp(48px, 7vw, 92px)/.9 var(--font-sans);
+  font: 700 clamp(40px, 5.5vw, 72px)/.9 var(--font-sans);
   letter-spacing: -.04em;
 }
 
@@ -439,8 +439,8 @@ video {
 
 .role {
   max-width: 600px;
-  margin: 26px 0 12px;
-  font: 600 clamp(18px, 2vw, 25px)/1.3 var(--font-mono);
+  margin: 20px 0 10px;
+  font: 600 clamp(16px, 1.6vw, 20px)/1.3 var(--font-mono);
 }
 
 .heroActions,
@@ -448,7 +448,7 @@ video {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  margin-top: 30px;
+  margin-top: 24px;
 }
 
 .button {
@@ -1358,11 +1358,11 @@ html:has(.resumeDialog[open], .projectDialog[open], .staggered-menu-wrapper[data
 @media (max-width:850px) {
   .hero {
     grid-template-columns: 1fr;
-    padding: 38px 30px;
+    padding: 30px 26px;
   }
 
   .portrait img {
-    max-height: 300px;
+    max-height: 240px;
   }
 
   .heroContent {
@@ -1450,7 +1450,7 @@ html:has(.resumeDialog[open], .projectDialog[open], .staggered-menu-wrapper[data
      edge and the hair breaking out above the border. user.webp is 800 × 800 with its blue block starting 160px down,
      so a margin of -20% of the photo's width lines the block up with the border; the clip trims the chest under the collar. */
   .hero {
-    --face: .72;
+    --face: .6;
     overflow: visible;
     margin-top: 60px;
     padding: 0 0 26px;
@@ -1484,20 +1484,20 @@ html:has(.resumeDialog[open], .projectDialog[open], .staggered-menu-wrapper[data
     rotate: -2deg;
   }
 
-  /* The name fills the card's width. */
+  /* The name spans most of the card's width. */
   .hero h1 {
-    font-size: 16.5vw;
+    font-size: 13vw;
     line-height: .86;
   }
 
   .role {
-    margin: 22px 0 10px;
-    font-size: 15px;
+    margin: 16px 0 8px;
+    font-size: 14px;
   }
 
   .heroActions {
     flex-direction: column;
-    margin-top: 24px;
+    margin-top: 18px;
   }
 
   .socialLinks {
