@@ -1272,25 +1272,72 @@ html:has(.resumeDialog[open]) {
     box-shadow: 4px 4px 0 var(--line);
   }
 
+  /* Phone hero as a cover card: the photo's blue block is the top of the card, edge to edge, and the hair breaks out
+     above its border. user.webp is 800 × 800 with the block starting 160px down, so a -20% margin (of the width) lines
+     the block up with the border; the clip trims the chest just under the collar. */
   .hero {
-    margin-top: 28px;
-    padding: 28px 18px;
+    overflow: visible;
+    margin-top: 76px;
+    padding: 0 0 26px;
+    border-radius: 18px 18px 7px 7px;
+  }
+
+  /* The photo's own blue behind it fills the slivers where its rounded corners and the card's don't quite meet. */
+  .portrait {
+    border-bottom: 2px solid var(--line);
+    border-radius: 16px 16px 0 0;
+    background: #004aad;
   }
 
   .portrait img {
-    max-height: 200px;
+    width: 100%;
+    max-height: none;
+    margin: -20% 0 -18%;
+    clip-path: inset(0 0 18% 0);
   }
 
-  .hero h1 {
-    font-size: 50px;
+  .heroContent {
+    padding: 0 18px;
   }
 
+  /* The greeting is a sticker slapped across the seam between photo and text. */
   .greeting {
+    position: relative;
+    width: fit-content;
+    margin: -18px 0 22px;
+    padding: 8px 12px;
+    border: 2px solid var(--line);
+    border-radius: 5px;
+    background: var(--panel);
+    box-shadow: 3px 3px 0 var(--line);
+    font-size: 13px;
+    rotate: -2deg;
+  }
+
+  /* The name fills the card's width. */
+  .hero h1 {
+    font-size: 16.5vw;
+    line-height: .86;
+  }
+
+  .role {
+    margin: 22px 0 10px;
+    font-size: 15px;
+  }
+
+  .heroText {
     font-size: 16px;
+    line-height: 1.6;
   }
 
   .heroActions {
     flex-direction: column;
+    margin-top: 24px;
+  }
+
+  .socialLinks {
+    justify-content: center;
+    margin-top: 12px;
   }
 
   .heroActions .button {
