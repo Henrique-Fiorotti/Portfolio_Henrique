@@ -1474,6 +1474,15 @@ html:has(.resumeDialog[open], .projectDialog[open]) {
     padding-top: 170px;
   }
 
+  /* On phones the folder says enough: the projects title stands alone, centred, without the intro line. */
+  .projectsSection .sectionHeading {
+    text-align: center;
+  }
+
+  .projectsSection .sectionHeading p {
+    display: none;
+  }
+
   .projectFolder > p {
     color: var(--on-ink-muted);
     font: 600 12px var(--font-mono);
