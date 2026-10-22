@@ -52,7 +52,7 @@ export const messages = {
       drawn: "Projeto sorteado:"
     },
     aboutMe: "Sobre mim",
-    projectsIntro: "Uma seleção de aplicações, experiências visuais e estudos de desenvolvimento.",
+    projectsIntro: "Vários projetos em destaque, clica em algum!",
     projectsHint: "Clique na pasta",
     viewProject: "Ver projeto",
     newTab: "abre em nova aba",

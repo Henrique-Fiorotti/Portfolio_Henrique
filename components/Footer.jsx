@@ -1,17 +1,17 @@
 import { profile } from "@/data/portfolio";
 import { ConsoleSignature } from "./ConsoleSignature";
 import { CopyEmail } from "./CopyEmail";
-const OUT = "M7 17 17 7M8 7h9v9";
-const DOWN = "M12 5v14m0 0 6-6m-6 6-6-6";
+import { GITHUB, LINKEDIN } from "./icons";
+const MAIL = "M3 5h18v14H3zM3 6l9 7 9-7";
 export function Footer({
   t
 }) {
-  const link = (href, label, arrow = OUT) => <a href={href} {...href.startsWith("http") && {
+  // Icon only, named for screen readers and on hover.
+  const link = (href, label, path) => <a href={href} aria-label={label} title={label} {...href.startsWith("http") && {
     target: "_blank",
     rel: "noreferrer"
   }}>
-      {label}
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d={arrow} /></svg>
+      <svg viewBox="0 0 24 24" aria-hidden="true" className={path === MAIL ? "mailIcon" : undefined}><path d={path} /></svg>
     </a>;
   return <footer id="contato" className="container footer">
       <ConsoleSignature message={t.console} />
@@ -21,10 +21,9 @@ export function Footer({
           <CopyEmail email={profile.email} copiedLabel={t.copied} />
         </div>
         <nav className="footerLinks" aria-label={t.footerNav}>
-          {link(`mailto:${profile.email}`, t.sendEmail)}
-          {link("#curriculo", t.nav.resume, DOWN)}
-          {link(profile.github, "GitHub")}
-          {link(profile.linkedin, "LinkedIn")}
+          {link(`mailto:${profile.email}`, t.sendEmail, MAIL)}
+          {link(profile.github, "GitHub", GITHUB)}
+          {link(profile.linkedin, "LinkedIn", LINKEDIN)}
         </nav>
         <div className="footerBottom">
           <p>© {new Date().getFullYear()} Henrique Fiorotti · {t.builtWith}</p>

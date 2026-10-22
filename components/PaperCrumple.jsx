@@ -530,6 +530,7 @@ const PaperCrumple = ({
     let gripIndices = [Math.floor(count / 2), 0, 0];
     let viewportWidth = 1,
       viewportHeight = 1,
+      reachRight = 1,
       scale = paperWidth;
     let pointerX = 0,
       pointerY = 0,
@@ -662,9 +663,10 @@ const PaperCrumple = ({
       const opts = options.current;
       let moving = false;
       // Portfolio change: while held, the crumple follows how far right of centre the sheet is; centre and left stay flat.
+      // Full at the right edge of what shows, even when the scene runs on past the screen.
       if (held)
         amount.target =
-          clamp(posX.value / Math.max(1, (viewportWidth - scale) / 2), 0, 1) *
+          clamp(posX.value / Math.max(1, reachRight - scale / 2), 0, 1) *
           clamp(finite(opts.crumpleAmount, 0.85), 0, 1);
       // Portfolio change: with shrinkTo, the sheet also shrinks the further left it is held, reaching shrinkTo 40px from the edge.
       if (held) shrink.target = clamp(-posX.value / Math.max(1, viewportWidth / 2 - 40), 0, 1);
@@ -728,6 +730,7 @@ const PaperCrumple = ({
       const rect = root.getBoundingClientRect();
       viewportWidth = Math.max(1, rect.width);
       viewportHeight = Math.max(1, rect.height);
+      reachRight = Math.min(viewportWidth / 2, document.documentElement.clientWidth - rect.left - viewportWidth / 2);
       scale =
         paperWidth *
         Math.min(1, Math.max(1, viewportWidth - 48) / paperWidth, Math.max(1, viewportHeight - 48) / paperHeight);

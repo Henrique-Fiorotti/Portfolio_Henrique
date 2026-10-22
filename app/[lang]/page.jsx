@@ -4,7 +4,6 @@ import { DecodeName } from "@/components/DecodeName";
 import Grainient from "@/components/Grainient";
 import FolderFloat from "@/components/FolderFloat";
 import { Greeting } from "@/components/Greeting";
-import { ProjectCard } from "@/components/ProjectCard";
 import { ProjectFolder } from "@/components/ProjectFolder";
 import { ResumeSheet } from "@/components/ResumeSheet";
 import { ResumeViewer } from "@/components/ResumeViewer";
@@ -79,7 +78,6 @@ export default async function Home({
           <p>{t.projectsIntro}</p>
         </div>
         <ProjectFolder label={t.nav.projects} hint={t.projectsHint} close={t.resume.close} projects={cards} t={cardT} />
-        <div className="projectsGrid">{cards.map(project => <ProjectCard key={project.slug} project={project} t={cardT} />)}</div>
       </section>
 
       <section id="sobre" className="container panel aboutSection">

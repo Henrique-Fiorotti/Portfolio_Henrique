@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { projects } from "@/data/portfolio";
-import { openFolder } from "./ProjectFolder";
+import { openFolder, showProject } from "./ProjectFolder";
 const SPIN_CHARACTERS = ["◆", "7", "✦"];
 const SPIN_MS = 1150;
 const isBlank = character => character === " " || character === " ";
@@ -25,24 +25,9 @@ export function CasinoProjectButton({
   const timersRef = useRef([]);
   useEffect(() => () => timersRef.current.forEach(clearTimeout), []);
   const land = () => {
-    const project = projects[winnerRef.current];
-    const card = document.getElementById(project.slug);
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     setPhase("won");
-    setAnnouncement(`${drawn} ${project.title}`);
-    if (card) {
-      card.scrollIntoView({
-        behavior: reducedMotion ? "auto" : "smooth",
-        block: "center"
-      });
-      card.querySelector(".projectActions a")?.focus({
-        preventScroll: true
-      });
-      card.classList.remove("isJackpot");
-      void card.offsetWidth;
-      card.classList.add("isJackpot");
-      timersRef.current.push(setTimeout(() => card.classList.remove("isJackpot"), 2400));
-    }
+    setAnnouncement(`${drawn} ${projects[winnerRef.current].title}`);
+    showProject(winnerRef.current);
     timersRef.current.push(setTimeout(() => setPhase("idle"), 1800));
   };
   const spin = () => {

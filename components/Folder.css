@@ -116,7 +116,7 @@
   overflow: hidden;
   color: var(--folder-tab-ink);
   opacity: var(--folder-label, 1);
-  font-size: calc(10.5px * var(--folder-scale));
+  font-size: calc(14px * var(--folder-scale));
   font-weight: 600;
   letter-spacing: -0.005em;
   line-height: 1;

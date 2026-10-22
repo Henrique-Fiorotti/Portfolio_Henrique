@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "layout-transition",
+        "value": "*",
+        "files": [
+          "app/globals.css"
+        ],
+        "createdAt": "2026-10-22T12:26:43.834Z",
+        "reason": "Claude: .projectFolder padding-top transition is intentional; ProjectFolder.holdFolder scrolls the page in step with it each frame so the folder stays put while room opens above (predates this session, was in the 620px block)"
+      }
+    ]
+  }
+}

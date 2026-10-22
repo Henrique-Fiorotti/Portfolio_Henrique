@@ -110,7 +110,7 @@ const toCss = m => `matrix3d(${m.map(v => (Math.abs(v) < 1e-7 ? 0 : Number(v.toF
 const measureFolder = (book, scale, labelWidth, hasLabel, tabPosition) => {
   const w = (book ? 180 : 224) * scale;
   const h = (book ? 232 : 176) * scale;
-  const tabH = 20 * scale;
+  const tabH = 28 * scale;
   const r = 12 * scale;
   const shoulder = tabH * 0.75;
   const frontTop = book ? tabH : tabH + h * 0.3;
@@ -744,13 +744,15 @@ const placeFlap = (rank, count, phase, layout, g, pointer) => {
         s: fit
       };
     }
-    // 'grid' (added): two rows narrow enough for a phone, the second row above the first.
-    const grid = layout === 'grid' && count > 3;
+    // 'grid' (added): two rows narrow enough for a phone, the second row above the first. 'wide': the same two rows with
+    // bigger cards, for bigger screens.
+    const wide = layout === 'wide';
+    const grid = (wide || layout === 'grid') && count > 3;
     const perRow = grid ? Math.ceil(count / 2) : count;
     const row = Math.floor(rank / perRow);
     const inRow = Math.min(perRow, count - row * perRow);
     const gap = 12 * g.scale;
-    const fit = Math.min(0.94, (g.w * (grid ? 1.4 : 2.3) - gap * (perRow - 1)) / (perRow * g.docW));
+    const fit = Math.min(wide ? 1.25 : 0.94, (g.w * (wide ? 3.2 : grid ? 1.4 : 2.3) - gap * (perRow - 1)) / (perRow * g.docW));
     const step = g.docW * fit + gap;
     const tidy = layout === 'row';
     return {

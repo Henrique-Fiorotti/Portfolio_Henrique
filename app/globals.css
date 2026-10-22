@@ -543,21 +543,6 @@ video {
   white-space: nowrap;
 }
 
-/* The drawn card steps forward in its own colour. */
-@keyframes jackpot {
-  30% {
-    transform: translate(-6px, -6px);
-    box-shadow: 12px 12px 0 var(--project-accent);
-  }
-}
-
-.projectCard.isJackpot {
-  outline: 4px solid var(--project-accent);
-  outline-offset: 6px;
-  animation: jackpot 1.2s var(--ease-out) .35s;
-  animation-timeline: auto;
-}
-
 .casinoButtonText {
   display: inline-flex;
   align-items: center;
@@ -664,24 +649,196 @@ video {
   gap: 30px;
 }
 
+/* Straight on the Grainient like the titles, so the light muted ink. */
 .sectionHeading p {
-  padding: 4px 10px;
-  border-radius: 4px;
-  background: var(--lavender);
   max-width: 440px;
-  color: var(--portfolio-muted);
+  color: var(--on-ink-muted);
   line-height: 1.6;
 }
 
 /* Section titles sit straight on the Grainient, which is dark in both themes. */
+/* Kept under the hero name (clamp(40px, 5.5vw, 72px)) at every width. */
 .sectionHeading h2 {
   color: var(--white);
-  font-size: clamp(48px, 7vw, 80px);
+  font-size: clamp(36px, 4.5vw, 60px);
 }
 
-/* Phone only (see the 620px block): the folder that holds the projects, each one a thumbnail with its title. */
+/* The folder that holds the projects, each one a thumbnail with its title. Open, the projects rise out of it in two rows,
+   so the folder steps down to make room for them. */
 .projectFolder {
-  display: none;
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  margin-bottom: 28px;
+  transition: padding-top .5s var(--ease-out);
+}
+
+.projectFolder:has([data-open]) {
+  padding-top: 170px;
+}
+
+/* Wide screens get bigger, more scattered cards (Folder's 'wide' layout, picked in ProjectFolder), so more room. */
+@media (min-width: 900px) {
+  .projectFolder:has([data-open]) {
+    padding-top: 320px;
+  }
+}
+
+/* Wider still: projects and résumé share one row, about below; smaller screens keep the page's order. main stays full
+   width (it clips the résumé's drag scene at the screen's edges); its padding lines the columns up with .container.
+   minmax(0, 1fr): the résumé's wide scene must not stretch its column. */
+@media (min-width: 1200px) {
+  main {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-areas: "top top" "projetos curriculo" "sobre sobre";
+    column-gap: 40px;
+    padding-inline: max(20px, (100% - 1180px) / 2);
+  }
+
+  /* No auto margins here: in a grid they shrink the item to its content instead of filling its area. */
+  main > .container {
+    width: auto;
+    margin-inline: 0;
+  }
+
+  /* The sheet rests in the middle of its scene, so the scene is centred on the résumé's column and reaches the screen's
+     left edge, where the approval tray waits (the column always starts at 50vw + 20px). That puts its right edge past
+     the screen (main clips it), so the bin is pulled back to the screen's edge. The scene covers the projects column, so
+     only the sheet itself takes the pointer. The sheet is a bit smaller here. */
+  #curriculo .resumePaper {
+    --resume-scene: min(560px, 100svh - 140px);
+    width: calc(100% + 100vw + 40px);
+    margin-left: calc(-50vw - 20px);
+    pointer-events: none;
+  }
+
+  #curriculo .paper-crumple-hit {
+    pointer-events: auto;
+  }
+
+  #curriculo .resumeBin {
+    right: calc(100% - 100vw);
+  }
+
+  #top {
+    grid-area: top;
+  }
+
+  #projetos {
+    grid-area: projetos;
+  }
+
+  #curriculo {
+    grid-area: curriculo;
+  }
+
+  #sobre {
+    grid-area: sobre;
+  }
+
+  /* Centred like the résumé's title, the intro line under it. */
+  .projectsSection {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .projectsSection .sectionHeading {
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    text-align: center;
+  }
+
+  /* The folder sits at the bottom, level with the résumé's buttons, and its cards rise into the room the taller résumé
+     leaves above it, so nothing has to step down. */
+  .projectFolder,
+  .projectFolder:has([data-open]) {
+    margin-top: auto;
+    padding-top: 0;
+  }
+}
+
+/* Out of the folder, the projects float gently in place, each on its own beat. translate and rotate stack on the
+   transform Folder sets every frame. */
+@keyframes folderFloat {
+  50% {
+    translate: 0 -6px;
+    rotate: .8deg;
+  }
+}
+
+.projectFolder .folder-root[data-open] .folder-item {
+  animation: folderFloat 3.4s ease-in-out infinite;
+}
+
+.projectFolder .folder-item:nth-child(3n+2) {
+  animation-delay: -1.1s;
+  animation-direction: reverse;
+}
+
+.projectFolder .folder-item:nth-child(3n) {
+  animation-delay: -2.3s;
+}
+
+.projectFolder > p {
+  color: var(--on-ink-muted);
+  font: 600 12px var(--font-mono);
+}
+
+/* A project picked from the folder (or drawn by the casino button): a small card centred over a scrim (full screen on
+   phones, see the 620px block). ProjectFolder animates it in and out with GSAP; --fade is the scrim's opacity, since
+   ::backdrop inherits from its dialog. margin: auto centres it again after the reset at the top. */
+.projectDialog {
+  width: min(520px, 100% - 32px);
+  max-height: 85dvh;
+  margin: auto;
+  padding: 0;
+  border: 2px solid var(--line);
+  border-radius: 10px;
+  background: var(--panel);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.projectDialog::backdrop {
+  background: var(--scrim);
+  opacity: var(--fade, 1);
+}
+
+.projectDialog .projectCard {
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.projectDialog .projectSkills {
+  margin-top: 0;
+}
+
+.projectDialogClose {
+  position: absolute;
+  z-index: 1;
+  top: 12px;
+  right: 12px;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border: 2px solid var(--line);
+  border-radius: 50%;
+  background: var(--panel);
+  color: var(--ink);
+  box-shadow: 3px 3px 0 var(--line);
+  cursor: pointer;
+}
+
+.projectDialogClose svg {
+  width: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
 }
 
 .folderProject {
@@ -705,27 +862,13 @@ video {
   letter-spacing: .02em;
 }
 
-.projectsGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 34px;
-}
-
 .projectCard {
   display: flex;
   flex-direction: column;
-  box-shadow: 6px 6px 0 var(--line);
-  transition: transform .2s var(--ease-out), box-shadow .2s var(--ease-out);
-}
-
-.projectCard:hover {
-  transform: translate(-3px, -3px);
-  box-shadow: 9px 9px 0 var(--line);
 }
 
 @supports (animation-timeline: view()) {
 
-  .projectCard,
   .aboutSection {
     animation: lift linear backwards;
     animation-timeline: view();
@@ -767,26 +910,6 @@ video {
 
 .projectMedia:hover img {
   transform: scale(1.025);
-}
-
-.projectCard:first-child,
-.projectCard:nth-child(even):last-child {
-  grid-column: 1 / -1;
-  display: grid;
-  grid-template-columns: 1.15fr .85fr;
-}
-
-.projectCard:first-child .projectMedia,
-.projectCard:nth-child(even):last-child .projectMedia {
-  aspect-ratio: auto;
-  max-height: none;
-  border-right: 2px solid var(--line);
-  border-bottom: 0;
-}
-
-.projectCard:first-child .projectContent,
-.projectCard:nth-child(even):last-child .projectContent {
-  padding: clamp(32px, 5vw, 60px);
 }
 
 .projectContent {
@@ -894,7 +1017,7 @@ video {
 }
 
 .footerEmail svg,
-.footerLinks svg,
+.footerLinks .mailIcon,
 .footerTop svg {
   width: 18px;
   height: 18px;
@@ -911,33 +1034,17 @@ video {
   font: 500 12px var(--font-mono);
 }
 
-/* The links as a plain list: one row each between hairlines, the arrow at the far end. */
+/* The links as plain round icons in a row, like the back-to-top button. */
 .footerLinks {
-  display: grid;
-  align-content: center;
-  border-top: 1px solid rgb(255 255 255 / .12);
-}
-
-.footerLinks a {
-  min-height: 56px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  border-bottom: 1px solid rgb(255 255 255 / .12);
-  font: 500 clamp(18px, 2vw, 21px)/1.2 var(--font-sans);
-  letter-spacing: -.01em;
-  transition: color .18s;
+  gap: 12px;
 }
 
-.footerLinks a svg {
-  color: var(--on-ink-muted);
-  transition: color .18s;
-}
-
-.footerLinks a:hover,
-.footerLinks a:hover svg {
-  color: var(--on-ink-accent);
+.footerLinks svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
 }
 
 .footerBottom {
@@ -950,7 +1057,8 @@ video {
   font: 500 12px/1.5 var(--font-mono);
 }
 
-.footerTop {
+.footerTop,
+.footerLinks a {
   width: 44px;
   height: 44px;
   flex: none;
@@ -962,7 +1070,8 @@ video {
   transition: border-color .18s, color .18s;
 }
 
-.footerTop:hover {
+.footerTop:hover,
+.footerLinks a:hover {
   border-color: var(--on-ink-accent);
   color: var(--on-ink-accent);
 }
@@ -1290,13 +1399,6 @@ main {
   }
 }
 
-/* Modal: a full-screen dialog over a dark scrim; the page behind stops scrolling while it is open. */
-@keyframes sheetUp {
-  from {
-    translate: 0 100%;
-  }
-}
-
 /* Anything open over the page holds it still; the gutter stays so the layout doesn't jump sideways. */
 html:has(.resumeDialog[open], .projectDialog[open], .staggered-menu-wrapper[data-open], .languageMenu) {
   overflow: hidden;
@@ -1378,29 +1480,6 @@ html:has(.resumeDialog[open], .projectDialog[open], .staggered-menu-wrapper[data
   .aboutSection {
     grid-template-columns: 1fr;
     gap: 25px;
-  }
-
-  .projectsGrid {
-    grid-template-columns: 1fr;
-  }
-
-  .projectCard:first-child,
-  .projectCard:nth-child(even):last-child {
-    grid-column: auto;
-    display: flex;
-  }
-
-  .projectCard:first-child .projectMedia,
-  .projectCard:nth-child(even):last-child .projectMedia {
-    aspect-ratio: 16/10;
-    max-height: 36svh;
-    border-right: 0;
-    border-bottom: 2px solid var(--line);
-  }
-
-  .projectCard:first-child .projectContent,
-  .projectCard:nth-child(even):last-child .projectContent {
-    padding: 30px;
   }
 
   .footerContent {
@@ -1536,19 +1615,6 @@ html:has(.resumeDialog[open], .projectDialog[open], .staggered-menu-wrapper[data
     translate: none;
   }
 
-  /* Open, the projects rise out of the folder in two rows, so the folder steps down to make room for them. */
-  .projectFolder {
-    display: grid;
-    justify-items: center;
-    gap: 8px;
-    margin-bottom: 28px;
-    transition: padding-top .5s var(--ease-out);
-  }
-
-  .projectFolder:has([data-open]) {
-    padding-top: 170px;
-  }
-
   /* On phones the folder says enough: the projects title stands alone, centred, without the intro line. */
   .projectsSection .sectionHeading {
     text-align: center;
@@ -1558,17 +1624,7 @@ html:has(.resumeDialog[open], .projectDialog[open], .staggered-menu-wrapper[data
     display: none;
   }
 
-  .projectFolder > p {
-    color: var(--on-ink-muted);
-    font: 600 12px var(--font-mono);
-  }
-
-  /* Only the card picked from the folder (or by the casino button) shows. */
-  .projectsGrid {
-    display: none;
-  }
-
-  /* A project picked from the folder: its card fills the screen and slides up from the bottom. */
+  /* On phones the picked card fills the screen and slides up from the bottom; its buttons sit at the bottom of it. */
   .projectDialog {
     width: 100%;
     max-width: none;
@@ -1577,54 +1633,21 @@ html:has(.resumeDialog[open], .projectDialog[open], .staggered-menu-wrapper[data
     margin: 0;
     padding: 0 0 env(safe-area-inset-bottom);
     border: 0;
-    background: var(--panel);
-    overflow-y: auto;
-    overscroll-behavior: contain;
-  }
-
-  .projectDialog[open] {
-    animation: sheetUp .4s var(--ease-out);
-  }
-
-  .projectDialog::backdrop {
-    background: var(--scrim);
+    border-radius: 0;
   }
 
   .projectDialog .projectCard {
     min-height: 100%;
-    border: 0;
-    border-radius: 0;
-    box-shadow: none;
-    animation: none;
   }
 
-  .projectDialog .projectSkills {
-    margin-top: 0;
+  .projectDialog .projectActions {
+    margin-top: auto;
+    padding-top: 24px;
   }
 
   .projectDialogClose {
     position: fixed;
-    z-index: 1;
     top: calc(12px + env(safe-area-inset-top));
-    right: 12px;
-    width: 44px;
-    height: 44px;
-    display: grid;
-    place-items: center;
-    border: 2px solid var(--line);
-    border-radius: 50%;
-    background: var(--panel);
-    color: var(--ink);
-    box-shadow: 3px 3px 0 var(--line);
-    cursor: pointer;
-  }
-
-  .projectDialogClose svg {
-    width: 20px;
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 2.2;
-    stroke-linecap: round;
   }
 
   .projectMedia video {
