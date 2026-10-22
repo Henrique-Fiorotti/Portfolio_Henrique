@@ -73,11 +73,16 @@ export function SiteHeader({
     // The current section is the last one whose top has reached the line where anchor jumps land
     // (scroll-margin-top in globals.css, plus slack); at the bottom of the page the last section wins,
     // since the footer can never scroll that high.
-    const update = () => {
+    const update = event => {
       const ids = ["top", ...SECTIONS];
       const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
       const current = atBottom ? ids.at(-1) : ids.findLast(id => document.getElementById(id)?.getBoundingClientRect().top <= 100);
-      setActive(SECTIONS.includes(current) ? current : null);
+      const section = SECTIONS.includes(current) ? current : null;
+      setActive(section);
+      // The address follows the section in view, so a reload comes back to it (none over the hero). replaceState adds no
+      // history entry and doesn't jump. Only on scroll: on load the browser may not have reached the address's section yet.
+      const hash = section ? `#${section}` : "";
+      if (event?.type === "scroll" && location.hash !== hash) history.replaceState(history.state, "", location.pathname + location.search + hash);
     };
     update();
     window.addEventListener("scroll", update, {
